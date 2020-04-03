@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/mine.min.css">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./fonts/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./fonts/iconfont/iconfont.css">
+    <link rel="stylesheet" href="./css/bootstrap-table.min.css">
+</head>
+<body>
+    <div class="bg">
+        <ul class="left-nav">
+            <li class="mine-test left-nav-li active" id="mineTest">我的考试</li>
+            <li class="mine-tran left-nav-li" id="mineTran">我的训练</li>
+            <li class="wrong left-nav-li" id="wrong">错题集</li>
+            <li class="collect left-nav-li" id="collect">收藏夹</li>
+        </ul>
+        <div class="right-grid">
+            <table class="table table-hover" id="testGridBox">
+            </table>
+        </div>
+    </div>
+
+
+    <!-- 提示删除是否成功 -->
+    <div class="modal fade" id="isDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document" style="z-index: 9999;">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">系统提示</h4>
+            </div>
+            <div class="modal-body" id="isDeleteText">
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+              <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    
+    <script src="./js/lib/jquery-3.4.1.min.js"></script>
+    <script src="./js/lib/bootstrap.min.js"></script>
+    <script src="./js/lib/bootstrap-table.min.js"></script>
+    <script src="./js/lib/bootstrap-table-zh-CN.min.js"></script>
+    <script src="./js/mine/mine.js"></script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>BD2状态</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .BD2-box {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      color: #fff;
+    }
+
+    /* 底部栏 */
+    .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: flex-end;
+      color: #cfd1fe;
+      flex: 0 0 18px;
+      font-size: 13px;
+    }
+
+    .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    /* 雷达框 */
+    .BD2-head {
+      flex: 0 0 120px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-top: 20px;
+      position: relative;
+    }
+
+    .circle {
+      border-radius: 50%;
+      border: 1px solid #fff;
+    }
+
+    .circle-bg {
+      width: 90px;
+      height: 90px;
+      position: relative;
+    }
+
+    .circle-sm {
+      width: 45px;
+      height: 45px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin-left: -22.5px;
+      margin-top: -22.5px;
+    }
+
+    .row-line {
+      width: 1px;
+      height: 88px;
+      position: absolute;
+      left: 50%;
+      margin-left: -.5px;
+      background-color: #fff;
+    }
+
+    .col-line {
+      width: 88px;
+      height: 1px;
+      position: absolute;
+      top: 50%;
+      margin-top: -.5px;
+      background-color: #fff;
+    }
+
+    .east,
+    .south,
+    .west,
+    .north {
+      position: absolute;
+    }
+
+    /* 东 */
+    .east {
+      top: 50%;
+      left: 104%;
+      transform: translateY(-50%);
+    }
+
+    /* 南 */
+    .south {
+      top: 104%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    /* 西 */
+    .west {
+      top: 50%;
+      right: 104%;
+      transform: translateY(-50%);
+    }
+
+    /* 北 */
+    .north {
+      bottom: 104%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .satellite-number,
+    .HDOP,
+    .VDOP {
+      position: absolute;
+    }
+
+    .satellite-number {
+      top: 8px;
+      left: 5px;
+    }
+
+    .HDOP {
+      top: 8px;
+      right: 5px;
+    }
+
+    .VDOP {
+      right: 5px;
+      top: 22px;
+    }
+
+
+    /* 柱状图 */
+    .BD2-center {
+      flex: auto;
+      display: flex;
+      padding-right: 1%;
+      padding-bottom: 4%;
+      padding-top: 20px;
+    }
+
+    .item {
+      flex: 1;
+      background-color: #94b5f5;
+      margin-left: 1%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="BD2-box">
+    <div class="BD2-head">
+      <div class="circle-bg circle">
+        <div class="circle-sm circle"></div>
+        <div class="row-line"></div>
+        <div class="col-line"></div>
+        <div class="east">东</div>
+        <div class="south">南</div>
+        <div class="west">西</div>
+        <div class="north">北</div>
+      </div>
+      <div class="satellite-number">卫星颗数:0</div>
+      <div class="HDOP">HDOP:0.00</div>
+      <div class="VDOP">VDOP:0.00</div>
+    </div>
+    <div class="BD2-center">
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+      <div class="item"></div>
+    </div>
+    <div class="machine-view-bottom">
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="../../js/lib/jquery-3.4.1.min.js"></script>
+<script>
+  $(function () {
+      var obj = function (option) {
+        this.option = option || {};
+        this.init(); // 初始化
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        this.allEvents(); // 各种点击事件
+      }
+
+
+      // 各种点击事件
+      obj.prototype.allEvents = function () {
+        this.clickReturn();      // 返回
+      }
+
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('BD2状态');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // ________________________________________________________________
+      window.BD2StateObj = new obj();
+    });
+</script>
+</html>

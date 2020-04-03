@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title></title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/normal.min.css">
+    <link rel="stylesheet" href="./css/radio.min.css">
+</head>
+
+<body>
+    <div class="machine-box">
+        <div class="machine-head">
+            <div class="return-box" id="returnBox">
+                <div class="return-img"></div>
+                <div class="return-text">返回</div>
+            </div>
+            <div class="is-now-test">
+                <div class="test-img"></div>
+                <div class="test-text"><span id="handText">考核</span>-电台操作</div>
+            </div>
+            <div class="test-time">
+                <div class="timed-box" id="timedBox">
+                    已考时间：<span class="time" id="timed"></span>
+                    <lable class="remain-time-text">剩余时间：</lable><span class="time remain-time" id="remain-time"></span>
+                </div>
+            </div>
+            <div class="hand" data-toggle="modal" data-target="#isHand" id="handBtn">交卷</div>
+        </div>
+        <div class="machine-body">
+            <div class="right-content">
+                <div class="content-image" id="contentImage">
+                    <div class="radio-box" id="radio">
+                        <div class="btn1" id="btn1"></div>
+                        <div class="btn2" id="btn2"></div>
+                        <div class="btn3" id="btn3"></div>
+                        <div class="btn4" id="btn4"></div>
+                        <div class="btn5" id="btn5"></div>
+                        <div class="greenLight" id="greenLight"></div>
+                        <div class="redLight" id="redLight"></div>
+                        <div class="clearBtn" id="clearBtn"></div>
+                        <input type="text" class="form-control screen" id="screen" autocomplete="off" disabled="true" />
+                        <!-- <div class="screen" id="screen"></div> -->
+                        <span class="screen-right" id="screenRight"></span>
+                        <div class="centerBtnBox" id="centerBtnBox">
+                            <div class="numBtn numBtn0" id="numBtn0"><i x-id="0"></i></div>
+                            <div class="numBtn numBtn1" id="numBtn1"><i x-id="1"></i></div>
+                            <div class="numBtn numBtn2" id="numBtn2"><i x-id="2"></i></div>
+                            <div class="numBtn numBtn3" id="numBtn3"><i x-id="3"></i></div>
+                            <div class="numBtn numBtn4" id="numBtn4"><i x-id="4"></i></div>
+                            <div class="numBtn numBtn5" id="numBtn5"><i x-id="5"></i></div>
+                            <div class="numBtn numBtn6" id="numBtn6"><i x-id="6"></i></div>
+                            <div class="numBtn numBtn7" id="numBtn7"><i x-id="7"></i></div>
+                            <div class="numBtn numBtn8" id="numBtn8"><i x-id="8"></i></div>
+                            <div class="numBtn numBtn9" id="numBtn9"><i x-id="9"></i></div>
+                            <div class="numBtn numBtn10" id="numBtn10"><i x-id="H"></i></div>
+                            <div class="numBtn numBtn11" id="numBtn11"><i x-id="F"></i></div>
+                            <div class="numBtn numBtn12" id="numBtn12"><i x-id="xd"></i></div>
+                            <div class="numBtn numBtn13" id="numBtn13"><i x-id="sd"></i></div>
+                            <div class="numBtn numBtn14" id="numBtn14"><i x-id="tg"></i></div>
+                            <div class="numBtn numBtn15" id="numBtn15"><i x-id="sure"></i></div>
+                        </div>
+                    </div>
+                    <button class="completeBtn" id="completeBtn" type="button">完成操作</button>
+                </div>
+                <div class="test-content" id="test-bank">
+                    <div class="testParper" id="item-bank"></div>
+                    <ul class="item-btn-ul" id="item-btn-ul">
+                        <li class="item-btn active" id="testReform">重做此题</li>
+                        <!-- <li class="item-btn active answer" id="answer">查看答案</li> -->
+                        <li class="item-btn" data-toggle="modal" data-target="" id="preQuestion">上一题</li>
+                        <li class="item-btn" data-toggle="modal" data-target="" id="nextQuestion">下一题</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- 首题和末题收藏提示 -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="tipMess">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="collectButtonSure">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 确认交卷 -->
+    <div class="modal fade" id="isHand" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body">
+                    确认交卷？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="hand" data-toggle="modal" data-target="#handSuccess">确认</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancelhand">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交卷成功 -->
+    <div class="modal fade" id="handSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
+                            id="closeBtn">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="handSuccessText">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="handSure">确认</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="handcancle">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/lib/jquery-3.4.1.min.js"></script>
+    <script src="./js/lib/jquery.cookie.js"></script>
+    <script src="./js/lib/bootstrap.min.js"></script>
+    <script src="./js/lib/rotate.js"></script>
+    <script src="./js/radio.js"></script>
+
+
+
+    <script>
+        $('#cancelhand').on('click', function() {
+            $('#isHand').modal('hide');
+        })
+        $(function() {
+            window.radioObj = new machineObj();
+        });
+    </script>
+</body>
+
+</html>

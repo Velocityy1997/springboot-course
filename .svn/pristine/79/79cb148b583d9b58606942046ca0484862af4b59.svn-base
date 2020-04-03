@@ -1,0 +1,65 @@
+package io.ken.springboot.course.service;
+
+import io.ken.springboot.course.bean.ChooseSelectStore;
+import io.ken.springboot.course.model.ExcelModel;
+import io.ken.springboot.course.model.exam.newExam.CreatNewExam;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 
+ * @author cll
+ *IFillExamService.java
+ * 2019年11月28日
+ */
+public interface IChooseSelectStoreService {
+
+	ChooseSelectStore getNameByCode(String fillQCode);
+
+	int add(ChooseSelectStore exam);
+		
+	int addModel(ChooseSelectStore fillModel);
+	
+	public List<ChooseSelectStore> getByName(String name);
+	
+	List<Map<String,Object>> getSelectQuestionRandom(String subject);
+
+	List<ChooseSelectStore> getAll();
+
+	/**
+	 * Excel选择题添加
+	 * @param chooseSelectStoreList
+	 * @return
+	 */
+	public int addExcel(List<ExcelModel> chooseSelectStoreList);
+
+	/**
+	 * 用于批量添加试题，查询题名
+	 * @param name
+	 * @return
+	 */
+	public ExcelModel queryName(String name,String result);
+
+	/**
+	 * 用于修改excel导入试题重复的试题
+	 * @param excelModel
+	 * @return
+	 */
+	public int updateQuestions(ExcelModel excelModel);
+
+	/**
+	 * 获取当前级别的的试题数量
+	 * @param subject 科目
+	 * @param flag 0单选，1多选
+	 * @param level 级别
+	 * @return 总数
+	 */
+	int getCount(String subject, int flag, String level);
+
+	/**
+	 * 随机取出一定数的题
+	 * @param creatNewExam
+	 * @return
+	 */
+	List<ChooseSelectStore> getQuestion(CreatNewExam creatNewExam);
+}

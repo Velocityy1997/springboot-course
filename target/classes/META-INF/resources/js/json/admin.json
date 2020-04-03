@@ -1,0 +1,42 @@
+{
+  "code": "200",
+  "msg": "msg",
+  "data": {
+    "adminImg": "./img/test/admin.png",
+    "admin":"true",
+    "data": [
+      {
+        "text": "姓名",
+        "value": "张三"
+      },
+      {
+        "text": "性别",
+        "value": "男"
+      },
+      {
+        "text": "年龄",
+        "value": "19"
+      },
+      {
+        "text": "年级",
+        "value": "一年级"
+      },
+      {
+        "text": "班级",
+        "value": "二班"
+      },
+      {
+        "text": "证件号",
+        "value": "123"
+      },
+      {
+        "text": "已考",
+        "value": "5"
+      },
+      {
+        "text": "待考",
+        "value": "1"
+      }
+    ]
+  }
+}

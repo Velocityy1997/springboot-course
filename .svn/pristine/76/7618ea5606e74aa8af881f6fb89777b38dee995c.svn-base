@@ -1,0 +1,396 @@
+$(function () {
+  let adminFlag = '';
+  window.titleClose = function () {
+    $("#littleTip").hide();
+  }
+  window.titleOpen = function () {
+    $("#littleTip").show();
+  }
+  $("#closeTip").on("click", function () {
+    window.titleClose();
+  })
+  //判断有无session,无则退出
+  $.get("/springboot-course/session/checkStatus", function (res) {
+    if (res.msg == "false") {
+      window.location.href = "/springboot-course/login.html";
+    }
+  })
+  //获取登录人姓名及权限
+  power();
+  function power() {
+    $.get("/springboot-course/user/userinfoname", function (res) {
+      $("#userName span").text(res.data.name);
+      adminFlag = res.data.admin;
+
+      if (res.data.admin == "false") {
+        $("#manage").hide();
+      } else {
+        $("#manage").show();
+      }
+
+      // new 实例对象
+      window.indexObj = new obj(adminFlag);
+    })
+  }
+
+  formVal();
+  layui.use('form', function () {
+    var form = layui.form;
+    form.render();
+  });
+  $("#manage span").on("click", function () {
+    if ($(this).text() == "系统管理") {
+      $(this).text("普通页面");
+      $("#iframe-test").css("display", "none");
+      $("#iframe-manage").css("display", "block");
+    } else {
+      $(this).text("系统管理");
+      $("#iframe-test").css("display", "block");
+      $("#iframe-manage").css("display", "none");
+    }
+  })
+  //退出登录
+  $("#loginOut span").on("click", function () {
+    $.post("/springboot-course/user/logOut", function (res) {
+      if (res.code == 200) {
+        window.location.href = "./login.html";
+      } else {
+        $("#tipMess").text(res.msg);
+        // $("#loginOut").attr("data-target","#exampleModal2");
+        $("#exampleModal2").modal("show");
+      }
+    })
+  })
+  //修改密码    
+  $("#surePass").on("click", function () {
+    var oldPass = $("#oldPass").val();
+    var newPass = $("#newPass").val();
+    $.post("/springboot-course/user/changePd", { newPd: newPass, oldPd: oldPass }, function (res) {
+      $("#tipMess").text(res.msg);
+      $("#exampleModal2").modal("show");
+      $("#oldPass").val("");
+      $("#newPass").val("");
+    })
+  })
+  //图片上传预览    IE是用了滤镜。
+  function previewImage(file) {
+    var MAXWIDTH = 200;
+    var MAXHEIGHT = 200;
+    var div = document.getElementById('preview');
+    if (!/.(jpg|png|JPG|PNG)$/.test(file.value)) {
+      $("#tipMess").text("图片类型必须是.jpg,png中的一种");
+      $("#exampleModal2").modal("show");
+      return false;
+    } else {
+      if (((file.files[0].size).toFixed(2)) >= (2 * 1024 * 1024)) {
+        $("#tipMess").text("请上传小于2M的图片");
+        $("#exampleModal2").modal("show");
+        return false;
+      }
+    }
+    if (file.files && file.files[0]) {
+      div.innerHTML = '<img id=imghead>';
+      var img = document.getElementById('imghead');
+      img.onload = function () {
+        var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+        img.width = rect.width;
+        img.height = rect.height;
+        //                 img.style.marginLeft = rect.left+'px';
+        img.style.marginTop = rect.top + 'px';
+      }
+      var reader = new FileReader();
+      reader.onload = function (evt) { img.src = evt.target.result; window.picSrc = img.src; }
+      reader.readAsDataURL(file.files[0]);
+    }
+    else //兼容IE
+    {
+      var sFilter = 'filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+      file.select();
+      var src = document.selection.createRange().text;
+      div.innerHTML = '<img id=imghead>';
+      var img = document.getElementById('imghead');
+      img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+      var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+      status = ('rect:' + rect.top + ',' + rect.left + ',' + rect.width + ',' + rect.height);
+      div.innerHTML = "<div id=divhead style='width:" + rect.width + "px;height:" + rect.height + "px;margin-top:" + rect.top + "px;" + sFilter + src + "\"'></div>";
+    }
+  }
+  function clacImgZoomParam(maxWidth, maxHeight, width, height) {
+    var param = { top: 0, left: 0, width: 200, height: 200 };
+    // if (width > maxWidth || height > maxHeight) {
+    //   rateWidth = width / maxWidth;
+    //   rateHeight = height / maxHeight;
+
+    //   if (rateWidth > rateHeight) {
+    //     param.width = maxWidth;
+    //     param.height = Math.round(height / rateWidth);
+    //   } else {
+    //     param.width = Math.round(width / rateHeight);
+    //     param.height = maxHeight;
+    //   }
+    // }
+    // param.left = Math.round((maxWidth - param.width) / 2);
+    // param.top = Math.round((maxHeight - param.height) / 2);
+    return param;
+  }
+  var userlevelList;
+  var classList = [];
+  // 获取才开始渲染的数据
+  $.ajax({
+    url: '/springboot-course/userlevel/list',
+    type: 'get',
+    dataType: 'json',
+    success: (data) => {
+      userlevelList = data;
+    }
+  });
+  $.ajax({
+    url: '/springboot-course/class/list',
+    type: 'get',
+    dataType: 'json',
+    success: (data) => {
+      classList = data;
+    }
+  });
+  $("#userName span").on("click", function () {
+    getUserList();
+  })
+
+  function getUserList() {
+    var params = $("#iframe-test")[0].contentWindow.window.setOption.option.idNumber;
+    $.ajax({
+      url: '/springboot-course/user/userinfo?idNumber',
+      type: 'get',
+      dataType: 'json',
+      success: (data) => {
+        var userList = data;
+        $("#name").val(userList.name);
+        $('#sex').val(userList.sex);
+        $("#class1").val(userList.classId);
+        $("#level1").val(userList.levelId);
+        $("#birthday1").val(userList.age);
+        $("#identity").val(userList.idNumber);
+        $("#phone").val(userList.tel);
+        if (userList.photo == null || userList.photo == "") {
+          $("#imghead").attr("src", "./img/user.png");
+        }
+        else {
+          $("#imghead").attr("src", "data:image/png;base64," + userList.photo);
+        }
+
+      }
+    });
+  }
+
+
+  drawLevel();
+  drawClassList();
+  // 描绘等级 
+  function drawLevel() {
+    $.each(userlevelList, (index, item) => {
+      $(`<option value="${item.levelId}">${item.name}</option>`).appendTo($('#level1'));
+    });
+  }
+
+  // 描绘班级
+  function drawClassList() {
+    $.each(classList, (index, item) => {
+      $(`<option value="${item.classId}">${item.className}</option>`).appendTo($('#class1'));
+    });
+  }
+  // 表单校验
+  function formVal() {
+    var _this = this;
+    layui.use(['form', 'layedit'], function () {
+      var form = layui.form,
+        layer = layui.layer,
+        layedit = layui.layedit;
+
+      //自定义验证规则
+      form.verify({
+        nameAdd: function (value) {
+          if (value.length < 5) {
+            return '标题至少得5个字符';
+          }
+        },
+        pass: [
+          /^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'
+        ],
+        identity: [
+          /(^\d{15}$)|(^\d{17}(x|X|\d)$)/, "请输入正确的证件号"
+        ],
+        cardId: [
+          /[a-zA-Z0-9]+$/, "请输入正确的证件号"
+        ],
+        tel: [
+          /^1(3|4|5|7|8)\d{9}$/, "请输入正确的手机号"
+        ],
+        content: function (value) {
+          layedit.sync(editIndex);
+        }
+
+      });
+      _this.form = form;
+
+      //监听提交
+      form.on('submit(demo1)', function (data) {
+        var photoArr = [];
+        if (window.picSrc != "" && window.picSrc != undefined) {
+          photoArr = window.picSrc.split(",");
+          window.picSrcBase = photoArr[1];
+        }
+
+        let user = {};
+        user.idNumber = $('#cardId').val();
+        user.tel = $('#phone').val();
+        user.photo = window.picSrcBase;
+
+        new Promise((resolve, reject) => {
+          $.post('/springboot-course/user/updateinfo', user, function (res) {
+            resolve(res);
+            $("#tipMess").text(res.msg);
+            $("#exampleModal2").modal("show");
+          });
+        }).then(res => {
+          $("#exampleModal1").hide();
+          if (res.data == false) {
+            $("#tipMess").text(res.msg);
+            $("#exampleModal2").modal("show");
+          } else {
+            getUserList();
+            if (window.picSrcBase != undefined) {
+              $("#iframe-test")[0].contentWindow.window.setOption.changePhoto(window.picSrcBase);
+            }
+          }
+        })
+        return false;
+      });
+    })
+  }
+
+
+  // $('#exampleModal-radio-check').modal();
+
+  // ------------------------- made by mc ---------------------------------
+  class obj {
+    constructor(adminFlag) {
+      this.adminFlag = adminFlag;
+      this.selectType = 1;
+      this.init();                // 初始化
+    }
+
+    // 初始化
+    init() {
+      this.allClickEvents();      // 所有点击事件 
+      // this.testStateShow();       // 判断是否管理员可以看考试的内容  
+    }
+
+    // 所有点击事件
+    allClickEvents() {
+      let _this = this;
+      // 点遮罩层确认按钮
+      $('#sure').on('click', function () {
+        // 清除时间
+        if (_this.selectType !== 0)
+          $('#iframe-test')[0].contentWindow.$('#textIframe')[0].contentWindow.newObj.clearTime();
+        $('#iframe-test')[0].contentWindow.location.reload();
+        $('#mark').fadeOut();
+        $('#iframe-test')[0].contentWindow.window.setOption.returnMachine();
+        $('#iframe-test')[0].contentWindow.document.getElementById('textIframe').contentWindow.window.newObj.reset();
+        window.titleClose();
+      });
+
+      // 取消
+      $('#cancel').on('click', function () {
+        $('#mark').fadeOut();
+      });
+
+      // 关闭
+      $('#close').on('click', function () {
+        $('#mark').fadeOut();
+      });
+
+      window.clickReturn = function (text, selectType) {
+        _this.selectType = selectType;
+        $('#contain').text(text);
+        $('#mark').show();
+      }
+
+      // 查看试卷打开
+      window.openCheckPaper = function (id) {
+        $('#frame-check')[0].contentWindow.getExam(id);
+        $('#exampleModal-check').modal();
+      }
+
+
+      // 查看试卷
+      window.setPapers = function (id, type) {
+        if (type === 1) {
+          $('#frame-check2')[0].contentWindow.window.newObj.questionsList(id);
+          $('#exampleModal5').modal();
+        } else if (type === 2) {
+          $('#frame-check-radio')[0].contentWindow.window.radioObj.questionsList(id);
+          $('#exampleModal-radio').modal();
+        }else if(type === 3){
+          $('#frame-check-know')[0].contentWindow.window.knowObj.questionsList(id);
+          $('#exampleModal-know').modal();
+        }else if(type === 6){
+          $('#frame-check-image')[0].contentWindow.window.imgObj.questionsList(id);
+          $('#exampleModal-image').modal();
+        }
+      }
+
+      window.setCollect = function (id, table_name) {
+        $('#frame-check3')[0].contentWindow.window.newObj.questionsList(id, table_name);
+        $('#exampleModal3').modal();
+      }
+      //查看错题
+      window.setWrong = function (id, table_name,type) {
+        if (type === 1) {
+          $('#frame-check-wrong')[0].contentWindow.window.newObj.questionsList(id, table_name);
+          $('#exampleModal1').modal();
+        }else if(type === 2) {
+          $('#check-radio-wrong')[0].contentWindow.window.radioObj.questionsList(id, table_name);
+          $('#exampleModal-radio-check').modal();
+        }else if(type === 3){
+          $('#check-erro-know')[0].contentWindow.window.knowObj.questionsList(id, table_name);
+          $('#exampleModal-know').modal();
+        }
+      }
+
+      window.closeCheck = function () {
+
+        $('#exampleModal-check').modal('hide');
+      }
+
+      $("#upLode").on("change", function () {
+        previewImage(this);
+      })
+    }
+
+    // 刷新考核
+    refreshTest() {
+      $('#iframe-test')[0].contentWindow.$('iframe[target="tab-item2"]')[0].contentWindow.location.reload();
+    }
+
+    // 判断是否管理员可以看考试的内容
+    testStateShow() {
+      debugger
+      if (this.adminFlag == "true") {
+
+        this.needStateData();             // 管理员可以看到的状态
+        $('#test-state-box').show();
+      } else {
+        $('#test-state-box').hide();
+      }
+    }
+
+    // 管理员可以看到的状态
+    needStateData() {
+
+    }
+  }
+
+
+})
+

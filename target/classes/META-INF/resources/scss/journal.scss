@@ -1,0 +1,72 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: 100% 100%;
+}
+.main{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #fff;
+    .user-view-box{
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+      
+        .user-head{
+          flex: 0 0 50px;
+      
+          .user-head-ul{
+            display: flex;
+            width: 35%;
+            height: 100%;
+            padding-top: 40px;
+            float: right;
+            .user-head-li{
+              flex: 1;
+              padding:0 10px;
+              text-align: center;
+      
+              label{
+                padding-right: 0;
+                padding-left: 0;
+                line-height: 34px;
+              }
+              .col-sm-9{
+                padding-left: 5px;
+                padding-right: 10px;
+      
+                .select{
+                  padding: 6px;
+                }
+              }
+            }
+            .user-head-li:last-child{
+              flex: .3;
+            }
+          }
+        }
+        // 表格
+        .user-body{
+          flex: auto;
+          padding: 10px;
+          .thead-light{
+            background-image: linear-gradient(to bottom,#f8f8f8 0,#ececec 100%);
+          }
+          table tr{
+            cursor: default;
+          }
+          .img-rounded{
+            width: 50px;
+            height: 50px;
+          }
+          .active td{
+            background-color: #eee;
+          }
+        }
+    }
+    
+}
+

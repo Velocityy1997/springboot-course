@@ -1,0 +1,253 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.modal-dialog {
+    width: 500px;
+    z-index: 9999;
+  }
+.bg{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left:0;
+    right:0;
+    background: url(../img/bg.png) no-repeat;
+    background-size: 100% 100%;
+    overflow: hidden;
+
+    .logo{
+        width: 247px;
+        height: 247px;
+        background: url(../img/logo.png) no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        top: 90px;
+        left: 100px;
+    }
+    .title-box{
+        width: 615px;
+        height: 250px;
+        position: absolute;
+        top: 370px;
+        left: 100px;
+
+        .title-deep{
+            font-size: 78px;
+            color:#04331A;
+        }
+        .title{
+            width:610px;
+            height:90px;
+            background: url(../img/title.png) no-repeat;
+            background-size: 100% 100%;
+            margin: 30px 0;
+        }
+        .number{
+            color:#C8E8C2;
+            font-size: 28px;
+        }
+    }
+    .login-box{
+        width:500px;
+        height:471px;
+        background:url(../img/login-box.png) no-repeat;
+        background-size: 100% 100%;
+        padding: 80px 75px;
+        position: absolute;
+        top: 245px;
+        right: 210px;
+        .user-box,.password-box{
+            width:345px;
+            height:67px;
+            margin: 0 auto;
+            margin-bottom: 35px;
+            position: relative;
+            .user-input,.password-input{
+                width:100%;
+                height:100%;
+                padding-left: 80px;
+                border: 2px solid #7dbc89;
+                border-radius: 3px;
+                font-size: 25px;
+                color: #006837;
+            }
+            .user-icon{
+                width:43px;
+                height:43px;
+                position: absolute;
+                top:12px;
+                left:18px;
+                background:url(../img/user-icon.png) no-repeat;
+                background-size: 100% 100%;
+
+            }
+            .password-icon{
+                width:43px;
+                height:43px;
+                position: absolute;
+                top:12px;
+                left:18px;
+                background:url(../img/password-icon.png) no-repeat;
+                background-size: 100% 100%;
+            }
+            .active1{
+                background:url(../img/user-icon1.png) no-repeat;
+                background-size: 100% 100%;
+            }
+            .active2{
+                background:url(../img/password-icon1.png) no-repeat;
+                background-size: 100% 100%;
+            }
+            .user-input:focus,.password-input:focus{
+                outline: 0;
+                border: 2px solid #408E69;
+            }
+        }
+        .btn{
+            width:345px;
+            height:65px;
+            display: block;
+            background-image: linear-gradient(to right, #016837,#B9E4B0);
+            font-size: 33px;
+            color:#fff;
+            margin: 0 auto;
+            margin-top: 40px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    }
+    .bottom-text{
+        width: 300px;
+        height: 30px;
+        position: absolute;
+        bottom: 70px;
+        right: 305px;
+        color: #BAE5B1;
+        font-size: 22px;
+    }
+    .ball1{
+        width:138px;
+        height:137px;
+        background: url(../img/middle-ball.png) no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        top: 170px;
+        left: 800px;
+        animation: ani 5s ease-out infinite alternate;
+    }
+    .ball2{
+        width:191px;
+        height:191px;
+        background: url(../img/big-ball.png) no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        bottom: 220px;
+        left: 795px;
+        animation: ani1 8s ease infinite alternate;
+    }
+    .ball3{
+        width:250px;
+        height:250px;
+        background: url(../img/big-ball.png) no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        bottom: -62px;
+        left: 470px;
+        animation: ani 10s ease-out infinite alternate;
+    }
+    .ball4{
+        width:55px;
+        height:55px;
+        background: url(../img/small-ball.png) no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        bottom: 330px;
+        left: 550px;
+        // animation: ani1 4s ease infinite alternate;
+        animation: scale 4s ease infinite alternate;
+    }
+    .ball5{
+        width:46px;
+        height:46px;
+        background: url(../img/small-ball.png) no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        bottom: 132px;
+        right: 805px;
+        // animation: ani 4s ease infinite alternate;
+        animation: scale 4s ease-out infinite alternate;
+    }
+    .ball6{
+        width:55px;
+        height:55px;
+        background: url(../img/small-ball.png) no-repeat;
+        background-size: 100% 100%;
+        position: absolute;
+        bottom: 69px;
+        right: 82px;
+        // animation: ani 4s ease infinite alternate;
+        animation: scale 4s ease-out infinite alternate;
+    }
+}
+@media screen and (max-width: 1366px) {
+    .bg{
+        .logo{
+            width: 100px;
+            height: 100px;
+            top: 60px;
+            left: 100px;
+        }
+        .title-box{
+            top: 200px;
+            left: 100px;
+            .title-deep{
+                font-size: 50px;
+            }
+            .title{
+                width: 488px;
+                height: 72px;
+            }
+            .number{
+                font-size: 23px;
+            }
+        }
+        .login-box{
+            top: 45px;
+            right: 165px;
+            transform: scale(.8);
+        }
+        .bottom-text{
+            bottom: 70px;
+            right: 240px;
+            font-size: 20px;
+        
+        }
+    }
+}
+@keyframes ani {
+    from{
+        transform: translateY(0px);
+    }
+    to{
+        transform: translateY(30px);
+    }
+}
+@keyframes ani1 {
+    from{
+        transform: translateY(0px);
+    }
+    to{
+        transform: translateY(-30px);
+    }
+}
+@keyframes scale {
+    from{
+        transform: scale(1) translateY(0px);
+    }
+    to{
+        transform: scale(1.1) translateY(-30px);
+    }
+}

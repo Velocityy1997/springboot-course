@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>列表</title>
+  <link rel="stylesheet" href="./css/normal.min.css">
+  <link rel="stylesheet" href="./css/machine-control-list.min.css">
+</head>
+
+<body>
+  <div class="machine-view-box">
+    <ul class="machine-view-ul" id="machine-view-ul">
+      <li class="machine-view-li" data-index="0">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">导航</div>
+      </li>
+      <li class="machine-view-li" data-index="1">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">定位</div>
+      </li>
+      <li class="machine-view-li" data-index="2">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">通讯</div>
+      </li>
+      <li class="machine-view-li" data-index="3">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">系统</div>
+      </li>
+      <li class="machine-view-li" data-index="4">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">工具</div>
+      </li>
+      <li class="machine-view-li" data-index="5">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">时间</div>
+      </li>
+    </ul>
+    <div class="machine-view-bottom">
+      <div class="sure">
+        <div class="sure-text">确定</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">关机</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/lib/jquery-3.4.1.min.js"></script>
+  <script src="./js/machine-control-list.js"></script>
+  <script>
+    $(function () {
+      window.parent.window.iframeObj.initOption();
+      var option = {};
+      window.machineControlObj = new machineControlObj(option);
+    })
+    
+  </script>
+</body>
+
+</html>

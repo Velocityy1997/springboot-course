@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>显示设置</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .display-box {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+      color: #fff;
+    }
+
+    .display-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 18px;
+      font-size: 13px;
+    }
+
+    .display-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .display-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .display-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/sure.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .display-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .display-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .display-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .response-beam-contain {
+      display: flex;
+      margin: 5px 10px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0;
+      border: 1px solid transparent;
+      cursor: default;
+      width: 144px;
+      margin: 0 auto;
+    }
+
+    .response-beam-contain.active {
+      border: 1px solid #ffd400;
+    }
+
+    .left-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/left-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #1c2bea;
+    }
+
+    .right-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/right-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #1c2bea;
+    }
+
+    .auto-btn {
+      background-color: #171988;
+      line-height: 27px;
+      text-align: center;
+      width: 80px;
+      height: 27px;
+    }
+
+    .auto-btn-light {
+      background-image: linear-gradient(to bottom, #e7f093, #e79a69);
+      width: 40%;
+      height: 100%;
+      transition: width .5s ease;
+    }
+
+    .auto-btn.normal {
+      background: #171988;
+    }
+
+    .display-contain {
+      flex: 0 0 100px;
+    }
+
+    .display-contain2 {
+      flex: auto;
+    }
+
+    .title {
+      text-align: center;
+      line-height: 30px;
+      padding-top: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="display-box">
+    <div class="display-contain">
+      <div class="title">屏幕亮度</div>
+      <div class="response-beam-contain">
+        <div class="left-btn" id="turnLeft1"></div>
+        <div class="auto-btn">
+          <div class="auto-btn-light" id="auto-btn-light"></div>
+        </div>
+        <div class="right-btn" id="turnRight1"></div>
+      </div>
+    </div>
+    <div class="display-contain display-contain2">
+      <div class="title">背光时间</div>
+      <div class="response-beam-contain">
+        <div class="left-btn" id="turnLeft2"></div>
+        <div class="auto-btn normal" id="normal">10秒</div>
+        <div class="right-btn" id="turnRight2"></div>
+      </div>
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">确定</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var obj = function (option) {
+        this.option = option || {};
+        this.currentIndex1 = 40;
+        this.currentIndex2 = 0;
+        this.bgTime = ['10秒', '30秒', '1分钟', '2分钟', '常开'];
+        this.init(); // 初始化
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        this.applyReset();       // 常亮和高亮的设置
+        this.allEvents();        // 各种点击事件
+      }
+
+      // 常亮和高亮的设置
+      obj.prototype.applyReset = function(){
+        var _this = this;
+       
+        if(window.parent.parent.window.newObj.option.highLightAnswer == "true"){
+            _this.currentIndex1 = 100;
+        }
+        
+        if(window.parent.parent.window.newObj.option.alwaysAnswer == "true"){
+            _this.currentIndex2 = _this.bgTime.length-1;
+        }
+        
+        $('#auto-btn-light').attr('style', 'width:' + _this.currentIndex1 + '%');
+   
+        $('#normal').text(_this.bgTime[_this.currentIndex2]);
+      }
+
+      // 各种点击事件
+      obj.prototype.allEvents = function () {
+        this.clickReturn(); // 返回
+        this.clickSure(); // 确定
+        this.clickTurnLeft(); // 点击左侧按钮
+        this.clickTurnRight(); // 点击右侧按钮
+        this.changeActive(); // 激活状态
+      }
+
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('显示设置');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // 确定
+      obj.prototype.sureActive = function () {
+        var _this = this;
+        if (_this.currentIndex1 == 100) {
+            window.parent.parent.window.newObj.option.highLightAnswer = "true"; //判断是否为高亮
+          } else {
+            window.parent.parent.window.newObj.option.highLightAnswer = "false"; //判断是否为高亮
+          }
+          if (_this.bgTime[_this.currentIndex2] == "常开") {
+            window.parent.parent.window.newObj.option.alwaysAnswer = "true"; //判断是否为常亮
+          } else {
+            window.parent.parent.window.newObj.option.alwaysAnswer = "false"; //判断是否为常亮
+          }
+          window.parent.window.iframeObj.goBackBefore('显示设置');
+      }
+
+      obj.prototype.clickSure = function () {
+        var _this = this;
+        $('#sure').on('click', function () {
+          _this.sureActive();
+        });
+      }
+
+      // 激活状态
+      obj.prototype.changeActive = function () {
+        $('.display-contain').on('click', '.response-beam-contain', function () {
+          $('.response-beam-contain').removeClass('active');
+          $(this).addClass('active');
+        });
+      }
+
+      // 点击左边按钮
+      obj.prototype.clickTurnLeft = function () {
+        var _this = this;
+        $('#turnLeft1').on('click', function () {
+          if (_this.currentIndex1 > 0 && _this.currentIndex1 <= 100) {
+            _this.currentIndex1 -= 20;
+          } else if (_this.currentIndex1 == 0) {
+            _this.currentIndex1 = 0;
+          }
+
+          $('#auto-btn-light').attr('style', 'width:' + _this.currentIndex1 + '%');
+        });
+
+
+        $('#turnLeft2').on('click', function () {
+
+          if (_this.currentIndex2 == 0) {
+            _this.currentIndex2 = _this.bgTime.length - 1;
+          } else {
+            _this.currentIndex2--;
+          }
+
+          $('#normal').text(_this.bgTime[_this.currentIndex2]);
+
+        });
+      }
+
+      // 点击右边按钮
+      obj.prototype.clickTurnRight = function () {
+        var _this = this;
+        $('#turnRight1').on('click', function () {
+          if (_this.currentIndex1 >= 0 && _this.currentIndex1 < 100) {
+            _this.currentIndex1 += 20;
+
+          } else if (_this.currentIndex1 == 100) {
+            _this.currentIndex1 = 100;
+          }
+
+          $('#auto-btn-light').attr('style', 'width:' + _this.currentIndex1 + '%');
+        });
+        $('#turnRight2').on('click', function () {
+          if (_this.currentIndex2 == _this.bgTime.length - 1) {
+            _this.currentIndex2 = 0;
+          } else {
+            _this.currentIndex2++;
+          }
+
+          $('#normal').text(_this.bgTime[_this.currentIndex2]);
+        });
+      }
+
+      // ----------------------------------------------------
+      window.displayObj = new obj();
+    });
+  </script>
+</body>
+
+</html>

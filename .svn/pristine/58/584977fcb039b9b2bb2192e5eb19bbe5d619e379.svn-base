@@ -1,0 +1,123 @@
+package io.ken.springboot.course.service;
+
+import io.ken.springboot.course.bean.ChooseSelectStore;
+import io.ken.springboot.course.bean.CommExamStore;
+import io.ken.springboot.course.bean.DecideStore;
+import io.ken.springboot.course.bean.Exam;
+import io.ken.springboot.course.bean.FillBlankExamStore;
+import io.ken.springboot.course.bean.HandExamStore;
+import io.ken.springboot.course.model.NewExam;
+import io.ken.springboot.course.model.TreeClass;
+import java.util.List;
+
+/**
+ * 
+ * @author lq
+ *IExamService.java
+ * 2019年11月20日
+ */
+public interface IExamService {
+
+	// 查询
+	public List<Exam> getMyExam(String id_number);
+
+	public List<String> getExamName();
+
+	public List<String> getExamNameBySubject(String subject);
+
+	public List<Exam> getExamByName(String name);
+
+	public List<Exam> getExamByNameAndSub(String name,String subject);
+
+	public List<Exam> getExamByNameYiKao(String name);
+
+	public List<DecideStore> getDecide1(String subject,int type,String level);
+	
+	public List<Exam> getFinishedExamByNameSub(String name,String subject);
+
+	public Exam getModel(String examId);
+	
+	public List<NewExam> getFill(String subject,String level);
+
+	public List<HandExamStore> getHandList(String subject,String level);
+	
+	public List<ChooseSelectStore> getSelect(String subject,String level);
+	
+	public List<ChooseSelectStore> getSelect1(String subject,int type,String level);
+
+	public List<FillBlankExamStore> getFillList();
+	
+	public List<NewExam> getFill1(String subject,int cate);
+	
+	public List<DecideStore> getDecide(String subject,String level);
+	
+	public List<CommExamStore> getComm(int type);
+
+	public List<TreeClass> getTreeList(String level);
+
+	public List<NewExam> getHF(String subject,String level);
+	
+	public List<NewExam> getHF1(String subject,int cate,String level);
+	
+	public String getCommResult(String questionCode);
+
+	public int addExam(Exam exam);
+	
+	public int getExamByStatus();
+	
+	public int getExamNum();
+	
+	public int getExcellent();
+	
+	public List<HandExamStore> getHandList1(String subject,int type,String level);
+	
+	public int getGood() ;
+	
+	public int getMedium() ;
+	
+	public int getSubalternation() ;
+
+	public List<Exam> getExamList(String examId);
+	
+	public int delByName(String name);
+	
+	public int delUserByNames(List<String> names);
+
+	public List<Exam> getExamListByName(String examName);
+
+
+	public List<Exam> getExamListByNameSub(String examName,String subject);
+	
+	List<String>  selectByfillCode(String fill_blank_exam_question);
+	
+	List<String>  selectByHandCode(String fill_blank_exam_question);
+	
+	List<String>  selectBycommCode(String fill_blank_exam_question);
+	
+	int delByCodeHand(String question_code);
+	
+	int delByCodeComm(String question_code);
+	
+	int delByCodeFill(String question_code);
+	
+	int delByCodeChoose(String question_code);
+	
+	int delByCodeDecide(String question_code);
+	
+	public int getStandard(int type);
+	
+	public int getNotStandard(int type);
+
+	public int updateModel(Exam exam);
+
+	public List<String> selectBySelectCode(String fill_blank_exam_question);
+	
+	public List<String> selectByDecideCode(String fill_blank_exam_question);
+	
+	public int batchUpateExam(List<Exam>  list);
+
+	//查询学员某科的考试
+	List<Exam> getExams(String id_number,String subject);
+
+
+}

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>系统设置</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .machine-view-box {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .machine-view-box .machine-view-ul {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      flex-wrap: wrap;
+      padding: 9px 28px;
+      justify-content: space-between;
+      align-content: space-between;
+    }
+
+    .machine-view-box .machine-view-ul .machine-view-li {
+      width: 54px;
+      height: 54px;
+      border: 2px solid #83f2fb;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .machine-view-box .machine-view-ul .machine-view-li .machine-view-img {
+      width: 31px;
+      height: 31px;
+    }
+
+    .machine-view-box .machine-view-ul .machine-view-li .machine-view-text {
+      color: #cfd1fe;
+      margin-top: 2px;
+    }
+
+    .machine-view-box .machine-view-ul .machine-view-li.active,
+    .machine-view-box .machine-view-uls .machine-view-li:hover {
+      border: 2px solid #ffbdff;
+    }
+
+    .machine-view-box .machine-view-ul .machine-view-li:nth-child(1) .machine-view-img {
+      background: url(../../img/machine/system/display-settings.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .machine-view-box .machine-view-ul .machine-view-li:nth-child(2) .machine-view-img {
+      background: url(../../img/machine/system/voice-settings.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .machine-view-box .machine-view-ul .machine-view-li:nth-child(3) .machine-view-img {
+      background: url(../../img/machine/system/antenna-settings.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .machine-view-box .machine-view-ul .machine-view-li:nth-child(4) .machine-view-img {
+      background: url(../../img/machine/system/screen-calibration.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .machine-view-box .machine-view-ul .machine-view-li:nth-child(5) .machine-view-img {
+      background: url(../../img/machine/system/port-settings.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .machine-view-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 18px;
+      font-size: 13px;
+    }
+
+    .machine-view-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .machine-view-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .machine-view-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/sure.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .machine-view-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .machine-view-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .machine-view-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="machine-view-box">
+    <ul class="machine-view-ul" id="machine-view-ul">
+      <li class="machine-view-li" data-index="0">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">显示设置</div>
+      </li>
+      <li class="machine-view-li" data-index="1">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">声音设置</div>
+      </li>
+      <li class="machine-view-li" data-index="2">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">天线设置</div>
+      </li>
+      <li class="machine-view-li" data-index="3">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">屏幕校准</div>
+      </li>
+      <li class="machine-view-li" data-index="4">
+        <div class="machine-view-img"></div>
+        <div class="machine-view-text">串口设置</div>
+      </li>
+    </ul>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">确定</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var obj = function (option) {
+        this.option = option || {};
+        this.currentIndex = Number(window.parent.window.iframeObj.systemSettingsIndex);
+        this.init(); // 初始化
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        $('.machine-view-li').eq(this.currentIndex).addClass('active');
+        this.allEvents(); // 各种点击事件
+      }
+
+      // 各种点击事件
+      obj.prototype.allEvents = function () {
+        this.clickReturn(); // 返回
+        this.clickSure(); // 确定
+        this.nextIframe(); // 点击下个页面 
+      }
+
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('系统设置');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // 确定
+      obj.prototype.sureActive = function () {
+        window.parent.window.iframeObj.changeIframe($('.machine-view-li.active').children('.machine-view-text')
+          .text());
+      }
+      obj.prototype.clickSure = function () {
+        var _this = this;
+        $('#sure').on('click', function () {
+          _this.sureActive();
+        });
+      }
+
+      // 点击下个页面
+      obj.prototype.nextIframe = function () {
+        $('#machine-view-ul').on('click', '.machine-view-li', function () {
+          var name = $(this).children('.machine-view-text').text();
+          if (name == "屏幕校准") {
+            window.parent.window.iframeObj.showScreen();
+            window.parent.window.iframeObj.screenSure();
+            window.parent.window.iframeObj.screenCancle();
+          } else {
+            window.parent.window.iframeObj.systemSettingsIndex = $(this).attr("data-index");
+            window.parent.window.iframeObj.changeIframe(name);
+          }
+
+        });
+      }
+
+      obj.prototype.upActive = function () {
+        let len = $('.machine-view-li').length - 1;
+        if (this.currentIndex == 0) {
+          this.currentIndex == 0
+        } else if (this.currentIndex == 1) {
+          this.currentIndex == 1
+        } else {
+          this.currentIndex -= 2;
+        }
+        this.changeActive();
+      }
+      obj.prototype.leftActive = function () {
+        let len = $('.machine-view-li').length - 1;
+        if (this.currentIndex == 0) {
+          this.currentIndex == 0
+        } else {
+          this.currentIndex -= 1;
+        }
+        this.changeActive();
+      }
+      obj.prototype.rightActive = function () {
+        let len = $('.machine-view-li').length - 1;
+        if (this.currentIndex == len) {
+          this.currentIndex == len
+        } else {
+          this.currentIndex = Number(this.currentIndex) + 1;
+        }
+        this.changeActive();
+      }
+      obj.prototype.downActive = function () {
+        let len = $('.machine-view-li').length - 1;
+        if (this.currentIndex == len) {
+          this.currentIndex = len
+        } else if (this.currentIndex == len - 1) {
+          this.currentIndex = len - 1
+        } else {
+          this.currentIndex = Number(this.currentIndex) + 2;
+        }
+        this.changeActive();
+      }
+
+      obj.prototype.changeActive = function () {
+        var currentIndex = this.currentIndex;
+        window.parent.window.iframeObj.systemSettingsIndex = currentIndex;
+        $('.machine-view-li').eq(currentIndex).addClass('active').siblings('.machine-view-li').removeClass(
+          'active');
+      }
+
+      window.systemSettingsObj = new obj();
+    });
+  </script>
+</body>
+
+</html>

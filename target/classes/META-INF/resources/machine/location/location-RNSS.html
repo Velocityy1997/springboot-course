@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>RNSS定位</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    body {
+      box-sizing: border-box;
+    }
+
+    .view-box {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .view-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 19px;
+      font-size: 13px;
+    }
+
+    .view-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/menu.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .view-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    /* 主体内容 */
+    .contain {
+      flex: auto;
+      color: #fff;
+    }
+
+    .title {
+      line-height: 20px;
+      text-align: center;
+    }
+
+    .main-bar {
+      display: flex;
+      align-items: center;
+      padding-top: 3px;
+    }
+
+    .main-bar-title {
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+    .response-beam-contain {
+      display: flex;
+      margin: 5px 10px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0;
+      border: 1px solid transparent;
+      cursor: default;
+      width: 130px;
+      margin: 0 auto;
+
+    }
+
+    .response-beam-contain.active {
+      border: 1px solid #ffd400;
+    }
+
+    .left-btn {
+      width: 20px;
+      height: 16px;
+      background: url(../../img/machine/system/left-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #3741f0;
+      z-index: 10;
+      box-shadow: 0 0 2px #8189fe;
+    }
+
+    .right-btn {
+      width: 20px;
+      height: 16px;
+      background: url(../../img/machine/system/right-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #3741f0;
+      z-index: 10;
+      box-shadow: 0 0 2px #8189fe;
+    }
+
+    .auto-btn {
+      background-color: #535fe5;
+      line-height: 17px;
+      text-align: center;
+      width: 80px;
+      height: 17px;
+    }
+
+    .location-box {
+      padding-top: 3px;
+    }
+
+    .location-li {
+      display: flex;
+      align-items: center;
+      margin: 3px 3px 0 3px;
+      justify-content: space-between;
+    }
+
+    .location-li .location-input {
+      width: 130px;
+      background-color: #9fc4f9;
+      outline: 0;
+      padding-left: 2px;
+      color: #5452a3;
+      height: 15px;
+    }
+
+    .location-li .location-val {
+      margin-left: 5px;
+      display: flex;
+    }
+
+    .location-li:nth-child(3) .location-input {
+      width: 77px;
+    }
+
+    .location-li:nth-child(3) .location-input2 {
+      width: 45px;
+      margin-left: 2px;
+    }
+
+    .location-li:nth-child(8) {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .location-li:nth-child(8) .text {
+      line-height: 20px;
+    }
+
+    .location-li:nth-child(8) .response-beam-contain {
+      width: 184px;
+    }
+
+    .location-li:nth-child(8) .response-beam-contain .auto-btn {
+      width: 130px;
+    }
+
+    /* 菜单列表 */
+    .menu-list {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      z-index: 999;
+      box-shadow: 0 0 3px #404567;
+      display: none;
+    }
+
+    .menu-list-li {
+      text-align: center;
+      line-height: 20px;
+      height: 21px;
+      cursor: pointer;
+      background-color: #3869e4;
+      width: 80px;
+      color: #fff;
+      border-top: 1px solid #86a8ec;
+    }
+
+    .menu-list-li:hover,
+    .menu-list-li.active {
+      background-image: linear-gradient(to bottom, #e6e613, #f95f05);
+    }
+
+    .menu-list-li.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="view-box">
+    <div class="contain">
+      <div class="title">北斗II定位</div>
+      <ul class="location-box">
+        <li class="location-li">
+          <div class="location-text" id="jd">经度:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" id="jdInput">
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text" id="wd">纬度:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" id="wdInput">
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text" id="gc">高程:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" id="gcInput">
+            <input type="text" class="location-input location-input2">
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text">时间:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" id="time">
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text">HDOP:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" id="time">
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text">VDOP:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" id="time">
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text">速度:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" id="time">
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="text">坐标形式:</div>
+          <div class="response-beam-contain">
+            <div class="left-btn btn" id="turnLeft2"></div>
+            <div class="auto-btn" id="coordinate">
+              CGCS2000大地
+            </div>
+            <div class="right-btn btn" id="turnRight2"></div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 菜单列表 -->
+    <div class="menu-list" id="menu-list">
+      <ul class="menu-list-ul" id="menu-list-ul">
+
+      </ul>
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">菜单</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var obj = function (option) {
+        this.option = option || {
+          locationWayList: ['单次', '连续'],
+          locationWayIndex: 0,
+          coordinateList: [{
+              name: 'CGCS2000大地',
+              firstText: "",
+              secondText: "",
+              thirdLeft: '',
+              thirdRight: '',
+              time: ''
+            },
+            {
+              name: 'CGCS2000高斯',
+              firstText: "",
+              secondText: "",
+              thirdLeft: '',
+              thirdRight: '',
+              time: ''
+            },
+            {
+              name: 'CGCS2000空间直角',
+              firstText: "",
+              secondText: "",
+              thirdLeft: '',
+              thirdRight: '',
+              time: ''
+            },
+            {
+              name: 'CGCS2000墨卡托',
+              firstText: "",
+              secondText: "",
+              thirdLeft: '',
+              thirdRight: '',
+              time: ''
+            }
+          ],
+          coordinateIndex: 0,
+          menuList: [
+            '位置报告1',
+            '位置报告2',
+            '保存路标',
+            '地图显示',
+            '返回'
+          ]
+        };
+        this.currentIndex = Number(window.parent.window.iframeObj.locationRNSSIndex);
+        this.init();
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        this.RNSSddzbX = "";
+        this.RNSSddzbY = "";
+        this.RNSSddzbgc = "";
+        this.RNSSgszbX = "";
+        this.RNSSgszbY = "";
+        this.RNSSgszbgc = "";
+        this.RNSSkjzbX = "";
+        this.RNSSkjzbY = "";
+        this.RNSSkjzbZ = "";
+        this.RNSSmktzbX = "";
+        this.RNSSmktzbY = "";
+        this.RNSSmktzbgc = "";
+        this.allEvents(); // 所有的事件
+        this.drawMenuList(); // 菜单渲染
+        // this.drawDd();     // 大地列表
+        this.parentRes(); //调用考试数据
+
+        $('.menu-list-li').eq(this.currentIndex).addClass('active');
+      }
+
+      // 所有的事件
+      obj.prototype.allEvents = function () {
+        this.clickSure(); // 菜单
+        this.clickReturn(); // 返回
+        this.clickLeft(); // 点击左侧按键
+        this.clickRight(); // 点击右侧按键
+        this.clickActive(); // 激活状态
+      }
+      //从父级拿到考试数据
+      obj.prototype.parentRes = function () {
+        _this = this;
+        _this.RNSSddzbX = window.parent.window.iframeObj.scjAllContent.RNSSddzbX;
+        _this.RNSSddzbY = window.parent.window.iframeObj.scjAllContent.RNSSddzbY;
+        _this.RNSSddzbgc = window.parent.window.iframeObj.scjAllContent.RNSSddzbgc;
+        _this.RNSSgszbX = window.parent.window.iframeObj.scjAllContent.RNSSgszbX;
+        _this.RNSSgszbY = window.parent.window.iframeObj.scjAllContent.RNSSgszbY;
+        _this.RNSSgszbgc = window.parent.window.iframeObj.scjAllContent.RNSSgszbgc;
+        _this.RNSSkjzbX = window.parent.window.iframeObj.scjAllContent.RNSSkjzbX;
+        _this.RNSSkjzbY = window.parent.window.iframeObj.scjAllContent.RNSSkjzbY;
+        _this.RNSSkjzbZ = window.parent.window.iframeObj.scjAllContent.RNSSkjzbZ;
+        _this.RNSSmktzbX = window.parent.window.iframeObj.scjAllContent.RNSSmktzbX;
+        _this.RNSSmktzbY = window.parent.window.iframeObj.scjAllContent.RNSSmktzbY;
+        _this.RNSSmktzbgc = window.parent.window.iframeObj.scjAllContent.RNSSmktzbgc;
+        $("#jdInput").val(_this.RNSSddzbX);
+        $("#wdInput").val(_this.RNSSddzbY);
+        $("#gcInput").val(_this.RNSSddzbgc);
+      }
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('RNSS定位');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // 菜单
+      obj.prototype.sureActive = function () {
+        $('#menu-list').show();
+      }
+      obj.prototype.clickSure = function () {
+        var _this = this;
+        $('#sure').on('click', function () {
+          _this.sureActive();
+        });
+
+        $('#menu-list').on('click', '.menu-list-li', function () {
+
+          $(this).addClass('active').siblings('.menu-list-li').removeClass('active');
+          window.parent.window.iframeObj.locationRNSSIndex = $(this).attr('data-index');
+
+          if ($(this).text() == '返回') {
+            $('#menu-list').hide();
+          } else if ($(this).text() == '位置报告1') {
+            var text = 'RNSS' + $(this).text();
+            window.parent.window.iframeObj.changeIframe(text);
+          } else if ($(this).text() == '位置报告2') {
+            var text = 'RNSS' + $(this).text();
+            window.parent.window.iframeObj.changeIframe(text);
+          } else if ($(this).text() == '保存路标') {
+            var text = 'RNSS' + $(this).text();
+            window.parent.window.iframeObj.changeIframe(text);
+          } else {
+            window.parent.window.iframeObj.changeIframe($(this).text());
+          }
+
+        });
+      }
+
+      // 激活状态
+      obj.prototype.clickActive = function () {
+        $('.contain').on('click', '.response-beam-contain', function () {
+          $('.response-beam-contain').removeClass('active');
+          $(this).addClass('active');
+        });
+      }
+
+      // 点击左侧按键
+      obj.prototype.clickLeft = function () {
+        var _this = this;
+        var locationWayList = _this.option.locationWayList;
+        // 定位方式       单次 连续
+        $('#turnLeft1').on('click', function () {
+          if (_this.option.locationWayIndex == 0) {
+            _this.option.locationWayIndex = locationWayList.length - 1;
+          } else {
+            _this.option.locationWayIndex--;
+          }
+          $('#locationWay').text(locationWayList[_this.option.locationWayIndex]);
+        });
+
+        // 坐标形式 CGCS2000大地 CGCS2000高斯 CGCS2000空间直角 CGCS2000墨卡托
+        var coordinateList = _this.option.coordinateList;
+        $('#turnLeft2').on('click', function () {
+          if (_this.option.coordinateIndex == 0) {
+            _this.option.coordinateIndex = coordinateList.length - 1;
+          } else {
+            _this.option.coordinateIndex--;
+          }
+          if (coordinateList[_this.option.coordinateIndex].name == 'CGCS2000大地') {
+            $('#jd').text('经度:');
+            $('#wd').text('纬度:');
+            $('#gc').text('高程:');
+            $("#jdInput").val(_this.RNSSddzbX);
+            $("#wdInput").val(_this.RNSSddzbY);
+            $("#gcInput").val(_this.RNSSddzbgc);
+          } else if (coordinateList[_this.option.coordinateIndex].name == 'CGCS2000高斯') {
+            $('#jd').text('X:');
+            $('#wd').text('Y:');
+            $('#gc').text('高程:');
+            $("#jdInput").val(_this.RNSSgszbX);
+            $("#wdInput").val(_this.RNSSgszbY);
+            $("#gcInput").val(_this.RNSSgszbgc);
+          } else if (coordinateList[_this.option.coordinateIndex].name == 'CGCS2000空间直角') {
+            $('#jd').text('X:');
+            $('#wd').text('Y:');
+            $('#gc').text('Z:');
+
+            $("#jdInput").val(_this.RNSSkjzbX);
+            $("#wdInput").val(_this.RNSSkjzbY);
+            $("#gcInput").val(_this.RNSSkjzbZ);
+          } else if (coordinateList[_this.option.coordinateIndex].name == 'CGCS2000墨卡托') {
+            $('#jd').text('X:');
+            $('#wd').text('Y:');
+            $('#gc').text('高程:');
+            $("#jdInput").val(_this.RNSSmktzbX);
+            $("#wdInput").val(_this.RNSSmktzbY);
+            $("#gcInput").val(_this.RNSSmktzbgc);
+          }
+
+          $('#coordinate').text(coordinateList[_this.option.coordinateIndex].name);
+          $('#time').val(coordinateList[_this.option.coordinateIndex].time);
+        });
+      }
+
+      // 点击右侧按键
+      obj.prototype.clickRight = function () {
+        var _this = this;
+        var locationWayList = _this.option.locationWayList;
+        // 定位方式       单次 连续
+        $('#turnRight1').on('click', function () {
+          if (_this.option.locationWayIndex == locationWayList.length - 1) {
+            _this.option.locationWayIndex = 0;
+          } else {
+            _this.option.locationWayIndex++;
+          }
+          $('#locationWay').text(locationWayList[_this.option.locationWayIndex]);
+        });
+
+        // 坐标形式 CGCS2000大陆 CGCS2000高斯 CGCS2000空间直角 CGCS2000墨卡托
+        var coordinateList = _this.option.coordinateList;
+        $('#turnRight2').on('click', function () {
+          if (_this.option.coordinateIndex == coordinateList.length - 1) {
+            _this.option.coordinateIndex = 0;
+          } else {
+            _this.option.coordinateIndex++;
+          }
+          if (coordinateList[_this.option.coordinateIndex].name == 'CGCS2000大地') {
+            $('#jd').text('经度:');
+            $('#wd').text('纬度:');
+            $('#gc').text('高程:');
+            $("#jdInput").val(_this.RNSSddzbX);
+            $("#wdInput").val(_this.RNSSddzbY);
+            $("#gcInput").val(_this.RNSSddzbgc);
+          } else if (coordinateList[_this.option.coordinateIndex].name == 'CGCS2000高斯') {
+            $('#jd').text('X:');
+            $('#wd').text('Y:');
+            $('#gc').text('高程:');
+            $("#jdInput").val(_this.RNSSgszbX);
+            $("#wdInput").val(_this.RNSSgszbY);
+            $("#gcInput").val(_this.RNSSgszbgc);
+          } else if (coordinateList[_this.option.coordinateIndex].name == 'CGCS2000空间直角') {
+            $('#jd').text('X:');
+            $('#wd').text('Y:');
+            $('#gc').text('Z:');
+            $("#jdInput").val(_this.RNSSkjzbX);
+            $("#wdInput").val(_this.RNSSkjzbY);
+            $("#gcInput").val(_this.RNSSkjzbZ);
+          } else if (coordinateList[_this.option.coordinateIndex].name == 'CGCS2000墨卡托') {
+            $('#jd').text('X:');
+            $('#wd').text('Y:');
+            $('#gc').text('高程:');
+            $("#jdInput").val(_this.RNSSmktzbX);
+            $("#wdInput").val(_this.RNSSmktzbY);
+            $("#gcInput").val(_this.RNSSmktzbgc);
+          }
+
+
+          $('#coordinate').text(coordinateList[_this.option.coordinateIndex].name);
+          $('#time').val(coordinateList[_this.option.coordinateIndex].time);
+        });
+      }
+
+      // 菜单列表
+      obj.prototype.drawMenuList = function () {
+        for (var i = 0; i < this.option.menuList.length; i++) {
+          $('<li class="menu-list-li" data-index="'+ i +'">' + this.option.menuList[i] + '</li>').appendTo($('#menu-list-ul'));
+        }
+      }
+
+
+      // ------------------
+      obj.prototype.upActive = function () {
+        let len = $('.menu-list-li').length - 1;
+        if (this.currentIndex == 0) {
+          this.currentIndex = len
+
+        } else {
+          this.currentIndex -= 1;
+        }
+        this.changeActive();
+      }
+      obj.prototype.downActive = function () {
+        let len = $('.menu-list-li').length - 1;
+        if (this.currentIndex == len) {
+          this.currentIndex = 0
+        } else {
+          this.currentIndex = Number(this.currentIndex) + 1;
+        }
+        this.changeActive();
+      }
+
+      obj.prototype.changeActive = function () {
+        var currentIndex = this.currentIndex;
+        window.parent.window.iframeObj.locationRNSSIndex = currentIndex;
+        $('.menu-list-li').eq(currentIndex).addClass('active').siblings('.menu-list-li').removeClass(
+          'active');
+      }
+
+      obj.prototype.needSureActive = function () {
+        if ($('.menu-list-li.active').text() == '返回') {
+          $('#menu-list').hide();
+        } else if ($('.menu-list-li.active').text() == '位置报告1') {
+          var text = 'RNSS' + $('.menu-list-li.active').text();
+          window.parent.window.iframeObj.changeIframe(text);
+        } else if ($('.menu-list-li.active').text() == '位置报告2') {
+          var text = 'RNSS' + $('.menu-list-li.active').text();
+          window.parent.window.iframeObj.changeIframe(text);
+        } else if ($('.menu-list-li.active').text() == '保存路标') {
+          var text = 'RNSS' + $('.menu-list-li.active').text();
+          window.parent.window.iframeObj.changeIframe(text);
+        } else {
+          window.parent.window.iframeObj.changeIframe($('.menu-list-li.active').text());
+        }
+      }
+
+      // ------------------------
+      window.locationRNSSObj = new obj();
+    })
+  </script>
+</body>
+
+</html>

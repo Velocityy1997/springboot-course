@@ -1,0 +1,425 @@
+class navObj {
+  constructor() {
+    this.svgConfig = {
+      svgns: 'http://www.w3.org/2000/svg',
+      timepath: '',
+      container: null,
+      svgcontainer: null,
+      timmerHandle: null,
+      isDrag: false,
+      currentIndex: 2,
+      pointArr: [],
+      throughPointIndex: 0,
+      collisionPointIndex: 0,
+    }
+    this.init();
+  }
+
+  init() {
+    this.getDom();              // 获取Dom
+    this.allClickEvents();      // 所有点击事件
+    this.moveMap();             // 移动地图
+  }
+
+  /**
+   * @description: 所有点击事件
+   * @method: allClickEvents
+   * @param: {}
+   * @return: void
+   */
+  allClickEvents() {
+    this.clickLeftTools();    // 点击左侧工具栏
+    this.clickRightTools();   // 点击右侧工具栏
+    this.setCorClick();       // 是否将当前点设置成新的目的地提示框
+    this.isSaveClick();       // 是否将保存路径计算结果
+    this.saveRoadName();      // 请输入道路名称
+    this.clickReturn();       // 返回
+    this.clickSure();         // 菜单
+    this.addThroughPoint();   // 加入经由点
+  }
+
+  /**
+  * @description: 点击左侧工具栏
+  * @method: clickLeftTools
+  * @param: {}
+  * @return: void
+  */
+  clickLeftTools() {
+    $('#navigationItem').off('click').on('click', function () {
+      if (!$(this).hasClass('active')) {
+        $(this).addClass('active').siblings('#nav-serve-ul').show();
+        return;
+      }
+      $(this).removeClass('active').siblings('#nav-serve-ul').hide();
+    })
+
+    $('#nav-serve-ul').off('click').on('click', '.nav-item', function () {
+      let xFrom = $(this).attr('x-from');
+      $(`.screen-box[x-to=${xFrom}]`).addClass('active');
+    });
+  }
+
+  /**
+  * @description: 点击右侧工具栏
+  * @method: clickRightTools
+  * @param: {}
+  * @return: void
+  */
+  clickRightTools() {
+    let _this = this;
+    $('#right-tool').off('click').on('click', '.tool-item', function () {
+      switch ($(this).attr('x-from')) {
+        case 'turn-big':
+          _this.svgConfig.currentIndex++;
+          if (_this.svgConfig.currentIndex >= 3) {
+            $('#svgcontainer').removeClass('big small').addClass('big');
+            $('#img').removeClass('big small').addClass('big');
+          } else if (_this.svgConfig.currentIndex === 2) {
+            $('#svgcontainer').removeClass('big small');
+            $('#img').removeClass('big small');
+          }
+          break;
+        case 'turn-small':
+          _this.svgConfig.currentIndex--;
+          if (_this.svgConfig.currentIndex <= 1) {
+            $('#svgcontainer').removeClass('big small').addClass('small');
+            $('#img').removeClass('big small').addClass('small');
+          } else if (_this.svgConfig.currentIndex === 2) {
+            $('#svgcontainer').removeClass('big small');
+            $('#img').removeClass('big small');
+          }
+
+          break;
+      }
+      $('#svgcontainer').attr('style', 'left: 0px; top: 0px');
+      $('#img').attr('style', 'left: 0px; top: 0px');
+      _this.moveMap();
+    });
+  }
+
+  /**
+    * @description: 获取DOM
+    * @method: getDom
+    * @param: {}
+    * @return: void
+    */
+  getDom() {
+    let _this = this;
+    this.svgConfig.container = document.getElementById("img");
+    this.svgConfig.svgcontainer = document.getElementById("svgcontainer");
+    this.svgConfig.svger = document.createElementNS(_this.svgConfig.svgns, "svg");
+    this.svgConfig.svger.setAttribute("width", _this.svgConfig.container.clientWidth);
+    this.svgConfig.svger.setAttribute("height", _this.svgConfig.container.clientHeight);
+    this.svgConfig.svger.setAttribute("viewBox", "0 0 " + _this.svgConfig.container.clientWidth + " " + _this.svgConfig.container.clientHeight);
+    this.svgConfig.svgcontainer.appendChild(_this.svgConfig.svger);
+  }
+
+  /**
+   * @description: 点击图片
+   * @method: imgClick
+   * @param: {}
+   * @return: void
+   */
+  imgClick(x, y) {
+    let _this = this;
+    _this.creatdot(x, y);
+    //连接点
+    let dots = document.querySelectorAll('.dot');
+    _this.linedot(dots[dots.length - 2], dots[dots.length - 1]);
+  }
+
+  /**
+   * @description: 新增点
+   * @method: creatdot
+   * @param: {}
+   * @return: void
+   */
+  creatdot(posX, posY) {
+
+    //相对container坐标
+    let newposX = posX;
+    let newposY = posY;
+    let dot = document.createElement("div");
+    dot.setAttribute("class", "dot");
+    //定位
+    dot.style.left = newposX + "px";
+    dot.style.top = newposY + "px";
+    this.svgConfig.container.appendChild(dot);
+  }
+
+  /**
+    * @description: 连接点
+    * @method: linedot
+    * @param: {}
+    * @return: void
+    */
+  linedot(dot1, dot2) {
+    let _this = this;
+    clearTimeout(_this.svgConfig.timepath);
+    let start = {
+      x: _this.intpixel(dot1.style.left),
+      y: _this.intpixel(dot1.style.top)
+    };
+    let end = {
+      x: _this.intpixel(dot2.style.left),
+      y: _this.intpixel(dot2.style.top)
+    };
+    let current = {
+      x: start.x,
+      y: start.y
+    };
+
+    //创建直线
+    let line = document.createElementNS(_this.svgConfig.svgns, "line");
+    line.setAttribute("x1", dot1.style.left);
+    line.setAttribute("y1", dot1.style.top);
+    line.setAttribute("x2", dot1.style.left);
+    line.setAttribute("y2", dot1.style.top);
+    line.setAttribute("stroke", "red");
+    line.setAttribute("fill", "none");
+
+    _this.svgConfig.svger.appendChild(line);
+    //角度
+    let tangle = {
+      sin: (end.y - start.y) / Math.sqrt((end.y - start.y) * (end.y - start.y) + (end.x - start.x) * (end.x - start
+        .x)),
+      cos: (end.x - start.x) / Math.sqrt((end.y - start.y) * (end.y - start.y) + (end.x - start.x) * (end.x - start.x))
+    };
+    //动画
+    let step = function () {
+      //定义每帧移动位移大小为10
+      if (Math.abs(current.x - end.x) < 10 && Math.abs(current.y - end.y) < 10) {
+        current.x = end.x;
+        current.y = end.y;
+      } else {
+        current.x += 10 * tangle.cos;
+        current.y += 10 * tangle.sin;
+        _this.svgConfig.timepath = setTimeout(step, 17); //浏览器重绘速度为60帧每秒
+      }
+
+      line.setAttribute("x2", current.x + "px");
+      line.setAttribute("y2", current.y + "px");
+    }
+    step();
+  }
+
+  /**
+   * @description: 位置像素 数值化
+   * @method: intpixel
+   * @param: {}
+   * @return: void
+   */
+  intpixel(str) {
+    return str.substring(0, str.length - 2) * 1;
+  }
+
+  /**
+   * @description: 获取鼠标坐标
+   * @method: mousePos
+   * @param: {}
+   * @return: void
+   */
+  mousePos(e) {
+    if (e.pageX) {
+      //IE9及以上支持pageX属性 相对文档
+      return {
+        x: e.pageX,
+        y: e.pageY
+      }
+    } else {
+      return {
+        x: e.clientX + document.body.scrollLeft - document.body.clientLeft,
+        y: e.clientY + document.body.scrollTop - document.body.clientTop
+      }
+    }
+  }
+
+  /**
+ * @description: 移动地图
+ * @param {} 
+ * @return: 
+ */
+  moveMap() {
+    this.startDrag();
+  }
+
+  /**
+  * @description: 拖拽的实现
+  * @method: startDrag
+  * @param {} 
+  * @return: 
+  */
+  startDrag() {
+    //获取元素
+    let dv = document.getElementById('img');
+    let sv = document.getElementById('svgcontainer');
+    let top = 'auto';
+    let bottom = 'auto';
+    let left = 'auto';
+    let right = 'auto';
+    let _this = this;
+    _this.svgConfig.posX = $('#coordinate').offset().left;
+    _this.svgConfig.posY = $('#coordinate').offset().top;
+    let $width = $('#svgcontainer').width();
+    let $height = $('#svgcontainer').height();
+
+    _this.positionX = _this.svgConfig.posX;
+    _this.positionY = _this.svgConfig.posY;
+
+    let nx = 0, ny = 0;
+
+    sv.onclick = function (e) {
+      nx += -(e.clientX - _this.svgConfig.posX);
+      ny += -(e.clientY - _this.svgConfig.posX);
+
+
+      // 加临界条件
+      if (nx > 0) {
+        nx = 0;
+      }
+
+      if (ny > 0) {
+        ny = 0;
+      }
+
+      if (nx < -($width - $('#contentImage').width())) {
+        nx = -($width - $('#contentImage').width());
+      }
+
+      if (ny < -($height - $('#contentImage').height())) {
+        ny = -($height - $('#contentImage').height());
+      }
+
+      left = nx + 'px';
+      top = ny + 'px';
+
+      dv.style.left = left;
+      dv.style.right = right;
+      dv.style.bottom = bottom;
+      dv.style.top = top;
+
+      sv.style.left = left;
+      sv.style.right = right;
+      sv.style.bottom = bottom;
+      sv.style.top = top;
+
+      _this.positionX = -(_this.svgConfig.container.offsetLeft - _this.svgConfig.posX - 20);
+      _this.positionY = -(_this.svgConfig.container.offsetTop - _this.svgConfig.posY - 20);
+    }
+  };
+
+
+  /**
+    * @description: 是否将当前点设置成新的目的地提示框
+    * @method: setCorClick
+    * @param {} 
+    * @return: void
+    */
+  setCorClick() {
+    $('#setCorSure').off('click').on('click', () => {
+      $('#setCorScreen').removeClass('active').siblings('#isSaveCal').addClass('active');
+    });
+    $('#setCorClose').off('click').on('click', () => {
+      $('#setCorScreen').removeClass('active');
+    });
+  }
+
+  /**
+    * @description: 是否将保存路径计算结果
+    * @method: isSaveClick
+    * @param {} 
+    * @return: void
+    */
+  isSaveClick() {
+    $('#isSaveCalSure').off('click').on('click', () => {
+      $('#isSaveCal').removeClass('active').siblings('#roadName').addClass('active');
+    });
+    $('#isSaveCalClose').off('click').on('click', () => {
+      $('#isSaveCal').removeClass('active');
+    });
+  }
+
+
+  /**
+    * @description: 请输入道路名称
+    * @method: saveRoadName
+    * @param {} 
+    * @return: void
+    */
+  saveRoadName() {
+    let _this = this;
+    $('#roadNameSure').off('click').on('click', () => {
+      $('#roadName').removeClass('active');
+      $('#svgcontainer').addClass('active');
+      // $('#nav-serve-ul').hide().siblings('#nav-set-after').show();
+      $('#nav-set-right').show();
+
+      if(_this.svgConfig.pointArr.length > 0) {
+        for(let i = 0; i < _this.svgConfig.pointArr.length; i++) {
+          _this.imgClick(_this.svgConfig.pointArr[i].x, _this.svgConfig.pointArr[i].y)
+        }
+        
+        $('.dot').css('visibility', 'hidden');
+        return;
+      }
+      _this.imgClick(_this.positionX, _this.positionY);
+    });
+    $('#roadNameClose').off('click').on('click', () => {
+      $('#roadName').removeClass('active');
+    });
+  }
+
+
+  /**
+   * @description: 返回
+   * @method: clickReturn
+   * @param {} 
+   * @return: void
+   */
+  returnActive() {
+    window.parent.window.iframeObj.goBackBefore('导航');
+  }
+  clickReturn() {
+    let _this = this;
+    $('#return').on('click', function () {
+      _this.returnActive();
+    });
+  }
+
+  /**
+   * @description: 确认
+   * @method: clickReturn
+   * @param {} 
+   * @return: void
+   */
+  sureActive() {
+    window.parent.window.iframeObj.changeIframe('菜单列表');
+  }
+  clickSure() {
+    let _this = this;
+    $('#sure').on('click', function () {
+      _this.sureActive();
+    });
+  }
+
+
+  /**
+   * @description: 加入经由点
+   * @method: clickReturn
+   * @param {} 
+   * @return: void
+   */
+  addThroughPoint() {
+    let _this = this;
+    $('#addThroughPoint').off('click').on('click', () => {
+      let x = _this.positionX;
+      let y = _this.positionY - 36;
+      
+      _this.svgConfig.pointArr.push({
+        x,
+        y: _this.positionY
+      });
+      $(`<div class="add-point" style="left: ${x}px; top: ${y}px;">A${++_this.svgConfig.throughPointIndex}</div>`).appendTo($('#img'));
+    });
+  }
+}

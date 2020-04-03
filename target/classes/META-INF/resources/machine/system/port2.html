@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>串口设置</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .view-box {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .head {
+      line-height: 30px;
+    }
+
+    .contain {
+      flex: auto;
+      padding: 20px;
+    }
+
+    .setpwd-box {
+      padding-top: 20px;
+    }
+
+    .setpwd-input {
+      width: 100%;
+      padding-left: 4px;
+    }
+
+    .view-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 18px;
+      font-size: 13px;
+    }
+
+    .view-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/sure.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .view-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .screen-box {
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      width: 150px;
+      height: 120px;
+      margin-left: -75px;
+      margin-top: -60px;
+      background-color: #555cff;
+      display: flex;
+      flex-direction: column;
+      color: #fff;
+      box-shadow: 0 0 3px #333;
+      display: none; 
+    }
+
+    .screen-box .head {
+      flex: 0 0 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-image: linear-gradient(to bottom, #7375a5, #e9f1fc);
+      padding: 0 5px;
+      line-height: 20px;
+    }
+
+    .screen-box .head .screen-img {
+      background: url(../../img/machine/system-img.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      width: 18px;
+      height: 20px;
+      transform: scale(0.7);
+    }
+
+    .screen-box .screen-contain {
+      flex: auto;
+      display: flex;
+      justify-content: center;
+      line-height: 33px;
+      color: #f1ff89;
+      font-size: 13px;
+      letter-spacing: 1px;
+    }
+
+    .screen-box .screen-bottom {
+      flex: 0 0 20px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .screen-box .screen-bottom .sure,
+    .screen-box .screen-bottom .close {
+      width: 50px;
+      height: 20px;
+      background-image: linear-gradient(to bottom, #1d2347, #c8cbfe);
+      cursor: pointer;
+    }
+
+    .screen-box .screen-bottom .sure {
+      margin-left: 15px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .screen-box .screen-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/sure.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .screen-box .screen-bottom .close {
+      margin-right: 15px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .screen-box .screen-bottom .close .close-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .screen-box.active {
+      display: flex;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="view-box">
+    <div class="contain">
+      <div class="head">请输入密码:</div>
+      <div class="setpwd-box">
+        <input type="password" class="setpwd-input" id="pwd">
+      </div>
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">确定</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+
+    <!-- 弹窗 -->
+    <div class="screen-box" id="screen">
+      <div class="head">
+        <div class="screen-img"></div>
+        <div class="screen-text">系统提示</div>
+      </div>
+      <div class="screen-contain">密码错误请重试！</div>
+      <div class="screen-bottom">
+        <div class="hideScreen sure" id="sure">
+          确认
+          <div class="sure-img"></div>
+        </div>
+        <div class="hideScreen close" id="close">
+          <div class="close-img"></div>
+          返回
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var obj = function (option) {
+        this.option = option || {};
+        this.currentIndex = 0;
+        this.init(); // 初始化
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        this.allEvents(); // 各种点击事件
+      }
+
+      // 各种点击事件
+      obj.prototype.allEvents = function () {
+        this.clickReturn();     // 返回
+        this.clickSure();       // 确定
+        this.clickHideScreen(); // 弹框隐藏
+      }
+
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('串口设置');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // 确定
+      obj.prototype.sureActive = function () {
+        if ($('#pwd').val() == '888888') {
+          window.parent.window.iframeObj.changeIframe('串口设置主页面');
+        } else {
+          $('#screen').addClass('active');
+        }
+      }
+      obj.prototype.clickSure = function () {
+        var _this = this;
+        $('#sure').on('click', function () {
+          _this.sureActive();
+        });
+      }
+
+      // 弹框隐藏
+      obj.prototype.clickHideScreen = function(){
+        $('.screen-bottom').on('click', '.hideScreen', function(){
+          $('#screen').removeClass('active');
+        });
+      }
+
+      // ----------------------------------------------------
+      window.port2Obj = new obj();
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>边海防学院训练考核系统</title>
+  <link rel="stylesheet" href="./css/normal.min.css">
+  <link rel="stylesheet" href="./layui/css/layui.css">
+  <link rel="stylesheet" href="./css/bootstrap.min.css">
+  <link rel="stylesheet" href="./css/index.min.css">
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+  <link rel="bookmark" href="./img/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <div class="container">
+    <div class="head">
+      <div class="logo-box">
+        <div class="logo-img"></div>
+        <div class="text">陆军边海防学院军事训练考核系统</div>
+      </div>
+      <div class="return-box">
+        <ul class="return-main">
+          <li class="return-li active" id="manage"><span>系统管理</span></li>
+          <li class="return-li" id="userName"><span data-target="#exampleModal" data-toggle="modal"></span></li>
+          <li class="return-li" id="revisePass"><span data-target="#exampleModal6" data-toggle="modal">修改密码</span></li>
+          <li class="return-li" id="loginOut" data-toggle="modal" data-target=""><span>退出</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="main-body">
+      <iframe src="./main.html" class="main-body-ifarme active" frameborder="0" id="iframe-test"></iframe>
+      <iframe src="./manage.html" class="main-body-ifarme" frameborder="0" id="iframe-manage"></iframe>
+    </div>
+
+    <!-- 点击返回后出现的现象 -->
+    <div class="mark" id="mark">
+      <div class="assign-box">
+        <h4 class="assignTop" style="font-size: 18px;">系统提示</h4>
+        <div class="contain" id="contain">确认交卷?</div>
+        <div class="close glyphicon glyphicon-remove" id="close">
+
+        </div>
+        <div class="bottom">
+          <button class="sure btn btn-primary" id="sure">确认</button>
+          <button class="sure cancle btn btn-default" id="cancel">取消</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade  msg" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">个人信息</h4>
+          </div>
+          <div class="modal-body layui-form" style="font-size: 0">
+            <div class="pic-left">
+              <div class="pic" id="preview">
+                <img id="imghead" width=100% height=auto border=0 src='./img/bg.png'>
+              </div>
+              <input id="upLode" type="file" class="uplode" />
+            </div>
+            <form class="layui-form form-parbox" action="">
+              <div class="layui-form-item">
+                <label class="layui-form-label">姓名:</label>
+                <div class="layui-input-block">
+                  <input type="text" disabled="" name="username" lay-verify="required" autocomplete="off"
+                    class="layui-input" id="name">
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">性别:</label>
+                <div class="layui-input-block">
+                  <input disabled="" type='text' class="layui-input" id="sex" name="sexAdd" />
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">年龄:</label>
+                <div class="layui-input-block">
+                  <input disabled="" type='text' class="layui-input" id="birthday1" name="birthdayAdd" />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">证件号:</label>
+                <div class="layui-input-block">
+                  <input disabled="" type="text" class="layui-input" id="identity" name="cardIdAdd" autocomplete="off">
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">单位:</label>
+                <div class="layui-input-block">
+                  <input disabled="" type='text' class="layui-input" id="class1" name="classAdd" />
+                </div>
+              </div>
+
+              <div class="layui-form-item">
+                <label class="layui-form-label">级别:</label>
+                <div class="layui-input-block">
+                  <input disabled="" type='text' name="levelAdd" class="layui-input" id="level1" />
+                </div>
+              </div>
+              <div class="layui-form-item">
+                <label class="layui-form-label">手机:</label>
+                <div class="layui-input-block">
+                  <input type="text" class="layui-input" id="phone" name="tel" lay-verify="tel" autocomplete="off">
+                </div>
+              </div>
+
+              <div class="layui-form-item btns">
+                <div class="layui-input-block">
+                  <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">提交</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 查看试卷-北斗手持机 -->
+    <div class="modal fade" id="exampleModal5" tabindex="-1" style="z-index: 0;" role="dialog"
+      aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">查看试卷-北斗手持机</h4>
+          </div>
+          <div class="modal-body">
+            <iframe src="./manage/check-paper-error.html" frameborder="0" class="iframe-box" id="frame-check2"></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check2">返回查看</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- 查看试卷-电台操作 -->
+    <div class="modal fade" id="exampleModal-radio" tabindex="-1" style="z-index: 0;" role="dialog"
+      aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">查看试卷-电台操作</h4>
+          </div>
+          <div class="modal-body">
+            <iframe src="./manage/check-paper-radio-error.html" frameborder="0" class="iframe-box"
+              id="frame-check-radio"></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check2">返回查看</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 查看试卷-识图用图 -->
+    <div class="modal fade" id="exampleModal-image" tabindex="-1" style="z-index: 0;" role="dialog"
+      aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">查看试卷-识图用图</h4>
+          </div>
+          <div class="modal-body">
+            <iframe src="./manage/check-paper-image-error.html" frameborder="0" class="iframe-box"
+              id="frame-check-image"></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check2">返回查看</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 收藏夹 -->
+    <div class="modal fade" id="exampleModal3" tabindex="-1" style="z-index: 0;" role="dialog"
+      aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">查看单题</h4>
+          </div>
+          <div class="modal-body">
+            <iframe src="./manage/check-paper-collect.html" frameborder="0" class="iframe-box"
+              id="frame-check3"></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check3">取消查看</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 查看试卷-错题夹 -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" style="z-index: 0;" role="dialog"
+      aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document" style="
+    z-index: 9999;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">查看错题</h4>
+          </div>
+          <div class="modal-body">
+            <iframe src="./manage/check-paper-wrong.html" frameborder="0" class="iframe-box"
+              id="frame-check-wrong"></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check-wrong">返回查看</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 查看-北斗手持机版块 -->
+    <div class="modal fade" id="exampleModal-check" tabindex="-1" style="z-index: 0;" role="dialog"
+      aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+          <div class="modal-body">
+            <iframe src="./manage/check-paper.html" frameborder="0" class="iframe-box" id="frame-check"></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check">取消查看</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 查看错题-电台操作 -->
+    <div class="modal fade" id="exampleModal-radio-check" tabindex="-1" style="z-index: 0;" role="dialog"
+      aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">查看试卷错题-电台操作</h4>
+          </div>
+          <div class="modal-body">
+            <iframe src="./manage/check-radio-paper.html" frameborder="0" class="iframe-box"
+              id="check-radio-wrong"></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check">取消查看</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 查看错题-识图认图 -->
+    <div class="modal fade" id="exampleModal-image-check" tabindex="-1" style="z-index: 0;" role="dialog"
+      aria-labelledby="exampleModalLabel">
+      <div class="modal-dialog" role="document" style="z-index: 9999;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="exampleModalLabel">查看试卷错题-识图用图</h4>
+          </div>
+          <div class="modal-body">
+            <iframe src="./manage/exampleModal-image-check.html" frameborder="0" class="iframe-box"
+              id="check-image-wrong"></iframe>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check">取消查看</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- -----------------------------------------------------------zwj------------------------------------------------------------------------------ -->
+  <!-- 查看试卷-理论知识 -->
+  <div class="modal fade" id="exampleModal-know" tabindex="-1" style="z-index: 0;" role="dialog"
+    aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document" style="z-index: 9999;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel">查看试卷-理论知识</h4>
+        </div>
+        <div class="modal-body">
+          <iframe src="./manage/check-paper-know.html" frameborder="0" class="iframe-box"
+            id="frame-check-know"></iframe>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check2">返回查看</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 查看错题-理论知识 -->
+  <div class="modal fade" id="exampleModal-know-check" tabindex="-1" style="z-index: 0;" role="dialog"
+    aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document" style="z-index: 9999;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel">查看错题-理论知识</h4>
+        </div>
+        <div class="modal-body">
+          <iframe src="./manage/check-erro-know.html" frameborder="0" class="iframe-box" id="check-erro-know"></iframe>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check">取消查看</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 查看试卷-航片判读 -->
+  <div class="modal fade" id="exampleModal-interpretation" tabindex="-1" style="z-index: 0;" role="dialog"
+  aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document" style="z-index: 9999;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">查看试卷-航片判读</h4>
+      </div>
+      <div class="modal-body">
+        <iframe src="./manage/check-paper-interpretation.html" frameborder="0" class="iframe-box"
+          id="frame-check-interpretation"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check2">返回查看</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <!-- 查看错题-航片判读 -->
+  <div class="modal fade" id="exampleModal-interpretation-check" tabindex="-1" style="z-index: 0;" role="dialog"
+  aria-labelledby="exampleModalLabel">
+  <div class="modal-dialog" role="document" style="z-index: 9999;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="exampleModalLabel">查看错题-航片判读</h4>
+      </div>
+      <div class="modal-body">
+        <iframe src="./manage/check-erro-interpretation.html" frameborder="0" class="iframe-box" id="check-erro-interpretation"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check">取消查看</button>
+      </div>
+    </div>
+  </div>
+  </div>
+   <!-- 查看试卷-作战计划 -->
+   <div class="modal fade" id="exampleModal-count" tabindex="-1" style="z-index: 0;" role="dialog"
+   aria-labelledby="exampleModalLabel">
+   <div class="modal-dialog" role="document" style="z-index: 9999;">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+             aria-hidden="true">&times;</span></button>
+         <h4 class="modal-title" id="exampleModalLabel">查看试卷-作战计划</h4>
+       </div>
+       <div class="modal-body">
+         <iframe src="./manage/check-paper-count.html" frameborder="0" class="iframe-box"
+           id="frame-check-count"></iframe>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check2">返回查看</button>
+       </div>
+     </div>
+   </div>
+   </div>
+   <!-- 查看错题-作战计划 -->
+   <div class="modal fade" id="exampleModal-count-check" tabindex="-1" style="z-index: 0;" role="dialog"
+   aria-labelledby="exampleModalLabel">
+   <div class="modal-dialog" role="document" style="z-index: 9999;">
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+             aria-hidden="true">&times;</span></button>
+         <h4 class="modal-title" id="exampleModalLabel">查看错题-作战计划</h4>
+       </div>
+       <div class="modal-body">
+         <iframe src="./manage/check-erro-count.html" frameborder="0" class="iframe-box" id="check-erro-count"></iframe>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-primary" data-dismiss="modal" id="return-check">取消查看</button>
+       </div>
+     </div>
+   </div>
+   </div>
+
+
+  <!-- 提示模态框 -->
+  <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">系统提示</h4>
+        </div>
+        <div class="modal-body" id="tipMess" style="padding: 15px;">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="delete">确认</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="cancal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 修改密码模态框 -->
+  <div class="modal fade" id="exampleModal6" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel6">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content" style="width:600px;margin:0 auto;height: auto;">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">系统提示</h4>
+        </div>
+        <div class="modal-body" style="padding: 25px 70px;">
+          <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 85px;">原密码:</label>
+            <div class="layui-input-block">
+              <input type='text' class="layui-input" id="oldPass" />
+            </div>
+          </div>
+
+          <div class="layui-form-item" style="margin-bottom:0;">
+            <label class="layui-form-label" style="width: 85px;">新密码:</label>
+            <div class="layui-input-block">
+              <input type='text' class="layui-input" id="newPass" />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="surePass">确认</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- loading -->
+  <div class="loading" id="loading">
+    <div class="loading-img"></div>
+  </div>
+  <div class="littleTip" id="littleTip">请用中文标点符号作答
+    <i class="glyphicon glyphicon-remove" id="closeTip"></i>
+  </div>
+
+  <!-- 考试状态 -->
+  <!-- <div class="test-state-box" id="test-state-box">
+    <h2 class="test-title"></h2>
+    <div class="test-time" id="test-time">00:00:00</div>
+    <div class="view-submission">查看提交情况</div>
+  </div> -->
+
+  <script src="./js/lib/jquery-3.4.1.min.js"></script>
+  <script src="./js/lib/bootstrap.min.js"></script>
+  <script src="./layui/layui.js"></script>
+  <script src="./js/lib/load.js"></script>
+  <script src="./js/index.js"></script>
+</body>
+
+</html>

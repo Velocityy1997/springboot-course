@@ -1,0 +1,874 @@
+package io.ken.springboot.course.controller.exam;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import io.ken.springboot.course.bean.ChooseSelectStore;
+import io.ken.springboot.course.bean.CommExamStore;
+import io.ken.springboot.course.bean.DecideStore;
+import io.ken.springboot.course.bean.Exam;
+import io.ken.springboot.course.bean.FillBlankExamStore;
+import io.ken.springboot.course.bean.HandExamStore;
+import io.ken.springboot.course.bean.User;
+import io.ken.springboot.course.service.IChooseSelectStoreService;
+import io.ken.springboot.course.service.ICommExamService;
+import io.ken.springboot.course.service.IDecideStoreService;
+import io.ken.springboot.course.service.IExamService;
+import io.ken.springboot.course.service.IFillExamService;
+import io.ken.springboot.course.service.IHandExamService;
+import io.ken.springboot.course.service.IUserService;
+import io.ken.springboot.course.service.implement.ChooseSelectStoreServiceImpl;
+import io.ken.springboot.course.service.implement.CommExamServiceImpl;
+import io.ken.springboot.course.service.implement.DecideStoreServiceImpl;
+import io.ken.springboot.course.service.implement.ExamInfoServiceImpl;
+import io.ken.springboot.course.service.implement.ExamServiceImpl;
+import io.ken.springboot.course.service.implement.FillExamServiceImpl;
+import io.ken.springboot.course.service.implement.HandExamServiceImpl;
+import io.ken.springboot.course.tools.PhotoUtil;
+import io.ken.springboot.course.tools.Result;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ 	* 试卷出题
+ * @author cll
+ *ExamPaperProduction.java
+ * 2019年11月25日
+ */
+
+@Controller
+@RequestMapping("/exampaper")
+public class ExamPaperController {
+	
+	@Autowired
+	private IExamService examService;
+	@Autowired
+	private IHandExamService handService;
+	@Autowired
+	private IFillExamService  fillExamService;
+	@Autowired
+	private ICommExamService commExamService; 
+	@Autowired
+	private IUserService userService;
+
+	@Autowired
+	private ExamServiceImpl examServiceImpl;
+	
+	@Autowired
+	private ExamInfoServiceImpl examInfoServiceImpl;
+	
+	@Autowired
+	private IChooseSelectStoreService chooseSelectStoreService;
+	
+	@Autowired
+	private IDecideStoreService decideStoreService;
+
+	@Autowired
+	private HandExamServiceImpl handExamServiceImpl;
+
+	@Autowired
+	private FillExamServiceImpl fillExamServiceImpl;
+
+	@Autowired
+	private ChooseSelectStoreServiceImpl chooseExamServiceImpl;
+
+	@Autowired
+	private DecideStoreServiceImpl decideExamServiceImpl;
+
+	@Autowired
+	private CommExamServiceImpl commExamServiceImpl;
+	
+	
+	/**
+	 * 新增试卷
+	 * testName ="试题1"
+	 * idNumber = "111,222,333,444"
+	 * startTime = 2019-04-11 11:45:15
+	 * duration = "100"分钟
+	 * typeQ ="通信题,通信题,填空题,填空题,操作题,操作题"
+	 * questionCode:"1.1,1.2,2.1,2.2"
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/gettest")
+	@ResponseBody
+	public Result getTestPaper(HttpServletRequest request ) {
+		
+		String testNames = request.getParameter("testName");//试题名称
+		String idNumbers = request.getParameter("idNumber");//学员证件号
+		String startTime = request.getParameter("startTime");//考试开始时间
+		String subject = request.getParameter("subject");//考试科目
+		//String startTime ="2019-11-20 10:35:03";
+
+		String duration = request.getParameter("duration");//考试时长
+		String typeQs = request.getParameter("typeQ");//题型   操作题,操作题,填空题,填空题,填空题,填空题,通信题,通信题
+		String questionCodes = request.getParameter("questionCode");//题目代码
+		String grade = request.getParameter("grade");
+		Result  result = new Result();			
+		try {
+
+			if (testNames == null || testNames.equals("")) {
+				result.setMsg("考试名称为空");
+				result.setCode(404);
+				result.setSuccess(false);
+
+				return result;
+
+			} else {
+
+				boolean  tag =  examServiceImpl.checkExamName(testNames);
+
+				if (tag) {
+					//名称存在
+					result.setMsg("考试名称已存在");
+					result.setCode(500);
+					result.setSuccess(true);
+					return result;
+
+				} else {
+					//result.setMsg("考试名称正确");
+					//result.setCode(200);
+					//result.setSuccess(false);
+
+					String questionCode = null;//题目代码 例 ：4.1
+					String typeQ = null;//试题类型 例：通信题
+
+					String idNum [] = idNumbers.split(",");
+					String type [] = typeQs.split(",");
+					String quesCodes [] = questionCodes.split(",");
+					int codeLength = quesCodes.length;
+					int typeQLength = type.length;
+
+					boolean doubleTag = false;
+
+					doubleTag = checkDubbleCode(questionCodes);
+
+					for (int i = 0; i < idNum.length; i++) {
+
+						List<String> handList = new ArrayList<String>();
+						List<String> fillList = new ArrayList<String>();
+						List<String> commList = new ArrayList<String>();
+						List<String> resultList = new ArrayList<String>();
+						List<String> selectList = new ArrayList<String>();
+						List<String> decideList = new ArrayList<String>();
+						List<String> fillresultList = new ArrayList<String>();
+						List<String> ssresultList = new ArrayList<String>();
+						List<String> ddresultList = new ArrayList<String>();
+						Exam exam = new Exam();
+						exam.setDuration(Integer.valueOf(duration));
+						Timestamp stTime = Timestamp.valueOf(startTime);
+						exam.setExamName(testNames);
+						exam.setStartTime(stTime);
+						exam.setType(Integer.parseInt(subject));
+						exam.setStatus(0);
+						exam.setGrade("0");
+						exam.setTotalGrade(grade);
+						String uuid = UUID.randomUUID().toString().replaceAll("-", "");
+						exam.setExamId(uuid);
+						String idNumber = idNum[i];
+						exam.setIdNumber(idNumber);
+
+						//此处待优化
+						if(codeLength == typeQLength) {
+							for (int a = 0; a < type.length; a++) {
+								typeQ =  type[a];
+								questionCode = quesCodes[a];
+
+								if (typeQ.equals("操作题")){
+									handList.add(questionCode);
+
+								}else if (typeQ.equals("通信题")) {
+									String commResult = examService.getCommResult(questionCode);
+									resultList.add(commResult);
+
+									commList.add(questionCode);
+								}else if (typeQ.equals("填空题")) {
+									FillBlankExamStore fill = fillExamService.getNameByCode(questionCode);//题目
+									fillList.add(questionCode);
+									if(!(subject.equals("1"))) {
+										fillresultList.add(fill.getResult());
+									}
+									
+
+								}
+								else if (typeQ.equals("选择题")) {
+									ChooseSelectStore fill = chooseSelectStoreService.getNameByCode(questionCode);//题目
+									selectList.add(questionCode);
+									ssresultList.add(fill.getResult());
+								}
+								else if (typeQ.equals("判断题")) {
+									DecideStore fill = decideStoreService.getNameByCode(questionCode);//题目
+									decideList.add(questionCode);
+									ddresultList.add(fill.getResult());
+								}
+							}
+						}
+
+
+						String handCode = String.join(";", handList);//将List转变为分号分隔的字符串
+						exam.setHandExamQuestion(handCode);
+						String resultStr = String.join(";", resultList);
+						exam.setCommExamResult(resultStr);
+						String cmmCode = String.join(";", commList);
+						exam.setCommExamQuestion(cmmCode);
+						String fillCode = String.join(";", fillList);
+						exam.setFillBlankExamQuestion(fillCode);
+						String selectCode = String.join(";", selectList);
+						exam.setChooseExamQuestion(selectCode);
+						String decideCode = String.join(";", decideList);
+						exam.setDecideExamQuestion(decideCode);
+						String ssresult = String.join(";", ssresultList);
+						exam.setChooseExamResult(ssresult);
+						String fillresult = String.join(";", fillresultList);
+						exam.setFillBlankExamResult(fillresult);
+						String ddresult = String.join(";", ddresultList);
+						exam.setDecideExamResult(ddresult);
+						exam.setQuestionNum(codeLength);
+						exam.setCreateExam(1);//手动创建试卷
+						int num  = examService.addExam(exam);
+
+						HttpSession session = request.getSession();
+						User user = (User) session.getAttribute("loginInfo");
+						List<String> examNameList = new ArrayList<String>();
+
+
+						if(num > 0) {
+							result.setMsg("存储失败");
+
+						}else {
+							result.setMsg("存储成功");
+
+							//给用户添加待考考试
+							examNameList.add(exam.getExamName());
+							String examNames = String.join(",", examNameList);
+							user.setExamNames(examNames);
+
+							//更新用户表
+							int userTag = userService.updateByUser(user);
+
+							if (userTag == 1) {
+								System.out.println("修改用户考试名称信息成功");
+							} else {
+								System.out.println("修改用户考试名称信息失败");
+
+							}
+						}
+
+						result.setData(num);
+						result.setCode(200);
+					}
+
+					}
+
+
+				}
+			
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			result.setData(1);
+			result.setCode(404);
+			result.setMsg("存储失败");
+		}										
+		return result;								
+	}
+
+
+	//检查试题是否重复
+	public boolean checkDubbleCode(String questionCodes) {
+
+		//typeQ: 操作题,操作题,  填空题,填空题,填空题,填空题,   通信题,通信题
+		//questionCode: 1.6,1.3,2.2,2.3,2.5,2.51,3.1,3.1
+
+		boolean flag = false;
+
+		String[] codeArr = questionCodes.split(",");
+		List<String> codeList = new ArrayList<String>();
+
+		for (String code : codeArr) {
+			codeList.add(code);
+		}
+
+		for (String code : codeList) {
+			int time = 0;
+			for (String codeCheck : codeList) {
+				if (code.equals(codeCheck)) {
+					time++;
+					if (time == 2) {
+						flag = true;
+						return flag;
+					}
+				}
+			}
+		}
+
+		return  flag;
+	}
+	
+	
+	
+	
+	/**
+	 * 试题库查看试题
+	 * @param code
+	 * @param type
+	 * @return
+	 */
+	@RequestMapping("/getsubject")
+	@ResponseBody
+	public Result getSubject(String code,String type){
+				
+				
+		Result result = new Result();
+		HandExamStore handModel =  new HandExamStore();
+		FillBlankExamStore fillModel = new FillBlankExamStore();
+		CommExamStore comModel =  new CommExamStore();
+		ChooseSelectStore chooseModel = new ChooseSelectStore();
+		DecideStore decideModel = new DecideStore();
+		Map<String, Object> map = new HashMap<String, Object>();
+		String  subType = "";
+		String question = "";
+		String selectA = "";
+		String img = "";
+		String answer = "";
+		if(type.equals("通信")) {
+			comModel = commExamService.getNameByCode(code);
+			subType = "通信题";
+			question = comModel.getQuestionName();
+			answer = comModel.getResult();
+			map.put("img", img);
+			if(comModel.getPassTableId() != null) {
+    			map.put("img", PhotoUtil.sqlTophoto(comModel.getPassTableId()));
+			}
+			if(answer != null && !(answer.equals(""))){
+				map.put("answer", answer);
+			}else {
+				map.put("answer", "暂无");
+			}
+			map.put("type", subType);
+			map.put("question", question);
+			
+			result.setCode(200);
+			result.setData(map);
+			result.setMsg("ok");
+									
+			return result;
+		}
+				
+		if(type.equals("填空")) {
+			fillModel = fillExamService.getNameByCode(code);
+			subType = "填空题";
+			question = fillModel.getQuestionName();
+			answer = fillModel.getResult();
+			if(answer != null && !(answer.equals(""))){
+				map.put("answer", answer);
+			}else {
+				map.put("answer", "暂无");
+			}
+			map.put("type", subType);
+			map.put("question", question);
+			map.put("img", img);
+			if(fillModel.getPassTableId() != null) {
+    			map.put("img", PhotoUtil.sqlTophoto(fillModel.getPassTableId()));
+			}
+			result.setCode(200);
+			result.setData(map);
+			result.setMsg("ok");
+									
+			return result;
+		}
+				
+		if(type.equals("操作")) {
+			handModel = handService.getNameByCode(code);
+			subType = "操作题";
+			question = handModel.getQuestionName();
+			
+			map.put("type", subType);
+			map.put("question", question);
+			map.put("img", img);
+			map.put("answer", answer);
+			result.setCode(200);
+			result.setData(map);
+			result.setMsg("ok");
+									
+			return result;
+		}
+		
+		if(type.equals("选择")) {
+			chooseModel = chooseSelectStoreService.getNameByCode(code);
+			subType = "选择题";
+			question = chooseModel.getQuestionName();
+			answer = chooseModel.getResult();
+			selectA = chooseModel.getSelectA();
+			int flag = chooseModel.getFlag();
+			map.put("type", subType);
+			map.put("question", question);
+			map.put("img", img);
+			if(chooseModel.getPassTableId() != null) {
+    			map.put("img", PhotoUtil.sqlTophoto(chooseModel.getPassTableId()));
+			}
+			map.put("answer", answer);
+			map.put("select", selectA);
+			map.put("flag", flag);
+			result.setCode(200);
+			result.setData(map);
+			result.setMsg("ok");
+									
+			return result;
+		}
+		
+		if(type.equals("判断")) {
+			decideModel = decideStoreService.getNameByCode(code);
+			subType = "判断题";
+			question = decideModel.getQuestionName();
+			answer = decideModel.getResult();
+			selectA = decideModel.getSelectA();
+			map.put("type", subType);
+			map.put("question", question);
+			map.put("img", img);
+			if(chooseModel.getPassTableId() != null) {
+    			map.put("img", PhotoUtil.sqlTophoto(chooseModel.getPassTableId()));
+			}
+			map.put("answer", answer);
+			map.put("select", selectA);
+			result.setCode(200);
+			result.setData(map);
+			result.setMsg("ok");
+									
+			return result;
+		}	
+		    return result;		
+				
+	}
+	
+	
+	/**
+	 * 交卷
+	 * @param hand(josn)
+	 * @return
+	 */
+	  @RequestMapping("/handResolve")
+	  @ResponseBody
+	   public Result getResolve(String hand,HttpServletRequest request ) {
+
+		  User user = (User) request.getSession().getAttribute("loginInfo");// 取得当前登录用户
+		  Result r = new Result();
+		  Exam exam = new Exam();
+
+		  List<String> handAnswer = new ArrayList<String>();
+		  List<String> fillAnswer = new ArrayList<String>();
+		  List<String> commAnswer = new ArrayList<String>();
+
+		  List<String> chooseAnswerList = new ArrayList<String>();
+		  List<String> decideAnswerList = new ArrayList<String>();
+
+		  JSONObject jsonObject = JSON.parseObject(hand);
+		  SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		  String date = df.format(new Date());
+		  Timestamp endTime = Timestamp.valueOf(date);
+
+		  String examId = jsonObject.getString("examId");
+		  String examName = jsonObject.getString("examName");
+		  String type = jsonObject.getString("type");
+		  String idNumber = jsonObject.getString("idNumber");
+		  String subject=null;
+		  try {
+			  subject = jsonObject.getString("subject");
+		  }catch (Exception e){
+
+		  }
+		  String data = jsonObject.getString("data");
+		  JSONArray jsonArray = JSON.parseArray(data);
+		  Iterator<Object> it = jsonArray.iterator();
+
+		  int questionNum = 0;//题目数
+		  int grades = 0;//分数
+		  
+		  Exam examNow = examInfoServiceImpl.getExamById(examId);
+		  int createExam=examNow.getCreateExam();//查看试卷是以哪种方式创建，0是自动，1是手动（自动创建分值与手动不同）
+
+		  String[] questionGrades=null;
+			if (createExam==0){
+				//自动生成试卷的分数（顺序：单选,多选,填空,判断）
+				String questionGrade=questionGrade=examNow.getQuestionGrade();
+				questionGrades=questionGrade.split(",");
+			}
+		  while (it.hasNext()) {
+
+			  JSONObject arrayObj = (JSONObject) it.next();
+			  String number = arrayObj.getString("number");
+			  String table = arrayObj.getString("table");
+			  String questionCode = arrayObj.getString("question_code");
+			  String questionName = arrayObj.getString("question_name");
+			  String grade = "";
+//					  arrayObj.getString("grade");
+			  String handCollects=null;
+			  if (grade == null) {
+			  	//分数为空按0分
+				  grade = "0";
+			  }
+
+			  String result = "";//arrayObj.getString("result");//正确答案
+			  String answer = arrayObj.getString("answer");//考生答案
+
+			  //操作题
+			  if (table.equals("hand_exam_store")) {
+				  handAnswer.add(answer);
+				  //查本题的分数
+//				  String exerciseGrade = examServiceImpl.
+				 
+
+				  //查答案(从操作表里面查)
+				  HandExamStore handExamStore = handExamServiceImpl.getNameByCode(questionCode);
+				  
+				  //result = arrayObj.getString("result");
+				  result = handExamStore.getResult();
+				  if (result == null) {
+					   result = "true";
+				   }else {
+					   result = "true";
+				   }
+				  
+				  grade = handExamStore.getGrade();
+
+				  if (!(result.equals(answer))) {//错题
+					  if (result.equals(answer)) {
+						  grades += Integer.valueOf(grade);
+					  }
+					  try {
+						  handCollects = user.getErrhandCollectList();
+					  }catch (NullPointerException e){
+					  	System.out.println("没有错题");
+					  }
+
+					  if (handCollects == null || handCollects.equals("")) {
+						  handCollects = "";
+					  }
+					  boolean flag = true;
+					  if (handCollects != null && !(handCollects.equals(""))) {
+						  String[] list = handCollects.split(";");
+
+						  for (String hands : list) {
+							  if (hands.equals(questionCode)) {
+								  flag = false;
+								  break;
+							  }
+						  }
+					  }
+
+					  if (flag) {
+						  String handCollect = handCollects + questionCode + ";";
+						  user.setErrhandCollectList(handCollect);
+					  }
+				  }else {
+					  grades += Integer.valueOf(grade);
+				  }
+			  }
+
+			  //填空题
+			  if (table.equals("fill_blank_exam_store")) {
+
+				  String newAnswer = "";
+
+				  //之前
+				  //FillBlankExamStore fillBlankExamStore =fillExamServiceImpl.getNameByCode(questionCode);
+				  
+				  //从考试表提取答案
+				 
+				  FillBlankExamStore fillBlankExamStore =fillExamServiceImpl.getNameByCode(questionCode);
+				  
+				  //result = fillBlankExamStore.getResult();
+				  String numStr = examNow.getFillBlankExamQuestion();// 获取题号
+				  String []numArr = numStr.split(";");
+				  int num = 0;//题号的位置
+				  
+				  for (int i = 0; i < numArr.length; i++) {
+					   if (numArr[i].equals(questionCode)) {
+						num = i;
+						break;
+					}
+				   }
+				  
+				//根据题号位置找出答案
+				  String reString = examNow.getFillBlankExamResult();// 117超短波电台;错;B。C;多云
+				  String reArr[] = reString.split(";");
+				  result = reArr[num];
+				 
+				  
+				  grade = fillBlankExamStore.getGrade();
+
+//				  if (answer.contains("。")) {
+//					  newAnswer = answer.replace("。", ",");
+//				  } else {
+					  newAnswer = answer;
+//				  }
+				  fillAnswer.add(newAnswer);
+				  if (!(result.equals(newAnswer))) {//错题
+					  try {
+						  handCollects =  user.getErrfillBlankCollectList();
+					  }catch (NullPointerException e){
+						  System.out.println("没有错题");
+					  }
+					  if (handCollects == null || handCollects.equals("")) {
+						  handCollects = "";
+					  }
+					  boolean flag = true;
+					  if (handCollects != null && !(handCollects.equals(""))) {
+						  String[] list = handCollects.split(";");
+
+						  for (String hands : list) {
+							  if (hands.equals(questionCode)) {
+								  flag = false;
+								  break;
+							  }
+						  }
+					  }
+
+					  if (flag) {
+						  String handCollect = handCollects + questionCode + ";";
+						  user.setErrfillBlankCollectList(handCollect);
+					  }
+				  }else {
+				  	if (createExam==0){
+				  		grades+=Integer.parseInt(questionGrades[2]);
+					}else {
+						grades += Integer.valueOf(grade);
+					}
+				  }
+			  }
+
+
+              //通讯题
+              if (table.equals("comm_exam_store")) {
+                  commAnswer.add(answer);
+
+                  CommExamStore commExamStore = commExamServiceImpl.getNameByCode
+                          (questionCode);
+                  result = commExamStore.getResult();
+                  grade = commExamStore.getGrade();
+                  //北斗手持答案判断
+
+                  if (subject.equals("bdscj")) {
+                      int gradeNum = Integer.parseInt(grade);
+                      char[] resultArray = result.toCharArray();
+                      char[] answerArray = answer.toCharArray();
+                      for (int i = 0; i < answerArray.length; i++) {
+                          if (resultArray[i] != answerArray[i]) {
+                              if (gradeNum <= 0) {
+                                  grade = "0";
+                                  break;
+                              }
+                              gradeNum=gradeNum-2;
+                          }
+                          grade = String.valueOf(gradeNum);
+                      }
+                  }
+
+                  if (!(result.equals(answer))) {//错题
+					  try {
+						  handCollects =  user.getErrcommCollectList();
+					  }catch (NullPointerException e){
+						  System.out.println("没有错题");
+					  }
+                      if (handCollects == null || handCollects.equals("")) {
+                          handCollects = "";
+                      }
+                      boolean flag = true;
+                      if (handCollects != null && !(handCollects.equals(""))) {
+                          String[] list = handCollects.split(";");
+                          for (String hands : list) {
+                              if (hands.equals(questionCode)) {
+                                  flag = false;
+                                  break;
+                              }
+                          }
+                      }
+                      //只要不是北斗手持机，错题分数为0
+                      if (!subject.equals("bdscj")) {
+                          grade = "0";
+                      }
+
+                      if (flag) {
+                          String handCollect = handCollects + questionCode + ";";
+                          user.setErrcommCollectList(handCollect);
+                      }
+                  }
+                  grades += Integer.valueOf(grade);
+                  questionNum++;
+                  continue;
+              }
+
+			  //多选题--新增1
+			  if (table.equals("choose_select_store")) {
+				  chooseAnswerList.add(answer);
+
+				  ChooseSelectStore chooseSelectStore = chooseExamServiceImpl.getNameByCode(questionCode);
+				  int flags =chooseSelectStore.getFlag();//0单选，1多选
+				  result = chooseSelectStore.getResult();
+				  grade = chooseSelectStore.getGrade();
+
+				  if (!(result.equals(answer))) {//错题
+					  try {
+						  handCollects =  user.getChooseBlankCollectList();//获取多选错题   1.1;1.2
+					  }catch (NullPointerException e){
+						  System.out.println("没有错题");
+					  }
+
+
+					  if (handCollects == null || handCollects.equals("")) {
+						  handCollects = "";
+					  }
+
+					  boolean flag = true;
+
+					  if (handCollects != null && !(handCollects.equals(""))) {
+
+						  String[] list = handCollects.split(";");
+
+						  for (String hands : list) {
+							  if (hands.equals(questionCode)) {
+								  flag = false;
+								  break;
+							  }
+						  }
+					  }
+
+					  if (flag) {
+						  String handCollect = handCollects + questionCode + ";";
+						  user.setChooseBlankCollectList(handCollect);
+					  }
+				  }else {
+				  	if (createExam==0){
+				  		if (flags==0){
+							grades+=Integer.parseInt(questionGrades[0]);
+						}else {
+							grades+=Integer.parseInt(questionGrades[1]);
+						}
+					}else {
+						grades += Integer.valueOf(grade);
+					}
+				  }
+				  questionNum++;
+			  }
+
+			  //判断题--新增2
+			  if (table.equals("decide_store")) {
+				  decideAnswerList.add(answer);
+
+				  DecideStore decideStore = decideExamServiceImpl.getNameByCode(questionCode);
+				  result = decideStore.getResult();
+				  grade = decideStore.getGrade();
+
+				  if (!(result.equals(answer))) {//错题
+					  try {
+						  handCollects =  user.getErrdecideBlankCollectList();
+					  }catch (NullPointerException e){
+						  System.out.println("没有错题");
+					  }
+					  if (handCollects == null || handCollects.equals("null")) {
+						  handCollects = "";
+					  }
+
+					  boolean flag = true;
+
+					  if (handCollects != null && !(handCollects.equals(""))) {
+						  String[] list = handCollects.split(";");
+						  for (String hands : list) {
+							  if (hands.equals(questionCode)) {
+								  flag = false;
+								  break;
+							  }
+						  }
+					  }
+
+					  if (flag) {
+						  String handCollect = handCollects + questionCode + ";";
+						  user.setErrdecideBlankCollectList(handCollect);
+					  }
+
+
+				  }else {
+					  if (createExam==0){
+						  grades+=Integer.parseInt(questionGrades[3]);
+					  }else {
+						  grades += Integer.valueOf(grade);
+					  }
+				  }
+				  questionNum++;
+			  }
+
+
+		  }
+
+			  String handStr = String.join(";", handAnswer);//操作题
+			  String fillStr = String.join(";", fillAnswer);//填空题
+			  String commStr = String.join(";", commAnswer);//通讯题
+
+			  //多选--新增
+		      String chooseStr = String.join(";", chooseAnswerList);
+			  //判断--新增
+		      String decideStr = String.join(";", decideAnswerList);
+
+
+			  exam.setEndTime(endTime);
+			  exam.setGrade(String.valueOf(grades));
+			  exam.setExamId(examId);
+			  exam.setType(Integer.valueOf(type));
+			  exam.setExamName(examName);
+
+			  exam.setFillBlankExamAnswer(fillStr);
+			  exam.setCommExamAnswer(commStr);
+			  exam.setHandExamAnswer(handStr);
+			  exam.setChooseExamAnswer(chooseStr);
+			  exam.setDecideExamAnswer(decideStr);
+
+
+			  exam.setQuestionNum(questionNum);
+			  exam.setStatus(1);
+			  exam.setIdNumber(user.getIdNumber());
+
+			  int status = examService.updateModel(exam);
+
+			 try {
+				 ////0为插入成功，1为插入失败;
+				 if (status == 0) {
+					 r.setCode(200);
+					 r.setData("true");
+					 r.setMsg(user.getName()+"本场考试成绩："+String.valueOf(grades));
+
+					 userService.updateByUser(user);
+					 HttpSession session = request.getSession();
+					 session.setAttribute("loginInfo", user);
+
+				 } else {
+					 r.setCode(500);
+					 r.setData("false");
+					 r.setMsg(user.getName()+"本场考试成绩："+String.valueOf(grades));
+				 }
+
+
+			 }catch (Exception e){
+			 	e.printStackTrace();
+			 }
+
+
+
+
+        return r;
+	  }
+
+}

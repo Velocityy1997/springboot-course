@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/data.min.css">
+</head>
+<body>
+    <div class="main">
+        <div class="left-main">
+            <div class="bjry-top">
+                <div class="bjry-title">单位人员</div>
+                <div class="bjry-num">
+                    <p class="bjsl">单位数量(个):<span class="bjsl-num" id="bjslNum">23</span></p>
+                    <p class="xysl">学员数量(人):<span class="xysl-num" id="xyslNum">209</span></p>
+                </div>
+            </div>
+            <div class="bjry-bottom">
+                <div class="bjry-title">单位情况分析(男<span class=""></span> 女<span class="greenCircle"></span></span>)</div>
+                <div class="bjry-chart" id="bjryChart"></div>
+            </div>
+        </div>
+        <div class="right-main">
+            <div class="ksqk-top">
+                <div class="ksqk-title">考试情况</div>
+                <div class="ksqk-num">
+                    <p class="stsl">试题数量(道):<span class="stsl-num" id="stslNum">109</span></p>
+                    <p class="kskm">考试科目(项):<span class="kskm-num" id="kskmNum">4</span></p>
+                    <p class="xysl">学员数量(次):<span class="xysl-num" id="testxyslNum">10</span></p>
+                    <p class="wcqk">完成情况(%):<span class="wcqk-num" id="wcqkNum">20</span></p>
+                    <div class="wcqk-bar" id="wcqkBar"><div class="red-block" id="redBlock"></div></div>
+                </div>
+            </div>
+            <div class="ksqk-bottom">
+                <div class="ksqkfx-title">考试情况分析(合格<span class="blueCircle"></span> 不合格<span class="redCircle"></span></span>)</div>
+                <div class="bdscj-chart" id="bdscjChart"></div>
+                <!-- <div class="dt-chart" id="dtChart"></div> -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/lib/jquery-3.4.1.min.js"></script>
+    <script src="../js/lib/echarts.min.js"></script>
+    <script src="../js/manage/data.js"></script>
+</body>
+</html>

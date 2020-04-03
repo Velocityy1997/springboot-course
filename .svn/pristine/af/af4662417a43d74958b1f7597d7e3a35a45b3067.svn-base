@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .main {
+            width: 193px;
+            height: 219px;
+            overflow: hidden;
+            position: relative;
+            background: url(../img/machine/page-time.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .returnButton {
+            width: 55px;
+            height: 20px;
+            position: absolute;
+            bottom: 0;
+            right: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="returnButton" id="returnButton"></div>
+    </div>
+    <script src="../js/lib/jquery-3.4.1.min.js"></script>
+    <script>
+        //返回按钮
+        var obj = function (option) {
+            this.option = option || {};
+            this.init(); // 初始化
+        }
+
+        // 初始化
+        obj.prototype.init = function () {
+            this.allEvents(); // 各种点击事件
+        }
+
+        // 各种点击事件
+        obj.prototype.allEvents = function () {
+            this.clickReturn(); // 返回
+        }
+
+        // 返回
+        obj.prototype.returnActive = function () {
+            window.parent.window.iframeObj.goBackBefore('时间');
+        }
+        obj.prototype.clickReturn = function () {
+            var _this = this;
+            $('#returnButton').on('click', function () {
+                window.parent.window.iframeObj.goBackBefore('时间');
+            });
+        }
+        window.machineTimeObj = new obj();
+    </script>
+</body>
+
+</html>

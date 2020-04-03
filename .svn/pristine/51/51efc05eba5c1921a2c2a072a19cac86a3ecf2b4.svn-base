@@ -1,0 +1,27 @@
+package io.ken.springboot.course.tools;
+
+public class TypeUtil {
+
+    public static String getSubject(String subject) {
+
+        if (subject.equals("北斗手持机")) {
+            return "1";
+        }
+        if (subject.equals("电台操作")) {
+            return "2";
+        }
+        if (subject.equals("理论知识")) {
+            return "3";
+        }
+        if (subject.equals("航片判读")) {
+            return "4";
+        }
+        if (subject.equals("作战计算")) {
+            return "5";
+        }
+        if (subject.equals("识图用图")) {
+            return "6";
+        }
+        return "1";
+    }
+}

@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>保存路标</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .view-box {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+      color: #fff;
+    }
+
+    .view-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 19px;
+      font-size: 13px;
+    }
+
+    .view-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/menu.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .view-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    /* 主体内容 */
+    .contain {
+      flex: auto;
+      color: #fff;
+    }
+
+    .location-box {
+      padding-top: 15px;
+      padding-left: 5px;
+    }
+
+    .location-li {
+      display: flex;
+      align-items: center;
+      margin: 5px 3px 0 3px;
+      line-height: 19px;
+    }
+
+    .location-li .location-input {
+      width: 120px;
+      background-color: #9fc4f9;
+      outline: 0;
+      padding-left: 2px;
+      color: #5452a3;
+      height: 18px;
+      margin-right: 5px;
+      font-size: 14px;
+    }
+
+    .location-li .location-val {
+      margin-left: 5px;
+      display: flex;
+    }
+
+
+    /* 菜单列表 */
+    .menu-list {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      z-index: 999;
+      box-shadow: 0 0 3px #404567;
+      display: none;
+    }
+
+    .menu-list-li {
+      text-align: center;
+      line-height: 20px;
+      height: 21px;
+      cursor: pointer;
+      background-color: #3869e4;
+      width: 80px;
+      color: #fff;
+      border-top: 1px solid #86a8ec;
+    }
+
+    .menu-list-li:hover,
+    .menu-list-li.active {
+      background-image: linear-gradient(to bottom, #e6e613, #f95f05);
+    }
+
+    .menu-list-li.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="view-box">
+    <div class="contain">
+      <ul class="location-box">
+        <li class="location-li">
+          <div class="location-text" id="jd">名称:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" value="定位路标1" id="name">
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text" id="wd">经度:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" value="108° 50′43.995″" readonly>
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text" id="gc">纬度:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" value="34° 10′11.265″" readonly>
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text">高程:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" value="392.95" readonly>
+            米
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text">注释:</div>
+          <div class="location-val">
+            <input type="text" class="location-input">
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 菜单列表 -->
+    <div class="menu-list" id="menu-list">
+      <ul class="menu-list-ul" id="menu-list-ul">
+
+      </ul>
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">菜单</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      class obj {
+        constructor(option) {
+          this.option = option || {
+            menuList: [
+              '地图显示',
+              '保存',
+              '返回'
+            ]
+          };
+          this.currentIndex = Number(window.parent.window.iframeObj.saveRoadSignsIndex);
+          this.init(); // 初始化
+        }
+
+        // 初始化
+        init() {
+          this.applyParent(); // 呼应父级
+          this.allEvents(); // 所有事件
+          this.drawMenuList(); // 菜单栏列表渲染
+          $('.menu-list-li').eq(this.currentIndex).addClass('active');
+        }
+
+        // 呼应父级
+        applyParent() {
+          if (window.parent.parent.window.newObj.resetNameAnswer == "true") {
+            $('#name').val('站立点');
+          } else {
+            $('#name').val('定位路标1');
+          }
+        }
+
+        // 所有事件
+        allEvents() {
+          this.clickSure(); // 确认
+          this.clickReturn(); // 返回
+        }
+
+        // 确认
+        sureActive = function () {
+          $('#menu-list').show();
+        }
+
+        clickSure() {
+          let _this = this;
+          $('#sure').on('click', function () {
+            _this.sureActive();
+          });
+
+          $('#menu-list').on('click', '.menu-list-li', function () {
+            $(this).addClass('active').siblings('.menu-list-li').removeClass('active');
+            window.parent.window.iframeObj.saveRoadSignsIndex = $(this).attr('data-index');
+
+            _this.needSureActive();
+          });
+        }
+
+        // 返回
+        returnActive() {
+          window.parent.window.iframeObj.goBackBefore('RDSS保存路标');
+        }
+        clickReturn() {
+          let _this = this;
+          $('#return').on('click', function () {
+            _this.returnActive();
+          });
+        }
+
+        // 菜单列表
+        drawMenuList() {
+          for (var i = 0; i < this.option.menuList.length; i++) {
+            $('<li class="menu-list-li" data-index="' + i + '">' + this.option.menuList[i] + '</li>').appendTo($(
+              '#menu-list-ul'));
+          }
+        }
+
+        upActive() {
+          let len = $('.menu-list-li').length - 1;
+          if (this.currentIndex == 0) {
+            this.currentIndex = len
+
+          } else {
+            this.currentIndex -= 1;
+          }
+          this.changeActive();
+        }
+        downActive() {
+          let len = $('.menu-list-li').length - 1;
+          if (this.currentIndex == len) {
+            this.currentIndex = 0
+          } else {
+            this.currentIndex = Number(this.currentIndex) + 1;
+          }
+          this.changeActive();
+        }
+
+        changeActive() {
+          var currentIndex = this.currentIndex;
+          window.parent.window.iframeObj.saveRoadSignsIndex = currentIndex;
+          $('.menu-list-li').eq(currentIndex).addClass('active').siblings('.menu-list-li').removeClass(
+            'active');
+          // this.findActive();
+        }
+
+        needSureActive() {
+          var that = this;
+          var _this = this;
+          if ($('.menu-list-li.active').text() == '保存') {
+            window.parent.window.iframeObj.setLocation($('#name').val());
+            window.parent.window.iframeObj.goBackBefore('RDSS保存路标');
+          } else if ($('.menu-list-li.active').text() == '返回') {
+            $('#menu-list').hide();
+          }
+        }
+      }
+
+      // ---------------
+      window.saveRoadSignsObj = new obj();
+    });
+  </script>
+</body>
+
+</html>

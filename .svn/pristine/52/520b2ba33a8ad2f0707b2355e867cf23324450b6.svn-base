@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/normal.min.css">
+    <link rel="stylesheet" href="./layui/css/layui.css">
+</head>
+<style>
+    body {
+        margin: 0;
+    }
+
+    .machine-box {
+        display: flex;
+        height: 100vh;
+        flex-direction: column;
+    }
+
+    .machine-head {
+        flex: 0 0 70px;
+        display: flex;
+        font-size: 18px;
+        background-color: #fff;
+        color: #6f737a;
+    }
+
+    .machine-head .return-box {
+        flex: 1.5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .machine-head .return-box .return-img {
+        width: 38px;
+        height: 39px;
+        background: url(./img/test/return.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+        margin-left: 20px;
+    }
+
+    .machine-head .return-box .return-text {
+        color: #6f737a;
+        margin-left: 14px;
+    }
+
+    .machine-head .is-now-test {
+        flex: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: linear-gradient(to right, #046b3a, #b6e2ae);
+    }
+
+    .machine-head .is-now-test .test-img {
+        width: 36px;
+        height: 41px;
+        background: url(./img/test/nowTest.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+    }
+
+    .machine-head .is-now-test .test-text {
+        color: #fff;
+        letter-spacing: 1px;
+        font-weight: 300;
+        margin-left: 20px;
+    }
+
+    .machine-head .test-time {
+        flex: 4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .machine-head .test-time .remain-time-text {
+        padding-left: 15px;
+    }
+
+    .machine-head .test-time .time {
+        padding-left: 10px;
+    }
+
+    .machine-head .test-time .remain-time {
+        color: #f959a3;
+    }
+
+    .machine-head .hand {
+        flex: 2;
+        text-align: center;
+        line-height: 70px;
+        color: #fff;
+        letter-spacing: 2px;
+        background-color: #827de6;
+        cursor: pointer;
+        font-family: "SimHei";
+        font-size: 23px;
+    }
+
+    .machine-head .moreTest {
+        flex: 2;
+        text-align: center;
+        line-height: 70px;
+        color: #fff;
+        letter-spacing: 2px;
+        background-color: #827de6;
+        cursor: pointer;
+        font-family: "SimHei";
+        font-size: 23px;
+        display: none;
+    }
+
+    .machine-head .hand .collectIcon {
+        vertical-align: top;
+        margin-top: 22px;
+        margin-right: 10px;
+        font-size: 27px;
+    }
+
+    .machine-head .collectButton {
+        display: none;
+    }
+
+    .machine-body {
+        flex: auto;
+        margin-top: 5px;
+        background-color: #fff;
+        display: flex;
+    }
+
+    .test-content {
+        width: 100%;
+        height: 100%;
+        border-left: 1px solid #eee;
+        display: inline-block;
+        vertical-align: top;
+        overflow-y: hidden;
+    }
+
+    .test-content .questions-ul {
+        width: 100%;
+        height: auto;
+        padding: 15px 50px 20px 50px;
+        font-size: 18px;
+        color: #6f737a;
+        letter-spacing: 2px;
+    }
+
+    .test-content .questions-ul .questions-item {
+        line-height: 30px;
+        margin-top: 30px;
+    }
+
+    .test-content .questions-ul .questions-item .answer-line {
+        border: none;
+        border-bottom: 1px solid #93969b;
+        outline: 0;
+        text-align: center;
+        line-height: 22px;
+        font-size: 16px;
+        color: #6f737a;
+        width: auto;
+    }
+
+    .test-content .questions-ul .questions-item .img-box {
+        margin-top: 20px;
+    }
+
+    .test-content .questions-ul .questions-item .select-box {
+        width: 100%;
+        height: auto;
+    }
+
+    .test-content .questions-ul .questions-item .select-box .selectLi {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+    }
+
+    .test-content .questions-ul .questions-item .select-box .selectLi label {
+        font-weight: normal;
+    }
+
+    .test-content .questions-ul .questions-item .select-box .selectLi label .selectRadio {
+        margin-right: 10px;
+    }
+
+    .test-content .questions-ul .questions-item .answerIcon {
+        width: 30px;
+        height: 20px;
+        font-size: 20px;
+        cursor: pointer;
+        color: #f959a3;
+        display: block;
+        margin: 10px 0 0 0;
+    }
+
+    .test-content .questions-ul .questions-item .answerBox {
+        width: 100%;
+        line-height: 30px;
+        color: #f959a3;
+        display: none;
+    }
+
+    .test-content .Pagination {
+        width: 100%;
+        height: 40px;
+        text-align: center;
+    }
+
+    .modal-dialog {
+        width: 500px;
+        z-index: 9999;
+    }
+
+    /*分页*/
+    .par-li {
+        display: none;
+    }
+    .par-li.active {
+        display: block;
+    }
+</style>
+
+<body>
+    <div class="machine-box">
+        <div class="machine-head">
+            <div class="return-box" id="returnBox">
+                <div class="return-img"></div>
+                <div class="return-text">返回</div>
+            </div>
+            <div class="is-now-test">
+                <div class="test-img"></div>
+                <div class="test-text"><span id="handText">考核</span>-航片判读</div>
+            </div>
+            <div class="test-time">
+                <div class="timed-box" id="timedBox">
+                    已考时间：<span class="time" id="timed"></span>
+                    <lable class="remain-time-text">剩余时间：</lable><span class="time remain-time" id="remain-time"></span>
+                </div>
+            </div>
+            <div class="hand" data-toggle="modal" data-target="#isHand" id="handBtn">交卷</div>
+            <!-- <div class="moreTest" id="moreTest">再做一组</div> -->
+        </div>
+        <div class="machine-body">
+            <div class="test-content" id="item-bank">
+
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <!-- 确认交卷 -->
+    <div class="modal fade" id="isHand" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body">
+                    确认交卷？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="hand" data-toggle="modal"
+                        data-target="#handSuccess">确认</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交卷成功 -->
+    <div class="modal fade" id="handSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
+                            id="closeBtn">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="handSuccessText">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="handSure">确认</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="handcancle">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./js/lib/jquery-3.4.1.min.js"></script>
+    <script src="./js/lib/bootstrap.min.js"></script>
+    <script src="./layui/layui.js"></script>
+    <script>
+        $(function () {
+
+            var option = {};
+            var machineObj = function (option) {
+                this.option = {
+                    testJsonList: [], // 试题及答案JSON
+                    questionsList: {
+                        data: []
+                    }, // 考试题
+                    answerList: [], // 答案
+                    examId: '', // 考试卷子id号,
+                    examName: '', // 考试卷子名称
+                    idNumber: '', // 考生id
+                    type: 3, // 考试类型
+                };
+
+                this.selectType = '';
+
+                this.option = $.extend(option, this.option);
+                this.PropellerObj = {};
+                this.timerDown = null; // 剩余时间
+                this.timerUp = null; // 已过时间
+                this.examId = '';
+                this.init();
+
+
+            };
+
+            // 初始化
+            machineObj.prototype.init = function () {
+
+                this.$itemBtnBox = $('#item-btn-ul'); // 选题父级DOM
+                this.$machineBtnBox = $('#machine-btn-box'); // 按键
+                this.$itemBank = $('#item-bank'); // 题库
+                this.$answerBank = $('#answerBank');
+                this.$hand = $('#handBtn'); // 交卷按钮
+                // this.questionsList();
+                // this.initPropellerObj();
+                this.handExam(); // 交卷
+                // this.moreTest();
+
+            }
+            // machineObj.prototype.moreTest = function () {
+            //     var that=this;
+            //     $("#moreTest").on("click",function(){
+            //         that.$itemBank.empty();
+            //         that.questionsList("/springboot-course/train/gettraining?subject=4");
+            //     })             
+            // }
+            //判断页面为训练、考核
+            machineObj.prototype.judgeType = function (type, url) {
+                this.selectType = type;
+                if (type == 0) {
+
+                    $("#handText").text("训练");
+                    $("#handBtn").hide();
+                    // $("#moreTest").show();
+                    $("#reform").hide();
+                    $("#answer").show();
+                    $("#timedBox").hide();
+                    // this.questionsList("/springboot-course/train/gettraining?subject=12345");
+                    this.questionsList(url);
+                    window.parent.window.setOption.openFullTest();
+                } else if (type == 3) {
+                    $("#handText").text("试卷");
+                    $("#handBtn").hide();
+                    $("#reform").hide();
+                    $("#answer").show();
+                    $("#timedBox").hide();
+                    this.questionsList("/springboot-course/exam/getExamPaper");
+                } else {
+                    $("#handText").text("考核");
+                    // $("#moreTest").hide();
+                    $("#reform").show();
+                    $("#answer").hide();
+                    $("#timedBox").show();
+                    // this.questionsList("./js/json/examQuestions.json");
+                    this.questionsList(url);
+                    // this.callTime(); // 调用倒计时函数和已过时间函数
+                }
+            }
+            // 时间函数
+            machineObj.prototype.callTime = function () {
+
+                var _this = this;
+                $.ajax({
+                    type: "get",
+                    url: "/springboot-course/examTime/getexamtime?examId=" + _this.examId,
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.code == '200') {
+                            var dataTime = Number(res.data.dataTime.slice(1));
+
+                            // 倒计时
+                            _this.TimeDown({
+                                id: 'remain-time',
+                                time: dataTime
+                            });
+
+                            // 已过时间
+                            _this.TimeUp({
+                                id: "timed",
+                                startTime: 0,
+                                endTime: dataTime
+                            });
+                        }
+
+                    },
+                    error: function (err) {
+                        console.log('数据返回错误', err);
+                    }
+                });
+
+            }
+
+            // 剩余时间
+            machineObj.prototype.TimeDown = function (timeObj) {
+                var maxtime = timeObj.time;
+                var id = timeObj.id;
+                var _this = this;
+
+                function CountDown() {
+                    if (maxtime >= 0) {
+                        hours = Math.floor(maxtime / 3600);
+                        minutes = Math.floor(maxtime / 60 % 60);
+                        seconds = Math.floor(maxtime % 60);
+
+                        msg = hours + "时" + minutes + "分" + seconds + "秒";
+                        document.getElementById(id).innerHTML = msg;
+                        if (maxtime == 5 * 60) {
+                            $("#tipMess").text("距离考试结束还有五分钟");
+                            $("#exampleModal2").modal("show");
+                        }
+                        --maxtime;
+                    } else {
+                        clearInterval(_this.timerDown);
+                        _this.handCoding();
+                        $("#tipMess").text("考试结束");
+                        $("#exampleModal2").modal("show");
+                    }
+                }
+                _this.timerDown = setInterval(CountDown, 1000);
+            }
+
+            // 已过时间
+            machineObj.prototype.TimeUp = function (timeObj) {
+                var endTime = timeObj.endTime;
+                var startTime = timeObj.startTime;
+                var id = timeObj.id;
+                var _this = this;
+
+                function CountUp() {
+                    if (endTime >= startTime) {
+                        hours = Math.floor(startTime / 3600);
+                        minutes = Math.floor(startTime / 60 % 60);
+                        seconds = Math.floor(startTime % 60);
+                        msg = hours + "时" + minutes + "分" + seconds + "秒";
+                        document.getElementById(id).innerHTML = msg;
+                        ++startTime;
+                    } else {
+                        clearInterval(_this.timerUp);
+                    }
+                }
+                _this.timerUp = setInterval(CountUp, 1000);
+
+            }
+
+
+            // 考试题及答案
+            machineObj.prototype.questionsList = function (url) {
+                var _this = this;
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    dataType: "JSON",
+                    async: false,
+                    success: function (res) {
+                        if (res.data == "") {
+                            if (res.msg.indexOf('/') != -1) {
+                                let time = res.msg.split('/');
+                                window.parent.window.setOption.openEmptyTest(time[1], time[0],
+                                    "4");
+                            } else {
+                                window.parent.window.setOption.openEmptyTest(0, res.msg, "4",
+                                    res
+                                    .data.examId);
+                            }
+
+                        } else {
+                            _this.examId = res.data.examId;
+                            var sumNum = res.data.testData.length;
+                            //使用layui
+                            layui.use('laypage', function () {
+                                var laypage = layui.laypage;
+                                laypage.render({
+                                    elem: 'Pagination', //注意，这里的 test1 是 ID，不用加 # 号
+                                    limit: 10,
+                                    count: sumNum, //数据总数，从服务端得到
+                                    jump: function(obj, first){
+                                        $(`.par-li[data-index=${obj.curr - 1}]`).addClass('active').siblings('.par-li').removeClass('active');
+                                    }
+                                });
+                            });
+                            _this.callTime(); //
+                            _this.option.testJsonList = res.data;
+
+                            // ----------------- made by mc ---------------------
+
+                            _this.option.examId = res.data.examId; //卷子id号
+                            if (_this.selectType != 0) {
+                                _this.option.examName = res.data.examName; // 考试卷子名称
+                                _this.option.idNumber = res.data.idNumber; // 考生id
+                                _this.option.type = 1; // 考试类型
+                            }
+
+
+                            _this.option.questionsList.data = res.data.testData;
+                            // _this.drawAnswer(_this.option.testJsonList);
+                            _this.drawQusetions(_this.option.questionsList.data);
+                            window.parent.window.setOption.openFullTest();
+                            // window.top.window.titleOpen();
+                        }
+                    },
+                    error: function (err) {
+                        console.log('数据返回错误', err);
+                    }
+                });
+            }
+            // 渲染题库
+            machineObj.prototype.drawQusetions = function (data) {
+                var _this = this;
+                var j = 0;
+                var $ul = $('<ul id="questions-ul" class="questions-ul">');
+                var $li = $('<li class="questions-item">');
+                var $div = $('<div id="Pagination" class="Pagination">');
+
+                for (let i = 0; i < data.length; i++) {
+                    // 分页
+                    if(i % 10 === 0) {
+                        var key =  i / 10;
+                        if(i === 0) {
+                            var $parLi = $(`<li class="par-li active" data-index="${key}">`);
+                        }else {
+                            var $parLi = $(`<li class="par-li" data-index="${key}">`);
+                        }
+
+                        $parLi.appendTo($ul);
+                    }
+
+                    if (data[i].type == "1") {
+                        $li = $('<div class="questions-item" data-id="' + data[i].number + '">');
+                    } else if (data[i].type == "2") {
+                        $li = $('<div class="questions-item danSelect" data-id="' + data[i].number + '" >');
+                    } else if (data[i].type == "3") {
+                        $li = $('<div class="questions-item multSelect" data-id="' + data[i].number + '" >');
+                    }
+
+                    var subject = data[i].number + "." + data[i].question_name.replace(/_/g,
+                        '<input class="answer-line" data-id="' + data[i].number + '">');
+                    $li.html(subject);
+
+                    if (data[i].img != null && data[i].img != "") {
+                        $('<div class="img-box"><img src="data:image/png;base64,' + data[i].img +
+                            '" class="img" id="questionImg"/></div>').appendTo($li);
+                    }
+                    // if(data[i].picturePath!=null && data[i].picturePath !=""){
+                    //   $('<div class="img-box"><img src="' + data[i].picturePath + '" class="img" id="questionImg"/></div>').appendTo($li);
+                    // }
+                    if (data[i].select != null && data[i].select != "") {
+                        var selectArr = data[i].select.split(";");
+                        var $selectBox = $('<ul class="select-box"></ul>');
+                        $.each(selectArr, function (index, item) {
+                            if (data[i].type == "2") {
+                                $('<li class="selectLi"><label><input type="radio" name="' + i +
+                                    '" class="selectRadio oneSelect" value="' + item + '"/>' +
+                                    item + '</label></li>').appendTo($selectBox);
+                            } else if (data[i].type == "3") {
+                                $('<li class="selectLi"><label><input name="~' + i +
+                                    '" type="checkbox" class="selectRadio moreSelect" value="' +
+                                    item + '""/>' + item + '</label></li>').appendTo($selectBox);
+                            }
+                        })
+                        $selectBox.appendTo($li);
+                    }
+                    if (_this.selectType == 0) {
+                        let $answerBox = $(
+                            '<div class="answerIcon glyphicon glyphicon-eye-close"></div><div class="answerBox" id="answerBox">参考答案：' +
+                            data[i].result + '</div>');
+                        $answerBox.appendTo($li);
+                    }
+                    $li.appendTo($parLi);
+                }
+                for (var i = 0; i < j; i++) {
+                    Object.defineProperty(_this.option, `messageNews${i + 1}`, {
+                        value: '未作答。未作答',
+                        writable: true
+                    });
+                }
+
+                this.$itemBank.empty();
+
+                $ul.appendTo(this.$itemBank);
+                $div.appendTo(this.$itemBank);
+                //训练查看答案
+                $("#item-bank").on("click", ".answerIcon", function () {
+                    if ($(this).hasClass("glyphicon-eye-close")) {
+                        $(this).removeClass("glyphicon-eye-close");
+                        $(this).addClass("glyphicon-eye-open");
+                    } else {
+                        $(this).removeClass("glyphicon-eye-open");
+                        $(this).addClass("glyphicon-eye-close");
+                    }
+                    $(this).siblings("#answerBox").toggle();
+                })
+            }
+
+            // 交卷的逻辑代码
+            machineObj.prototype.handCoding = function () {
+
+                var _this = this;
+
+                arr = _this.option.questionsList.data.map((item, index) => {
+                    var itemStr = "";
+                    $('.questions-item[data-id=' + item.number + ']').find('.answer-line').each(
+                        function () {
+                            if ($(this).val() == '') {
+                                var $val = "未作答";
+                            } else {
+                                var $val = $(this).val().replace(/\s/g, null)
+                            }
+                            itemStr += "。" + $val;
+                        });
+                    itemStr = itemStr.slice(1);
+
+                    return {
+                        number: item.number,
+                        table: item.table,
+                        question_code: item.question_code,
+                        question_name: item.question_name,
+                        // result: item.result,
+                        answer: itemStr,
+                        // grade: item.grade
+                    }
+                });
+
+                // 单选题 || 判断题
+                var danArr = [];
+                $('.danSelect').each(function () {
+                    let danSelect = [];
+                    if ($(this).find('input[type="radio"]:checked').val()) {
+                        danSelect = $(this).find('input[type="radio"]:checked').val().split('.');
+                    } else {
+                        danSelect[0] = '未作答'
+                    }
+
+                    danArr['-' + $(this).attr('data-id')] = danSelect[0];
+                });
+
+                // 多选题
+                var multArr = [];
+                $('.multSelect').each(function () {
+                    let valArr = '';
+                    if ($(this).find('.moreSelect:checked').length > 0) {
+                        $(this).find('.moreSelect:checked').each(function () {
+                            let str = $(this).val().split('.');
+                            valArr += str[0];
+                        });
+                    } else {
+                        valArr = '未作答';
+                    }
+
+                    multArr['-' + $(this).attr('data-id')] = valArr;
+                });
+
+
+
+                // 单选题
+                if (Object.keys(danArr).length != 0) {
+                    for (let index in arr) {
+                        let answer = '';
+
+                        for (let i in danArr) {
+                            if ((i.split('-'))[1] == arr[index].number) {
+                                answer = danArr[i];
+                                break;
+                            } else {
+                                answer = arr[index].answer;
+                            }
+                        }
+                        arr[index].answer = answer;
+                    }
+                }
+
+                // 多选题
+                if (Object.keys(multArr).length != 0) {
+                    for (let index in arr) {
+                        let answer = '';
+
+                        for (let i in multArr) {
+                            if ((i.split('-'))[1] == arr[index].number) {
+                                answer = multArr[i];
+                                break;
+                            } else {
+                                answer = arr[index].answer;
+                            }
+                        }
+                        arr[index].answer = answer;
+                    }
+                }
+
+
+                let newData = {
+                    "data": arr,
+                    "examId": _this.option.examId,
+                    "examName": _this.option.examName,
+                    "type": _this.option.type,
+                    "idNumber": _this.option.idNumber,
+                    "subject": "hppd"
+                }
+
+                $.ajax({
+                    type: "post",
+                    url: "/springboot-course/exampaper/handResolve",
+                    data: "hand=" + JSON.stringify(newData),
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.data == 'true') {
+                            let msg = `交卷成功<div class="stu-grad-show">${res.msg}</div>`;
+                            $('#handSuccessText').html(msg);
+                            $('#handSuccess').modal("show");
+
+                            $('#handSure').off('click').on('click', function () {
+                                window.parent.window.setOption.displayScore();
+                                window.top.window.indexObj.refreshTest();
+                            });
+                            $('#handcancle').off('click').on('click', function () {
+                                window.parent.window.setOption.displayScore();
+                                window.top.window.indexObj.refreshTest();
+                            });
+                            $('#closeBtn').off('click').on('click', function () {
+                                window.parent.window.setOption.displayScore();
+                                window.top.window.indexObj.refreshTest();
+                            });
+                            // window.top.window.titleClose();
+                        } else {
+                            $('#handSuccessText').text('交卷失败');
+                            $('#handSuccess').modal("show");
+                        }
+                    },
+                    error: function (err) {
+                        console.log('答案正确率', err);
+                    }
+                });
+
+                clearInterval(_this.timerUp);
+                clearInterval(_this.timerDown);
+            }
+            // 交卷
+            machineObj.prototype.handExam = function () {
+                var _this = this;
+
+                this.$hand.on('click', function () {
+                    _this.handCoding();
+                });
+
+                //返回上个页面
+                $("#returnBox").on("click", function () {
+                    let text = '';
+                    if (_this.selectType == 0) {
+                        text = '确认结束训练吗？'
+                    } else if (_this.selectType == 3) {
+                        text = '查看试卷结束？'
+                    } else {
+                        text = '确认交卷？'
+                    }
+
+                    window.top.window.clickReturn(text, _this.selectType, 4);
+                })
+            }
+
+
+            machineObj.prototype.clearTime = function () {
+                var _this = this;
+                clearInterval(_this.timerUp);
+                clearInterval(_this.timerDown);
+                _this.handCoding();
+            }
+
+
+            machineObj.prototype.reset = function () {
+                $("#answerBank").css("display", "none");
+                $("#item-bank").html('');
+                $("#answerBank").html('');
+            }
+
+            // 考题映射
+            machineObj.prototype.examMapper = function () {
+                var _this = this;
+                var arr = [];
+                $.each(_this.option.questionsList.data, function (index, item) {
+                    arr[item.number] = {
+                        questionCode: item.question_code,
+                        table: item.table
+                    }
+                });
+
+                return arr;
+            }
+
+            window.interpretationObj = new machineObj(option);
+        });
+    </script>
+</body>
+
+</html>

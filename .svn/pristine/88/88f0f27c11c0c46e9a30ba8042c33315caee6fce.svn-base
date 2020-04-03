@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>定位设置</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .view-box {
+      display: flex;
+      height: 100vh;
+      color: #fff;
+      flex-direction: column;
+    }
+
+    .view-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 19px;
+      font-size: 13px;
+    }
+
+    .view-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/sure.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .view-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+
+    /* -------------- contain ------------ */
+    .contain {
+      flex: auto;
+    }
+
+    .response-beam-contain {
+      display: flex;
+      margin: 5px 10px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0;
+      border: 1px solid transparent;
+      cursor: default;
+      margin: 0 auto;
+      margin-top: 5px;
+    }
+
+    .response-beam-contain.active {
+      border: 1px solid #ffd400;
+    }
+
+    .left-btn {
+      width: 25px;
+      height: 22px;
+      background: url(../../img/machine/system/left-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #3741f0;
+      z-index: 10;
+      box-shadow: 0 0 2px #8189fe;
+    }
+
+    .right-btn {
+      width: 25px;
+      height: 22px;
+      background: url(../../img/machine/system/right-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #3741f0;
+      z-index: 10;
+      box-shadow: 0 0 2px #8189fe;
+    }
+
+    .auto-btn {
+      background-color: #535fe5;
+      line-height: 22px;
+      text-align: center;
+      width: 100px;
+      height: 22px;
+    }
+
+    .location-box {
+      padding-top: 3px;
+    }
+
+    .location-li {
+      display: flex;
+      align-items: center;
+      margin: 5px 3px 0 3px;
+      justify-content: space-between;
+    }
+
+    .location-li .location-input {
+      width: 100px;
+      background-color: #9fc4f9;
+      outline: 0;
+      padding-left: 4px;
+      color: #5452a3;
+    }
+
+    .location-li .location-text {
+      width: 52px;
+    }
+
+    .location-li .location-val {
+      margin-left: 5px;
+      display: flex;
+    }
+
+    .location-li:nth-child(2) {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .location-li .location-input.readonly {
+      color: #a2a2a2;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="view-box">
+    <div class="contain">
+      <ul class="location-box">
+        <li class="location-li">
+          <div class="location-text" id="jd">定位频度:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" value="0">
+
+          </div>
+          <div class="format">秒</div>
+        </li>
+        <li class="location-li">
+          <div class="text">测高方式:</div>
+          <div class="response-beam-contain">
+            <div class="left-btn btn" id="turnLeft1"></div>
+            <div class="auto-btn" id="coordinate">
+              有高程
+            </div>
+            <div class="right-btn btn" id="turnRight1"></div>
+          </div>
+        </li>
+        <li class="location-li">
+          <div class="location-text" id="wd">高程:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" value="0">
+          </div>
+          <div class="format">米</div>
+        </li>
+        <li class="location-li">
+          <div class="location-text" id="gc">天线:</div>
+          <div class="location-val">
+            <input type="text" class="location-input" value="0">
+          </div>
+          <div class="format">米</div>
+        </li>
+        <li class="location-li">
+          <div class="location-text">气压:</div>
+          <div class="location-val">
+            <input type="text" class="location-input readonly" id="time" value="0" readonly>
+          </div>
+          <div class="format">帕</div>
+        </li>
+        <li class="location-li">
+          <div class="location-text">温度:</div>
+          <div class="location-val">
+            <input type="text" class="location-input readonly" id="time" value="0" readonly>
+          </div>
+          <div class="format">度</div>
+        </li>
+      </ul>
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">确认</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var obj = function (option) {
+        this.option = option || {
+          locationWayList: ['无高程', '测高一', '测高二', '有高程'],
+          locationWayIndex: 0
+        };
+        this.init();
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        this.setWgc(); // 初始化无高程
+        this.allEvents(); // 所有的事件
+      }
+
+      // 所有的事件
+      obj.prototype.allEvents = function () {
+        this.clickSure(); // 菜单
+        this.clickReturn(); // 返回
+        this.clickLeft(); // 点击左侧按键
+        this.clickRight(); // 点击右侧按键
+        this.clickActive(); // 激活状态
+      }
+
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('定位设置');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // 确定
+      obj.prototype.sureActive = function () {
+        if ($('#coordinate').text() == '无高程') {
+          window.parent.parent.window.newObj.option.noElevationAnswer = "true"; //判断是否无高程
+          window.parent.window.iframeObj.setElevationFree();
+        } else {
+          window.parent.parent.window.newObj.option.noElevationAnswer = "false"; //判断是否无高程
+        }
+        window.parent.window.iframeObj.goBackBefore('定位设置');
+      }
+      obj.prototype.clickSure = function () {
+        var _this = this;
+        $('#sure').on('click', function () {
+          _this.sureActive();
+        });
+      }
+
+      // 激活状态
+      obj.prototype.clickActive = function () {
+        $('.contain').on('click', '.response-beam-contain', function () {
+          $('.response-beam-contain').removeClass('active');
+          $(this).addClass('active');
+        });
+      }
+
+      // 点击左侧按键
+      obj.prototype.clickLeft = function () {
+        var _this = this;
+        var locationWayList = _this.option.locationWayList;
+        $('#turnLeft1').on('click', function () {
+          if (_this.option.locationWayIndex == 0) {
+            _this.option.locationWayIndex = locationWayList.length - 1;
+          } else {
+            _this.option.locationWayIndex--;
+          }
+          if (locationWayList[_this.option.locationWayIndex] == '测高一') {
+            $('.location-input').removeClass('readonly').attr('readonly', false);
+            $('.location-input').eq(1).addClass('readonly').attr('readonly', true);
+          } else if (locationWayList[_this.option.locationWayIndex] == '测高二') {
+            $('.location-input').removeClass('readonly').attr('readonly', false);
+          } else if (locationWayList[_this.option.locationWayIndex] == '有高程') {
+            $('.location-input').removeClass('readonly').attr('readonly', false);
+            $('.location-input').eq(3).addClass('readonly').attr('readonly', true);
+            $('.location-input').eq(4).addClass('readonly').attr('readonly', true);
+          } else if (locationWayList[_this.option.locationWayIndex] == '无高程') {
+            $('.location-input').removeClass('readonly').attr('readonly', false);
+            $('.location-input').eq(1).addClass('readonly').attr('readonly', true);
+            $('.location-input').eq(3).addClass('readonly').attr('readonly', true);
+            $('.location-input').eq(4).addClass('readonly').attr('readonly', true);
+          }
+          $('#coordinate').text(locationWayList[_this.option.locationWayIndex]);
+        });
+      }
+
+      // 点击右侧按键
+      obj.prototype.clickRight = function () {
+        var _this = this;
+        var locationWayList = _this.option.locationWayList;
+        $('#turnRight1').on('click', function () {
+          if (_this.option.locationWayIndex == locationWayList.length - 1) {
+            _this.option.locationWayIndex = 0;
+          } else {
+            _this.option.locationWayIndex++;
+          }
+          if (locationWayList[_this.option.locationWayIndex] == '测高一') {
+            $('.location-input').removeClass('readonly').attr('readonly', false);
+            $('.location-input').eq(1).addClass('readonly').attr('readonly', true);
+          } else if (locationWayList[_this.option.locationWayIndex] == '测高二') {
+            $('.location-input').removeClass('readonly').attr('readonly', false);
+          } else if (locationWayList[_this.option.locationWayIndex] == '有高程') {
+            $('.location-input').removeClass('readonly').attr('readonly', false);
+            $('.location-input').eq(3).addClass('readonly').attr('readonly', true);
+            $('.location-input').eq(4).addClass('readonly').attr('readonly', true);
+          } else if (locationWayList[_this.option.locationWayIndex] == '无高程') {
+            $('.location-input').removeClass('readonly').attr('readonly', false);
+            $('.location-input').eq(1).addClass('readonly').attr('readonly', true);
+            $('.location-input').eq(3).addClass('readonly').attr('readonly', true);
+            $('.location-input').eq(4).addClass('readonly').attr('readonly', true);
+
+          }
+          $('#coordinate').text(locationWayList[_this.option.locationWayIndex]);
+        });
+      }
+
+      // 初始化无高程
+      obj.prototype.setWgc = function () {
+        var _this = this;
+        if (window.parent.window.iframeObj.elevationFree === true) {
+          $('#coordinate').text(_this.option.locationWayList[0]);
+          $('.location-input').eq(1).addClass('readonly').attr('readonly', true);
+          $('.location-input').eq(3).addClass('readonly').attr('readonly', true);
+          $('.location-input').eq(4).addClass('readonly').attr('readonly', true);
+        }
+      }
+
+      // ------------------------
+      window.locationSettingsObj = new obj();
+    })
+  </script>
+</body>
+
+</html>

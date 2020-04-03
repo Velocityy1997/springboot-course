@@ -1,0 +1,86 @@
+var testObj = function(option) {
+    this.option = option || {};
+    this.init();
+};
+
+// 初始化
+testObj.prototype.init = function() {
+    this.$trainUl = $('#train-ul'); // 训练列表父容器
+    this.createTrainList(); // 训练列表
+    // this.callParent();
+    this.allEvent(); // 所有事件
+}
+
+// 训练列表
+testObj.prototype.createTrainList = function() {
+    var _this = this;
+    _this.option.trainIndex = 0;
+
+
+    $.each(this.option.testData, function(index, item) {
+        var $li = $('<li class="train-li" data-id="' + (index + 1) + '">');
+        if (item.isTest == "true") {
+            $('<div class="is-test"></div>').appendTo($li);
+            _this.option.trainIndex++;
+        }
+        $(' <div class="train-img" style="background: url(' + item.imgSrc + ') 0 0 no-repeat; background-size: 100% 100%;" data-imgActive="' + item.imgActiveSrc + '" data-img="' + item.imgSrc + '"></div>').appendTo($li);
+        $(' <div class="train-text">' + item.text + '</div>').appendTo($li);
+        $li.appendTo(_this.$trainUl);
+    });
+
+    _this.callParent();
+
+}
+
+// 所有事件
+testObj.prototype.allEvent = function() {
+    // this.hoverTrainList();      // 鼠标hover效果
+    this.clickTrainList(); // 鼠标点击切换
+}
+testObj.prototype.reset = function() {
+    $('.train-li').each(function() {
+        var $img = $(this).children('.train-img').attr('data-img');
+        var $style = 'background: url(' + $img + ') 0 0 no-repeat;background-size: 100% 100%';
+        $(this).children('.train-img').attr('style', $style);
+    });
+}
+
+testObj.prototype.clickTrainList = function() {
+    var _this = this;
+    this.$trainUl.on('click', '.train-li', function() {
+        // $(this).remove('.is-test');
+        _this.reset();
+        var subject = $(this).attr('data-id');
+        window.parent.window.setOption.goMachine(1, "/springboot-course/exam/getExamPaper?subject=" + subject + "&id_number=", subject);
+        $(this).addClass('active').siblings('.train-li').removeClass('active');
+        var $imgActive = $(this).children('.train-img').attr('data-imgActive');
+        var $style = 'background: url(' + $imgActive + ') 0 0 no-repeat;background-size: 100% 100%';
+        $(this).children('.train-img').attr('style', $style);
+    });
+}
+
+//当本场考试已过
+testObj.prototype.passTest=function(type,examId){
+    if($(".train-li").eq(type-1).find(".is-test").length>0){
+        $(".train-li").eq(type-1).find(".is-test").remove();//当考试时间已过
+        window.parent.window.setOption.changeNums();   //改变警示红点数量
+        // $.ajax({
+        //     type: "get",
+        //     url: 'user/getuserbyname',
+        //     async: false,
+        //     dataType: "JSON",
+        //     success: function(res) {
+        //         window.parent.window.setOption.adminMain(res.data.data);
+        //     },
+        //     error: function(err) {
+        //         console.log('数据返回错误', err);         //改变个人信息处待考数量
+        //     }
+        // });
+        
+    }
+}
+// 调用父级方法
+
+testObj.prototype.callParent = function() {
+    window.parent.window.setOption.changeNums('test', this.option.trainIndex);
+}

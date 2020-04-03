@@ -1,0 +1,101 @@
+{
+  "code": 200,
+  "msg": "ok",
+  "data": {
+    "paper": [
+      {
+        "number": "1",
+        "table": "hand_exam_store",
+        "question_code": "1.1",
+        "question_name": "开机",
+        "result": "true",
+        "answer": "集团军前指下达计划，要求合成第11旅前往云南地区集结。",
+        "score": "5",
+        "right": "0"
+      },
+      {
+        "number": "2",
+        "table": "hand_exam_store",
+        "question_code": "1.2",
+        "question_name": "屏幕设置为高亮",
+        "result": "true",
+        "answer": "455110",
+        "score": "5",
+        "right": "0"
+      },
+      {
+        "number": "4",
+        "table": "fill_blank_exam_store",
+        "question_code": "2.1",
+        "question_name": "本机地址ID号___。",
+        "result": "123456",
+        "answer": "123456",
+        "score": "5",
+        "right": "5"
+      },
+      {
+        "number": "5",
+        "table": "fill_blank_exam_store",
+        "question_code": "2.2",
+        "question_name": "通信等级___级。",
+        "result": "3",
+        "answer": "3",
+        "score": "5",
+        "right": "5"
+      },
+      {
+        "number": "6",
+        "table": "fill_blank_exam_store",
+        "question_code": "2.5",
+        "question_name": "所在位置RDSS高斯坐标（X：____，Y：____，高程：____）。",
+        "result": "123,123,123",
+        "answer": "123,13,123",
+        "score": "5",
+        "right": "0"
+      },
+      {
+        "number": "7",
+        "table": "fill_blank_exam_store",
+        "question_code": "2.6",
+        "question_name": "所在位置大地坐标（X：____，Y：____，高程：____）。",
+        "result": "234,234,234",
+        "answer": "234,234,34",
+        "score": "5",
+        "right": "0"
+      },
+      {
+        "number": "8",
+        "table": "comm_exam_store",
+        "question_code": "3.1",
+        "question_name": "发送“集团军前指下达计划，要求合成第11旅前往云南地区集结。”发送到指挥机455110上",
+        "result": "集团军前指下达计划，要求合成第11旅前往云南地区集结。",
+        "answer": "集团军前指下达计划，要求合成第11旅前往云南地区集结。",
+        "score": "15",
+        "right": "15"
+      },
+      {
+        "number": "9",
+        "table": "comm_exam_store",
+        "question_code": "3.5",
+        "question_name": "发送“敌特分子袭扰，迅速驱歼袭扰之敌。”代密到指挥机123456上。",
+        "result": "455110",
+        "answer": "455110",
+        "score": "15",
+        "right": "15"
+      }
+    ],
+    "list": [
+      {
+        "examName": "考试1",
+        "examTime": "2019-11-20 10:35:03",
+        "studentName": null,
+        "completeTime": "2019-11-20 11:00:50",
+        "totalTimuNum": "8",
+        "corretNum": "4",
+        "errorNum": "4",
+        "score": "35",
+        "grade": "不合格"
+      }
+    ]
+  }
+}

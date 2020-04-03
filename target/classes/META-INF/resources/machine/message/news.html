@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新建电文</title>
+    <link rel="stylesheet" href="../../css/normal.min.css">
+    <style>
+        .main {
+            width: 193px;
+            height: 219px;
+        }
+
+        .main-top {
+            width: 193px;
+            height: 198px;
+            overflow: hidden;
+            padding: 5px;
+        }
+
+        .title {
+            width: 100%;
+            height: 20px;
+            font-size: 17px;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            line-height: 20px;
+        }
+
+        .getbox {
+            width: 100%;
+            height: 45px;
+        }
+
+        .getbox .gettext {
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .getbox .getName {
+            width: 124px;
+            height: 20px;
+            border: 1px solid #fff;
+            background: #89A7F5;
+            box-shadow: inset 0px 15px 1px -15px #000, inset 17px 17px 1px -16px #000;
+            padding: 3px;
+            display: inline-block;
+        }
+
+        .getbox .mesPageBtn {
+            width: 50px;
+            height: 20px;
+            border: none;
+            border-radius: 3px;
+            background: #489CF5;
+            color: #fff;
+            font-size: 12px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .typeBox {
+            width: 100%;
+            height: 27px;
+        }
+
+        .typeBox .mesTypeText {
+            font-size: 14px;
+            display: inline-block;
+            color: #fff;
+        }
+
+        .typeBox .btnBox {
+            width: 100px;
+            height: 20px;
+            background: #2A2EA2;
+            display: inline-block;
+            margin-left: 7px;
+            text-align: center;
+            line-height: 20px;
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .typeBox .btnBox .leftBtn {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #4D57CB;
+            background: url(../../img/machine/message/leftBtn.png) no-repeat;
+            background-size: 100% 100%;
+            background-position: center;
+            float: left;
+            cursor: pointer;
+        }
+
+        .typeBox .btnBox .rightBtn {
+            width: 20px;
+            height: 20px;
+            border: 1px solid #4D57CB;
+            background: url(../../img/machine/message/rightBtn.png) no-repeat;
+            background-size: 100% 100%;
+            background-position: center;
+            float: right;
+            cursor: pointer;
+        }
+
+        .textarea {
+            width: 100%;
+            height: 72px;
+            border: 1px solid #fff;
+            background: #89A7F5;
+            box-shadow: inset 0px 15px 1px -15px #000, inset 17px 17px 1px -16px #000;
+            padding: 3px;
+            resize: none;
+        }
+
+        .areaText {
+            width: 100%;
+            font-size: 14px;
+            line-height: 18px;
+            height: 26px;
+            color: #fff;
+        }
+
+        .bottom-box {
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            height: 20px;
+            padding: 0 5px
+        }
+
+        .cancle {
+            width: auto;
+            height: 100%;
+            float: right;
+            cursor: pointer;
+        }
+
+        .cancle .cancle-img {
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/return.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+
+        .cancle .cancle-text {
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        .nav {
+            width: auto;
+            height: 100%;
+            float: left;
+            cursor: pointer;
+        }
+
+        .nav .nav-img {
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/message/navIcon.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+
+        .nav .nav-text {
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        .nav-list {
+            width: 80px;
+            height: 100px;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            text-align: center;
+            display: none;
+        }
+
+        .main .active {
+            display: block;
+        }
+
+        .nav-list li {
+            width: 100%;
+            height: 25px;
+            color: #fff;
+            line-height: 25px;
+            background: #1B31BA;
+            border: 1px solid #25308F;
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            letter-spacing: 14px;
+            padding-left: 11px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-list li:hover,
+        .nav-list li.active {
+            background-image: linear-gradient(to bottom, #C3D642, #C04825);
+        }
+
+        .mespage {
+            width: 193px;
+            height: 219px;
+            overflow: hidden;
+            position: relative;
+            display: none;
+
+        }
+
+        .mespage .page-title {
+            width: 100%;
+            height: 35px;
+            font-size: 17px;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            line-height: 35px;
+        }
+
+        .mespage .page-box {
+            width: 85%;
+            height: 141px;
+            overflow-y: auto;
+            margin: 0 auto;
+            border: 1px solid #fff;
+        }
+
+        .mespage .list-heard {
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            font-size: 0;
+            color: #fff;
+            background: #515DE8;
+        }
+
+        .mespage .userId,
+        .userName {
+            font-size: 14px;
+            width: 50%;
+            height: 100%;
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .mespage .userId {
+            border-right: 1px solid #7F8DEC;
+        }
+
+        .mespage .page-list {
+            width: 100%;
+            height: auto;
+        }
+
+        .mespage .page-list li {
+            width: 100%;
+            height: 20px;
+            background: #515DE8;
+            border-top: 1px solid #7F8DEC;
+            font-size: 0;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .mespage .page-list .liClick {
+            background-image: linear-gradient(to bottom, #0016bf, #939de0);
+        }
+
+        .mespage .listUserId,
+        .listUserName {
+            font-size: 14px;
+            width: 50%;
+            height: 100%;
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+        }
+
+        .mespage .listUserId {
+            border-right: 1px solid #7F8DEC;
+        }
+
+        .mespage .pageBottom {
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            height: 20px;
+            padding: 0 5px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .mespage .sure {
+            width: auto;
+            height: 100%;
+            float: left;
+            cursor: pointer;
+        }
+
+        .mespage .sure .sure-img {
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/sure.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+
+        .mespage .sure .sure-text {
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        .mespage .return {
+            width: auto;
+            height: 100%;
+            float: right;
+            cursor: pointer;
+        }
+
+        .mespage .return .return-img {
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/return.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+
+        .mespage .return .return-text {
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        /* 输入框的dom */
+        .keys-box {
+            position: fixed;
+            width: 100%;
+            bottom: 20px;
+            z-index: 999;
+            display: none;
+        }
+
+        .hzChar-box {
+            display: flex;
+            height: 20px;
+            justify-content: space-between;
+            width: 100%;
+            background-color: #303765;
+            border: .5px solid #5c608f;
+            border-radius: 3px;
+        }
+
+        .hzChar-box .btn {
+            flex: 0 0 20px;
+            border-radius: 3px;
+        }
+
+        .hzChar-box .hz-char {
+            flex: auto;
+            color: #d6d6e1;
+            padding-left: 3px;
+        }
+
+        .turn-left {
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-right: 10px solid #4a4968;
+            border-bottom: 8px solid transparent;
+            margin-left: -3px;
+            cursor: pointer;
+        }
+
+        .turn-left.active {
+            border-right: 10px solid #cdc8c4;
+        }
+
+        .turn-right {
+            width: 0;
+            height: 0;
+            border-top: 8px solid transparent;
+            border-left: 10px solid #4a4968;
+            border-bottom: 8px solid transparent;
+            cursor: pointer;
+        }
+
+        .turn-right.active {
+            border-left: 10px solid #cdc8c4;
+        }
+
+        /* 汉字和拼音 */
+        .hz-char-li {
+            width: 100%;
+            display: none;
+        }
+
+        .hz-char-li.active {
+            display: flex;
+        }
+
+        .hz-char-li .hz-chart-text {
+            flex: 0 0 25.33px;
+            text-align: center;
+            line-height: 17px;
+            cursor: pointer;
+        }
+
+        .hz-char-li .hz-chart-text.active,
+        .hz-char-li .hz-chart-text:hover {
+            background-color: #3ec7cd;
+            color: #0d838a;
+        }
+
+        .keys-bottom-box {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            display: none;
+        }
+
+        .en-item {
+            width: 100%;
+            display: none;
+        }
+
+        .en-item.active {
+            display: flex;
+        }
+
+        .keys-bottom-box .nav-img {
+            background: url(../../img/machine/sure.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+        /* 拼音字母 */
+        .en-chart-li {
+            width: 100%;
+            display: flex;
+        }
+
+        .en-chart-text {
+            width: 25.33px;
+            line-height: 17px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .en-chart-text:hover,
+        .en-chart-text.active {
+            background-color: #3ec7cd;
+            color: #0d838a;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main" id="main">
+        <div class="main-top">
+            <div class="title">新建电文</div>
+            <div class="getbox">
+                <div class="gettext">收件人：</div>
+                <input type="text" class="getName" id="getName" autocomplete="off">
+                <button type="button" class="mesPageBtn" id="mesPageBtn">通信薄</button>
+            </div>
+            <div class="typeBox">
+                <div class="mesTypeText">信息类型：</div>
+                <div class="btnBox">
+                    <button class="leftBtn" id="leftBtn"></button>
+                    <span class="mesType" id="mesType">混合</span>
+                    <button class="rightBtn" id="rightBtn"></button>
+                </div>
+            </div>
+            <textarea name="" id="news" cols="30" rows="10" class="textarea"></textarea>
+            <div class="areaText" id="areaText">
+                已输入<span class="ysrNum" id="ysrNum">0</span>字，还可输入<span class="syNum" id="syNum">71</span>字
+            </div>
+        </div>
+        <ul class="nav-list" id="navList">
+            <li class="nav-li send" id="send">发送</li>
+            <li class="nav-li insert" id="insert">插入</li>
+            <li class="nav-li save" id="save">保存</li>
+            <li class="nav-li nav-return" id="navReate">返回</li>
+        </ul>
+        <div class="bottom-box" id="bottom-box">
+            <div class="nav" id="nav">
+                <div class="nav-text">菜单</div>
+                <div class="nav-img"></div>
+            </div>
+            <div class="cancle" id="return">
+                <div class="cancle-img"></div>
+                <div class="cancle-text">返回</div>
+            </div>
+        </div>
+    </div>
+    <div class="mespage" id="mesPage">
+        <div class="page-title">通信薄</div>
+        <div class="page-box">
+            <div class="list-heard">
+                <div class="userId" id="userId">用户ID</div>
+                <div class="userName" id="userName">用户名称</div>
+            </div>
+            <ul class="page-list" id="pageList">
+                <li>
+                    <div class="listUserId">ser</div>
+                    <div class="listUserName">s123</div>
+                </li>
+                <li>
+                    <div class="listUserId">adf</div>
+                    <div class="listUserName">134</div>
+                </li>
+                <li>
+                    <div class="listUserId">123</div>
+                    <div class="listUserName">312</div>
+                </li>
+                <li>
+                    <div class="listUserId">123</div>
+                    <div class="listUserName">4353</div>
+                </li>
+                <li>
+                    <div class="listUserId">ser</div>
+                    <div class="listUserName">s123</div>
+                </li>
+                <li>
+                    <div class="listUserId">adf</div>
+                    <div class="listUserName">134</div>
+                </li>
+                <li>
+                    <div class="listUserId">123</div>
+                    <div class="listUserName">312</div>
+                </li>
+                <li>
+                    <div class="listUserId">123</div>
+                    <div class="listUserName">4353</div>
+                </li>
+            </ul>
+        </div>
+        <div class="pageBottom">
+            <div class="sure" id="sure">
+                <div class="sure-text">确定</div>
+                <div class="sure-img"></div>
+            </div>
+            <div class="return" id="pageReturn">
+                <div class="return-img"></div>
+                <div class="return-text">返回</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9键输入法DOM -->
+    <div class="keys-box" id="keys-box">
+        <div class="hzChar-box" id="hzChar-box">
+        </div>
+        <div class="hzChar-box enChar-box" id="enChar-box">
+            <div class="btn turn-left"></div>
+            <ul class="hz-char en-char" id="en-chars">
+            </ul>
+            <div class="btn turn-right"></div>
+        </div>
+    </div>
+    <div class="bottom-box keys-bottom-box" id="keys-bottom-box">
+        <div class="nav" id="keys-sure">
+            <div class="nav-text">确认</div>
+            <div class="nav-img"></div>
+        </div>
+        <div class="cancle" id="keys-cancle">
+            <div class="cancle-img"></div>
+            <div class="cancle-text">取消</div>
+        </div>
+    </div>
+
+    <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function () {
+            //信息类型选择
+            var typeList = ["混合", "汉字", "代码"];
+            var index = 0;
+            var newsArr = [];
+            $("#leftBtn").on("click", function () {
+                if (index == 0) {
+                    index = 2
+                } else {
+                    index--;
+                }
+                $("#mesType").text(typeList[index]);
+            });
+            $("#rightBtn").on("click", function () {
+                if (index == 2) {
+                    index = 0;
+                } else {
+                    index++;
+                }
+                $("#mesType").text(typeList[index]);
+            });
+
+            //输入框
+            // $("#news").on("keyup", function (val) {
+            //     return $('news').val("");
+            // })
+            //通信薄显示隐藏
+            $("#mesPageBtn").on("click", function () {
+                $("#main").css("display", "none");
+                $("#mesPage").css("display", "block");
+            })
+            $("#sure").on("click", function () {
+                $("#main").css("display", "block");
+                $("#mesPage").css("display", "none");
+                $("#getName").val(clickId); //从通讯簿获取收件人
+            })
+            $("#pageReturn").on("click", function () {
+                $("#main").css("display", "block");
+                $("#mesPage").css("display", "none");
+            })
+            //通信薄选中行
+            var clickId = $("#pageList li:first").text();
+            $("#pageList").on("click", "li", function () {
+                $(this).addClass("liClick");
+                $(this).siblings().removeClass("liClick");
+                clickId = $(this).children(".listUserId").text();
+            })
+
+            // ------------------------- made by mc ---------------------
+            class obj {
+                constructor(option) {
+                    this.option = option || {
+                        // 符号
+                        fhList: [
+                            "，",
+                            "。",
+                            "；",
+                            "？",
+                            "！",
+                            "-",
+                            "+",
+                            "“",
+                            "”",
+                            "’",
+                            "（",
+                            "）",
+                            "＜",
+                            "＞",
+                            "【",
+                            "】",
+                            "{",
+                            "}",
+                            "《",
+                            "》",
+                            "/",
+                            "/\/",
+                            "#",
+                            "*",
+                            "$",
+                            "%",
+                            "@",
+                            "、",
+                            "~",
+                            "=",
+                            "|",
+                            "...",
+                            "￥",
+                            "&",
+                            "'",
+                            "一",
+                            "℉",
+                            "℃"
+                        ]
+                    };
+                    this.navIndex = -1; // 菜单栏高亮位置
+                    this.focusSelect = ''; // 聚焦在哪个输入框
+                    this.getNameStr = ''; // 收件人显示的内容
+                    this.getTextStr = ''; // 获取文本域输入的数字
+                    this.currentIndex = 0; // 当前高亮位置
+                    this.currentIndexZh = 0; // 汉字当前高亮位置
+                    this.enText = ''; // 拼音
+                    this.enIndex = 0;
+                    this.getTextArea = ''; // 文本域里面的内容
+                    this.level = 'en'; // 当前处于文字还是汉字
+                    this.zhFlag = true; // 当前输入法为汉字
+                    this.lockState = 'hide'; // 锁定状态
+                    this.init(); // 初始化
+                }
+
+                // 初始化
+                init() {
+                    // this.noKeyboardClick();     // 禁止键盘点击
+                    this.allEvents();           // 各种点击事件
+                }
+
+                // 禁止键盘点击
+                noKeyboardClick() {
+                   document.onkeydown = new Function("return false");
+                }
+                allEvents() {
+                    this.clickReturn(); // 返回
+                    this.clickSend(); // 发送
+                    this.clickNavList(); // 单击菜单栏
+                    this.focusGetName(); // 收件人聚焦事件
+                    this.clickCancle(); // 点击取消
+                    this.clickSwitchHz(); // 切换汉字
+                    this.clickHzText(); // 点击汉字输入到文本域里面
+                }
+                // 重置
+                reset() {
+                    this.currentIndex = 0; // 当前高亮位置
+                    this.currentIndexZh = 0; // 汉字当前高亮位置
+                    this.enText = ''; // 拼音
+                    this.enIndex = 0;
+                    this.getTextStr = '';
+                    this.level = 'en'; // 当前处于文字还是汉字
+                }
+
+                // 返回
+                returnActive() {
+                    if ($('#news').val() == '') {
+                        this.getTextStr = "";
+                        window.parent.parent.newObj.isNineKey = "false";
+                        window.parent.window.iframeObj.goBackBefore('新建电文');
+                    } else {
+                       
+                        $('#news').val($('#news').val().slice(0, -1));
+                    } 
+                }
+                clickReturn() {
+                    let _this = this;
+                    $('#return').on('click', function () {
+                        window.parent.window.iframeObj.goBackBefore('新建电文');
+                    });
+                }
+
+                // 确认
+                clickActive() {
+                    this.needSureActive();
+                }
+                clickSure() {
+                    let _this = this;
+                    $('#keys-sure').on('click', function () {
+                        _this.clickActive();
+                    });
+                }
+
+                // 发送
+                sendActive() {
+                    window.parent.parent.window.newObj.tagFlag();
+                    var getName = $('#getName').val();
+                    var getNews = $('#news').val();
+                    var NewsType = $("#mesType").text();
+
+                    var newsObj = {
+                        "id": getName,
+                        "type": NewsType,
+                        "content": getNews,
+                    };
+                    window.parent.window.iframeObj.newsArr.push(newsObj);
+
+                    if (getName == '') {
+                        getName = null;
+                    }
+                    if (getNews == '') {
+                        getNews = null;
+                    }
+
+                    var postMesage = getNews + '。' + getName;
+
+                    Object.defineProperty(window.parent.parent.window.newObj.option,
+                        window
+                        .parent.parent
+                        .newObj.messageFlag, {
+                            value: postMesage,
+                            writable: true
+                        });
+
+                    window.parent.parent.window.newObj.saveSendMsg(window.parent.parent
+                        .newObj
+                        .messageFlag,
+                        postMesage);
+                    window.parent.window.iframeObj.goBackBefore('新建电文');
+                }
+                clickSend() {
+                    let _this = this;
+                    $('#send').off('click').on('click', function () {
+                        _this.sendActive();
+                    });
+                }
+
+                // 单击菜单栏
+                sureActive() {
+                    if ($("#navList").hasClass("active") == false) {
+                        $("#navList").addClass("active");
+                    }
+                }
+                clickNavList() {
+                    let _this = this;
+                    //菜单显示隐藏
+                    $("#nav").on("click", function () {
+                        _this.sureActive();
+                    })
+                    $("#navList").on("click", "li", function () {
+                        $("#navList").removeClass("active");
+                    })
+                }
+
+                // 单击9键
+                clickNineKeys(keyNum) {
+                    let _this = this;
+                    if (this.focusSelect == "1") {
+                        // just
+                        _this.getNameStr = $('#getName').val();
+                        _this.getNameStr += keyNum;
+                        $('#getName').val(_this.getNameStr);
+                    } else if (this.focusSelect == "2") {
+                        // 当前为汉字状态
+                        if (_this.zhFlag === true) {
+                            if (keyNum !== '0') {
+                                $('#keys-box').show();
+                                _this.getTextStr += keyNum;
+                                this.level = 'en';
+                                this.lockState = 'hide';
+                                this.currentIndex = 0; // 当前高亮位置
+                                this.currentIndexZh = 0; // 汉字当前高亮位置
+                                window.parent.parent.window.newObj.hideActive();
+                                new Promise((resolve, reject) => {
+                                    $.ajax({
+                                        url: '/springboot-course/inputc/getinputC?code=' +
+                                            _this
+                                            .getTextStr,
+                                        dataType: 'json',
+                                        success(data) {
+                                            resolve(data);
+                                        },
+                                        error() {
+                                            _this.getTextStr = _this.getTextStr
+                                                .slice(0, -
+                                                    1);
+                                            alert('拼音不对，请重新拼');
+                                        }
+                                    });
+                                }).then(res => {
+                                    _this.drawChars(res.data);
+                                }).catch(err => console.log('获取按键信息err'));
+                            } else {
+                                _this.getTextArea = $('#news').val() + ' ';
+                                $('#news').val(_this.getTextArea);
+                                _this.limitWords();
+                            }
+                        } else {
+                            // 当前为英文状态
+                            _this.getTextArea = $('#news').val() + keyNum;
+                            $('#news').val(_this.getTextArea);
+                            _this.reset();
+                            _this.limitWords();
+                        }
+                    }
+                }
+
+                // 绘制按键信息
+                drawChars(data) {
+                    let $charLi = $('<li class="en-chart-li active">');
+                    $('#en-chars').empty();
+                    $('#hzChar-box').empty();
+
+                    $.each(data, function (index, item) {
+                        let $enItem = $(
+                            `<div class="en-item" x-target="${item.letterCode}">`);
+                        // 拼音
+                        if ((index % 6 == 0 && index != 0)) {
+                            $charLi.appendTo($('#en-chars'));
+                            $charLi = $('<li class="en-chart-li">');
+                        }
+                        if (index == 0) {
+                            $enItem.attr('x-target', item.letterCode);
+                            $enItem.addClass('active');
+                            $(`<div class="en-chart-text active" x-data="${item.letterCode}">${item.letterCode}</div>`)
+                                .appendTo($charLi);
+                        } else {
+                            $(`<div class="en-chart-text" x-data="${item.letterCode}">${item.letterCode}</div>`)
+                                .appendTo(
+                                    $charLi);
+                        }
+
+                        // 汉字
+
+                        let $ul = $('<ul class="hz-char">');
+                        let hzArr = item.inputC.split('');
+                        let $hzLi = $('<li class="hz-char-li active">');
+                        let $rightBtn = $(`<div class="btn turn-right"></div>`);
+
+                        $(`<div class="btn turn-left"></div>`).appendTo($enItem);
+                        $.each(hzArr, function (index2, item2) {
+                            if ((index2 % 6 == 0 && index2 != 0)) {
+                                $hzLi.appendTo($ul);
+                                $hzLi = $('<li class="hz-char-li">');
+                                $rightBtn.addClass('active');
+                            }
+                            if (index2 == 0) {
+                                $(`<div class="hz-chart-text">${item2}</div>`)
+                                    .appendTo($hzLi);
+                            } else {
+                                $(`<div class="hz-chart-text">${item2}</div>`)
+                                    .appendTo(
+                                        $hzLi);
+                            }
+                        });
+
+                        $hzLi.appendTo($ul);
+                        $ul.appendTo($enItem);
+                        $rightBtn.appendTo($enItem);
+                        $enItem.appendTo($('#hzChar-box'));
+                    });
+
+
+                    $charLi.appendTo($('#en-chars'));
+                    $('#keys-box').hide().children('#enChar-box').css('visibility', 'visible');
+                    $('#keys-box').show();
+                    $('#bottom-box').hide();
+                    $('#keys-bottom-box').show();
+                    window.parent.parent.newObj.isNineKey = "true";
+
+                    this.enText = $('.en-chart-text.active').text(); // 当前拼音所在
+                    this.enIndex = 0; // 
+
+                    this.clickRightBtn(); // 点击右键
+                    this.clickLeftBtn(); // 点击左键
+                }
+
+                // 收件人框聚焦事件
+                focusGetName() {
+                    let _this = this;
+                    $('#getName').off('focus').on('focus', function () {
+                        _this.focusSelect = "1";
+                    });
+                    $('#news').off('focus').on('focus', function () {
+                        _this.focusSelect = "2";
+                    });
+                }
+
+                // 单击取消
+                cancleActive() {
+                    $('#keys-box').hide();
+                    $('#bottom-box').show();
+                    $('#keys-bottom-box').hide();
+                    this.reset();
+                    window.parent.parent.window.newObj.isNineKey = 'false';
+                }
+                clickCancle() {
+                    let _this = this;
+                    $('#keys-cancle').off('click').on('click', function () {
+                        _this.cancleActive();
+                    });
+                }
+
+                // 切换汉字
+                clickSwitchHz() {
+                    let _this = this;
+                    $('#en-chars').on('click', '.en-chart-text', function () {
+                        let $text = $(this).text();
+                        $('.en-chart-text').removeClass('active');
+                        $(this).addClass('active');
+                        $(`.en-item[x-target=${$text}]`).addClass('active').siblings(
+                                '.en-item')
+                            .removeClass('active');
+
+
+                        _this.enText = $text;
+                        _this.enIndex = 0;
+
+                        $('.hz-char').find('.hz-char-li').removeClass('active');
+                        $('.turn-left').removeClass('active');
+                        $('.hz-char').each(function () {
+                            $(this).find('.hz-char-li').first().addClass('active');
+
+                        });
+                        $('.en-item').each(function () {
+                            $(this).find('.turn-right').addClass('active');
+                        });
+
+                        _this.clickRightBtn();
+                        _this.clickLeftBtn();
+                    });
+
+                }
+
+                // 上下左右按钮
+                leftActive() {
+                    let _this = this;
+                    let len = $('.en-chart-text').length - 1;
+                    let lenZh = $('.en-item.active').find('.hz-char-li.active').find(
+                            '.hz-chart-text')
+                        .length - 1;
+
+                    if (this.level == 'en') {
+                        if (this.currentIndex == 0) {
+                            this.currentIndex == 0
+                        } else {
+                            this.currentIndex -= 1;
+                        }
+                    } else if (this.level == 'zn') {
+                        if (this.currentIndexZh == 0) {
+
+                            // 分页上
+                            if (_this.enIndex != 0) {
+                                if (_this.enIndex == 1) {
+                                    $('.en-item.active').children('.turn-left').removeClass(
+                                        'active');
+                                }
+                                $('.en-item.active').children('.hz-char').find('.hz-char-li.active')
+                                    .removeClass(
+                                        'active').prev('.hz-char-li').addClass('active');
+                                _this.enIndex--;
+                                $('.en-item.active').children('.turn-right').addClass('active');
+                                _this.currentIndexZh = $('.en-item.active').children('.hz-char')
+                                    .children(
+                                        '.hz-char-li.active').find('.hz-chart-text').length - 1;
+                            }
+
+                        } else {
+                            this.currentIndexZh -= 1;
+                        }
+                    }
+                    this.changeActive();
+                }
+                rightActive() {
+                    let _this = this;
+                    let len = $('.en-chart-text').length - 1;
+                    let lenZh = $('.en-item.active').find('.hz-char-li.active').find(
+                            '.hz-chart-text')
+                        .length - 1;
+
+                    if (this.level == 'en') {
+                        if (this.currentIndex == len) {
+                            this.currentIndex == len
+                        } else {
+                            this.currentIndex = Number(this.currentIndex) + 1;
+                        }
+                    } else if (this.level == 'zn') {
+                        if (this.currentIndexZh == lenZh) {
+                            // 下一页
+                            if (_this.enIndex != $('.en-item.active').children('.hz-char').find(
+                                    '.hz-char-li')
+                                .length - 1) {
+                                if (_this.enIndex == $('.en-item.active').children('.hz-char').find(
+                                        '.hz-char-li')
+                                    .length - 2) {
+                                    $('.en-item.active').children('.turn-right').removeClass(
+                                        'active');
+                                }
+
+                                $('.en-item.active').find('.hz-char-li.active').removeClass(
+                                    'active').next('.hz-char-li').addClass('active');
+                                _this.enIndex++;
+                                $('.en-item.active').children('.turn-left').addClass('active');
+                                _this.currentIndexZh = 0;
+                            }
+                        } else {
+                            this.currentIndexZh = Number(this.currentIndexZh) + 1;
+                        }
+
+                    }
+                    this.changeActive();
+                }
+                upActive() {
+                    if (this.level == 'en' && this.lockState == 'hide') {
+                        $('.en-chart-text').removeClass('active');
+                        $('.en-item.active').find('.hz-char-li.active').children('.hz-chart-text').eq(0)
+                            .addClass('active');
+                        this.level = 'zn';
+                    }
+
+                }
+                downActive() {
+
+                    if (this.lockState == 'hide') {
+                        $('.hz-chart-text').removeClass('active');
+                        let $target = $('.en-item.active').attr('x-target');
+                        $(`.en-chart-text[x-data="${$target}"]`).addClass('active');
+                        this.level = 'en';
+                        this.currentIndexZh = 0;
+                    }
+                }
+                changeActive() {
+                    let _this = this;
+                    let currentIndex = this.currentIndex;
+                    let currentIndexZh = this.currentIndexZh;
+
+                    if (_this.level == 'en') {
+                        $('.en-chart-text').removeClass('active');
+                        $('.en-chart-text').eq(currentIndex).addClass('active');
+                        let $text = $('.en-chart-text').eq(currentIndex).text();
+                        $(`.en-item[x-target=${$text}]`).addClass('active').siblings('.en-item')
+                            .removeClass('active');
+                        _this.enText = $text;
+                        _this.enIndex = 0;
+
+                        $('.hz-char').find('.hz-char-li').removeClass('active');
+                        $('.turn-left').removeClass('active');
+                        $('.hz-char').each(function () {
+                            $(this).find('.hz-char-li').first().addClass('active');
+                        });
+
+                        this.clickRightBtn();
+                        this.clickLeftBtn();
+                    } else if (_this.level == 'zn') {
+                        $('.hz-chart-text').removeClass('active');
+                        $('.en-item.active').find('.hz-char-li.active').find('.hz-chart-text').eq(
+                            currentIndexZh).addClass('active');
+                    }
+                }
+
+                downNavActive() {
+                    let _this = this;
+                    if (this.navIndex == $('.nav-li').length - 1) {
+                        this.navIndex = $('.nav-li').length - 1;
+                    } else {
+                        this.navIndex++;
+                    }
+                    $('.nav-li').eq(_this.navIndex).addClass('active').siblings('.nav-li').removeClass(
+                        'active');
+                }
+                upNavActive() {
+                    let _this = this;
+                    if (this.navIndex == 0) {
+                        this.navIndex = 0;
+                    } else {
+                        this.navIndex--;
+                    }
+                    $('.nav-li').eq(_this.navIndex).addClass('active').siblings('.nav-li').removeClass(
+                        'active');
+                }
+
+                // 点击右键
+                clickRightBtn() {
+                    let _this = this;
+                    if (_this.enText !== "") {
+                        $('.en-item[x-target=' + _this.enText + ']').off('click').on('click',
+                            '.turn-right.active',
+                            function () {
+                                if (_this.enIndex != $(this).siblings('.hz-char').find(
+                                        '.hz-char-li')
+                                    .length - 1) {
+                                    if (_this.enIndex == $(this).siblings('.hz-char').find(
+                                            '.hz-char-li')
+                                        .length - 2) {
+                                        $(this).removeClass('active');
+                                    }
+
+                                    $(this).siblings('.hz-char').find('.hz-char-li.active')
+                                        .removeClass(
+                                            'active').next('.hz-char-li').addClass('active');
+                                    _this.enIndex++;
+                                    if (_this.level == 'en') {
+                                        $('.hz-chart-text').removeClass('active');
+                                    } else if (_this.level == 'zn') {
+                                        _this.currentIndexZh = 0;
+                                        $('.hz-chart-text').removeClass('active');
+                                        $(this).siblings('.hz-char').find('.hz-char-li.active')
+                                            .children('.hz-chart-text').eq(0).addClass(
+                                                'active');
+                                    }
+                                    $(this).siblings('.turn-left').addClass('active');
+                                }
+                            });
+                    }
+                }
+
+                // 点击左键
+                clickLeftBtn() {
+                    let _this = this;
+                    if (_this.enText !== "") {
+                        $('.en-item[x-target=' + _this.enText + ']').on('click', '.turn-left',
+                            function () {
+                                if (_this.enIndex != 0) {
+                                    if (_this.enIndex == 1) {
+                                        $(this).removeClass('active');
+                                    }
+                                    $(this).siblings('.hz-char').find('.hz-char-li.active')
+                                        .removeClass(
+                                            'active').prev('.hz-char-li').addClass('active');
+                                    _this.enIndex--;
+                                    $(this).siblings('.turn-right').addClass('active');
+
+                                    if (_this.level == 'en') {
+                                        $('.hz-chart-text').removeClass('active');
+                                    } else if (_this.level == 'zn') {
+                                        $('.hz-chart-text').removeClass('active');
+                                        _this.currentIndexZh = 0;
+                                        $(this).siblings('.hz-char').find('.hz-char-li.active')
+                                            .children('.hz-chart-text').eq(0).addClass(
+                                                'active');
+                                    }
+                                }
+                            });
+                    }
+                }
+
+                // 点击汉字输入到文本域zhong 
+                clickHzText() {
+                    let _this = this;
+                    $('#hzChar-box').on('click', '.hz-chart-text', function () {
+
+                        _this.getTextArea = $('#news').val() + $(this).text();
+                        $('#news').val(_this.getTextArea);
+                        $('#keys-box').hide();
+                        $('#keys-bottom-box').hide();
+                        $('#bottom-box').show();
+                        _this.limitWords();
+                    });
+                }
+
+                // 点击确认键
+                needSureActive() {
+                    let _this = this;
+                    if (this.level == 'zn') {
+                        this.getTextArea = $('#news').val() + $('.hz-chart-text.active').text();
+                        $('#news').val(_this.getTextArea);
+                        _this.limitWords();
+                        $('#keys-box').hide();
+                        $('#keys-bottom-box').hide();
+                        $('#bottom-box').show();
+                        window.parent.parent.newObj.isNineKey = "false";
+                        _this.reset();
+                    }
+                }
+
+                // 切换
+                changeFlag(num) {
+                    if (num === 0) {
+                        this.zhFlag = false;
+                        $('#keys-box').hide();
+                    } else if (num === 1) {
+                        this.zhFlag = true;
+                    }
+                }
+
+                // 符号
+                lockFlag(lockState) {
+                    this.lockState = lockState;
+                    if (lockState === 'show' && this.focusSelect == "2") {
+                        $('#areaText').hide();
+                        $('#keys-box').show().children('#enChar-box').css('visibility', 'hidden');
+                        $('#bottom-box').hide();
+                        this.level = 'zn';
+                        this.currentIndexZh = 0;
+                        this.currentIndex = 0;
+                        this.drawLockItems();
+                    } else if (lockState === 'hide' && this.focusSelect == "2") {
+                        $('#areaText').show();
+                        $('#keys-box').hide().children('#enChar-box').css('visibility', 'visible');
+                        $('#keys-bottom-box').hide();
+                        $('#bottom-box').show();
+                        this.level = 'en';
+                    }
+                    this.getTextStr = '';
+                }
+
+                // 渲染符号
+                drawLockItems() {
+                    let _this = this;
+                    $('#en-chars').empty();
+                    $('#hzChar-box').empty();
+                    // 英文
+                    let $charLi = $('<li class="en-chart-li active">');
+                    $(`<div class="en-chart-text active" style="display: none;" x-data="fh">fh</div>`)
+                        .appendTo($charLi);
+                    $charLi.appendTo($('#en-chars'));
+
+                    // 汉字
+                    let $ul = $('<ul class="hz-char">');
+                    let $hzLi = $('<li class="hz-char-li active">');
+                    let $rightBtn = $(`<div class="btn turn-right"></div>`);
+                    let $enItem = $(`<div class="en-item active" x-target="fh">`);
+                    $(`<div class="btn turn-left"></div>`).appendTo($enItem);
+
+                    for (let index2 = 0; index2 < _this.option.fhList.length; index2++) {
+                        let item2 = _this.option.fhList[index2];
+                        if ((index2 % 6 == 0 && index2 != 0)) {
+                            $hzLi.appendTo($ul);
+                            $hzLi = $('<li class="hz-char-li">');
+                            $rightBtn.addClass('active');
+                        }
+                        if (index2 == 0) {
+                            $(`<div class="hz-chart-text active">${item2}</div>`)
+                                .appendTo($hzLi);
+                        } else {
+                            $(`<div class="hz-chart-text">${item2}</div>`)
+                                .appendTo(
+                                    $hzLi);
+                        }
+                    }
+
+                    $hzLi.appendTo($ul);
+                    $ul.appendTo($enItem);
+                    $rightBtn.appendTo($enItem);
+                    $enItem.appendTo($('#hzChar-box'));
+
+                    $('#keys-bottom-box').show();
+                    window.parent.parent.newObj.isNineKey = "true";
+
+                    this.enText = $('.en-chart-text.active').text(); // 当前拼音所在
+                    this.enIndex = 0; // 
+
+                    this.clickRightBtn(); // 点击右键
+                    this.clickLeftBtn(); // 点击左键
+                }
+
+                // 点击菜单栏
+                needNavActive() {
+                    let _this = this;
+                    if ($('.nav-li.active').text() == '发送') {
+                        _this.sendActive();
+                    } else if ($('.nav-li.active').text() == '保存' || $('.nav-li.active').text() == '返回') {
+                        $('#navList').removeClass('active');
+                    }
+                }
+
+                // 字数限制
+                limitWords() {
+                    let len = $("#news").val().length;
+                    if (len > 71) {
+                        $("#news").val($(this).val().substring(0, 71));
+                        $("#syNum").text(0);
+                        $("#ysrNum").text(71);
+                    } else {
+                        $("#ysrNum").text(len);
+                    }
+                    let num = 71 - len;
+                    if (num < 0) {
+                        $("#syNum").text(0);
+                    } else {
+                        $("#syNum").text(num);
+                    }
+                }
+            }
+
+            // -------------------------- 实例化一个对象 -----------------------
+            window.news = new obj();
+        })
+    </script>
+</body>
+
+</html>

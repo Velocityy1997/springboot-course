@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .mespage{
+            width: 193px;
+            height: 219px;
+            overflow: hidden;
+            position: relative;         
+        }
+        .mespage .page-title{
+            width: 100%;
+            height: 35px;
+            font-size: 17px;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            line-height: 35px;
+        }
+        .mespage .page-box{
+            width:85%;
+            height:141px;
+            overflow-y: auto;
+            margin: 0 auto;
+            border: 1px solid #fff;
+        }
+        .mespage .list-heard{
+            width:100%;
+            height:20px;
+            line-height: 20px;
+            font-size: 0;
+            color: #fff;
+            background: #515DE8;
+        }
+        .mespage .userId,.userName{
+            font-size: 14px;
+            width: 50%;
+            height:100%;
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+        }
+        .mespage .userId{
+            border-right: 1px solid #7F8DEC;
+        }
+        .mespage .page-list{
+            width:100%;
+            height: auto;           
+        }
+        .mespage .page-list li{
+            width:100%;
+            height:20px;
+            background: #515DE8;
+            border-top: 1px solid #7F8DEC;
+            font-size: 0;
+            cursor: pointer;
+            color: #fff;
+        }
+        .mespage .page-list .liClick{
+            background-image: linear-gradient(to bottom,#0016bf,#939de0);
+        }
+        .mespage .listUserId,.listUserName{
+            font-size: 14px;
+            width: 50%;
+            height:100%;
+            display: inline-block;
+            vertical-align: top;
+            text-align: center;
+        }
+        .mespage .listUserId{
+            border-right: 1px solid #7F8DEC;
+        }
+        .mespage .pageBottom,.mespage .sendBottom{
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            height: 20px;
+            padding: 0 5px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .mespage .sendBottom{
+            display: none;
+        }
+        .mespage .pageBottom .nav,.mespage .sendBottom .sure{
+            width:auto;
+            height: 100%;
+            float:left;
+            cursor: pointer;
+        }
+        .mespage .pageBottom .nav .nav-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/message/navIcon.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .mespage .sendBottom .sure .sure-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/sure.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .mespage .pageBottom .nav .nav-text,.mespage .sendBottom .sure .sure-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+        .mespage .pageBottom .return,.mespage .sendBottom .return{
+            width:auto;
+            height: 100%;
+            float:right;
+            cursor: pointer;
+        }
+        .mespage .pageBottom .return .return-img,.mespage .sendBottom .return .return-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/return.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .mespage .pageBottom .return .return-text,.mespage .sendBottom .return .return-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+        .mespage .nav-list{
+            width: 80px;
+            height: 125px;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            text-align: center;
+            display: none;
+        }
+        .mespage .active{
+            display: block;
+        }
+        .mespage .nav-list li{
+            width: 100%;
+            height: 25px;
+            color: #fff;
+            line-height: 25px;
+            background: #1B31BA;
+            border: 1px solid #25308F;
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            letter-spacing: 9px;
+            padding-left: 9px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .mespage .nav-list li:hover{
+            background-image: linear-gradient(to bottom,#C3D642,#C04825);
+        }
+        .editPage{
+            width: 193px;
+            height: 219px;
+            overflow: hidden;
+            position: relative;
+            display: none;
+            padding: 30px 10px 0 10px;
+        }
+        .nameBox,.idBox{
+            width:100%;
+            height:auto;
+        }
+        .nameText,.idText{
+            width:100%;
+            line-height: 35px;
+            font-size: 16px;
+            color: #fff;
+        }
+        .inputid,.inputName{
+            width: 160px;
+            height: 30px;
+            border: 1px solid #fff;
+            background: #89A7F5;
+            box-shadow: inset 0px 15px 1px -15px #000, inset 17px 17px 1px -16px #000;
+            padding: 3px;
+            margin: 0 auto;
+            display: block;
+        }
+        .editBottom{
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            height: 20px;
+            padding: 0 5px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .editPage .sure{
+            width:auto;
+            height: 100%;
+            float:left;
+            cursor: pointer;
+        }
+        .editPage .sure .sure-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/sure.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .editPage .sure .sure-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+        .editPage .return{
+            width:auto;
+            height: 100%;
+            float:right;
+            cursor: pointer;
+        }
+        .editPage .return .return-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/return.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .editPage .return .return-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+
+        .main{
+            width: 193px;
+            height: 219px;
+            overflow: hidden;
+            position: relative; 
+            display: none; 
+            padding: 5px;
+        }
+        .main .title{
+            width: 100%;
+            height: 20px;
+            font-size: 17px;
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            line-height: 20px;
+        }
+        .main .getbox{
+            width: 100%;
+            height: 45px;
+        }
+        .main .getbox .gettext{
+            font-size: 14px;
+            color:#fff;
+        }
+        .main .getbox .getName{
+            width: 124px;
+            height: 20px;
+            border: 1px solid #fff;
+            background: #89A7F5;
+            box-shadow: inset 0px 15px 1px -15px #000, inset 17px 17px 1px -16px #000;
+            padding: 3px;
+            display: inline-block;
+        }
+        .main .getbox .mesPageBtn{
+            width: 50px;
+            height:20px;
+            border: none;
+            border-radius: 3px;
+            background: #489CF5;
+            color: #fff;
+            font-size: 14px;
+            line-height: 20px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .main .typeBox{
+            width:100%;
+            height:27px;
+        }
+        .main .typeBox .mesTypeText{
+            font-size: 14px;
+            display: inline-block;
+            color: #fff;
+        }
+        .main .typeBox .btnBox{
+            width: 100px;
+            height: 20px;
+            background: #2A2EA2;
+            display: inline-block;
+            margin-left: 7px;
+            text-align: center;
+            line-height: 20px;
+            color: #fff;
+            font-size: 14px;
+        }
+        .main .typeBox .btnBox .leftBtn{
+            width: 20px;
+            height: 20px;
+            border: 1px solid #4D57CB;
+            background: url(../../img/machine/message/leftBtn.png) no-repeat;
+            background-size: 100% 100%;
+            background-position: center;
+            float: left;
+            cursor: pointer;
+        }
+        .main .typeBox .btnBox .rightBtn{
+            width: 20px;
+            height: 20px;
+            border: 1px solid #4D57CB;
+            background: url(../../img/machine/message/rightBtn.png) no-repeat;
+            background-size: 100% 100%;
+            background-position: center;
+            float: right;
+            cursor: pointer;
+        }
+        .main .textarea{
+            width: 100%;
+            height: 72px;
+            border: 1px solid #fff;
+            background: #89A7F5;
+            box-shadow: inset 0px 15px 1px -15px #000, inset 17px 17px 1px -16px #000;
+            padding: 3px;
+            resize: none;
+        }
+        .main .areaText{
+            width: 100%;
+            font-size: 14px;
+            line-height: 18px;
+            height: 26px;
+            color: #fff;
+        }
+        .main .mainBottom{
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            height: 20px;
+            padding: 0 5px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .main .mainReturn{
+            width:auto;
+            height: 100%;
+            float:right;
+            cursor: pointer;
+        }
+        .main .mainReturn .mainReturn-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/return.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .main .mainReturn .mainReturn-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+        .main .mainSure{
+            width:auto;
+            height: 100%;
+            float:left;
+            cursor: pointer;
+        }
+        .main .mainSure .mainSure-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/sure.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .main .mainSure .mainSure-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+        .alertBox{
+            width: 170px;
+            height: 120px;
+            background: #2A31B6;
+            z-index: 99;
+            position: absolute;
+            top: 30px;
+            left: 11px;
+            display: none;
+        }
+        .alertBox .alertHeard{
+            width: 100%;
+            height:30px;
+            background: #C2CAF5;
+            padding: 0 5px;
+        }
+        .alertBox .alertHeard .alertIcon{
+            width:18px;
+            height: 20px;
+            display: inline-block;
+            background: url(../../img/machine/message/alertIcon.png) no-repeat;
+            background-size: 100% 100%;
+            margin-top: 6px;
+        }
+        .alertBox .alertHeard .pointText{
+            font-size: 14px;
+            color: #fff;
+            line-height: 30px;
+            float: right;
+        }
+        .alertBox .alertText{
+            width: 100%;
+            height: auto;
+            font-size: 16px;
+            line-height: 40px;
+            color: #D3DAA6;
+            text-align: center;
+        }
+        .alertBox .sureButton{
+            width: 65px;
+            height: 30px;
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+            background: #2C356B;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+        }
+        .alertBox .sureButton .alertSure{
+            width:11px;
+            height:11px;
+            background: url(../../img/machine/sure.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+            margin-left: 3px;
+        }
+        .alertBox .returnButton{
+            width: 65px;
+            height: 30px;
+            font-size: 14px;
+            color: #fff;
+            text-align: center;
+            background: #2C356B;
+            position: absolute;
+            bottom: 10px;
+            right: 11px;
+        }
+        .alertBox .returnButton .alertReturn{
+            width:11px;
+            height:11px;
+            background: url(../../img/machine/return.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="alertBox" id="alertBox">
+        <div class="alertHeard">
+            <i class="alertIcon"></i>
+            <div class="pointText">系统提示</div>
+        </div>
+        <div class="alertText">
+            确认要删除该用户？
+        </div>
+        <button class="sureButton" id="sureButton">确认<i class="alertSure"></i></button>
+        <button class="returnButton" id="returnButton"><i class="alertReturn"></i>返回</button>
+    </div>
+    <div class="mespage" id="mesPage">
+        <div class="page-title">通信薄</div>
+        <div class="page-box">
+            <div class="list-heard">
+                <div class="userId" id="userId">用户ID</div>
+                <div class="userName" id="userName">用户名称</div>
+            </div>
+            <ul class="page-list" id="pageList">
+                <li>
+                    <div class="listUserId">ser</div>
+                    <div class="listUserName">s123</div>
+                </li>
+                <li>
+                    <div class="listUserId">adf</div>
+                    <div class="listUserName">134</div>
+                </li>
+                <li>
+                    <div class="listUserId">123</div>
+                    <div class="listUserName">312</div>
+                </li>
+                <li>
+                    <div class="listUserId">123</div>
+                    <div class="listUserName">4353</div>
+                </li><li>
+                        <div class="listUserId">ser</div>
+                        <div class="listUserName">s123</div>
+                    </li>
+                    <li>
+                        <div class="listUserId">adf</div>
+                        <div class="listUserName">134</div>
+                    </li>
+                    <li>
+                        <div class="listUserId">123</div>
+                        <div class="listUserName">312</div>
+                    </li>
+                    <li>
+                        <div class="listUserId">123</div>
+                        <div class="listUserName">4353</div>
+                    </li>
+            </ul>
+        </div>
+        <ul class="nav-list" id="navList">
+            <li class="send" id="send">发短信</li>
+            <li class="edit" id="add">添加</li>
+            <li class="edit" id="edit">编辑</li>
+            <li class="nav-del" id="navDel">删除</li>
+            <li class="nav-return" id="navReate">返回</li>
+        </ul>
+        <div class="pageBottom" id="pageBottom">
+            <div class="nav" id="nav">
+                <div class="nav-text">菜单</div>
+                <div class="nav-img"></div>
+            </div>
+            <div class="return" id="pageReturn">
+                <div class="return-img"></div>
+                <div class="return-text">返回</div>
+            </div>
+        </div>
+        <div class="sendBottom" id="sendBottom">
+            <div class="sure" id="sendSure">
+                <div class="sure-text">确定</div>
+                <div class="sure-img"></div>
+            </div>
+            <div class="return" id="sendReturn">
+                <div class="return-img"></div>
+                <div class="return-text">返回</div>
+            </div>
+        </div>
+    </div>
+    <div class="editPage" id="editPage">
+        <div class="nameBox">
+            <div class="nameText">用户名称：</div>
+            <input type="text" class="inputName" id="inputName" autocomplete="off">
+        </div>
+        <div class="idBox">
+            <div class="idText">用户ID：</div>
+            <input type="text" class="inputid" id="inputid" autocomplete="off">
+        </div>
+        <div class="editBottom">
+            <div class="sure" id="editSure">
+                <div class="sure-text">确定</div>
+                <div class="sure-img"></div>
+            </div>
+            <div class="return" id="editReturn">
+                <div class="return-img"></div>
+                <div class="return-text">返回</div>
+            </div>
+        </div>
+    </div>
+    <div class="main" id="main">
+        <div class="main-top">
+            <div class="getbox">
+                <div class="gettext">发送给：</div>
+                <input type="text" class="getName" id="getName" autocomplete="off">
+                <button type="button" class="mesPageBtn" id="mesPageBtn">通信薄</button>
+            </div>
+            <div class="typeBox">
+                <div class="mesTypeText">信息类型：</div>
+                <div class="btnBox">
+                    <button class="leftBtn" id="leftBtn"></button>
+                    <span class="mesType" id="mesType">混合</span>
+                    <button class="rightBtn" id="rightBtn"></button>
+                </div>          
+            </div>
+            <textarea name="" id="news" cols="30" rows="10" class="textarea"></textarea>
+            <div class="areaText" id="areaText">
+                已输入<span class="ysrNum" id="ysrNum">0</span>字，还可输入<span class="syNum" id="syNum">71</span>字
+            </div>
+        </div>
+        <div class="mainBottom" >
+            <div class="mainSure" id="mainSure">
+                <div class="mainSure-text">确定</div>
+                <div class="mainSure-img"></div>
+            </div>
+            <div class="mainReturn" id="mainReturn">
+                <div class="mainReturn-img"></div>
+                <div class="mainReturn-text">返回</div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function(){
+            //返回按钮
+        var obj = function(option){
+            this.option = option || {};
+            this.init();      // 初始化
+            }
+
+        // 初始化
+        obj.prototype.init = function(){
+            this.allEvents(); // 各种点击事件
+        }
+
+        // 各种点击事件
+        obj.prototype.allEvents = function(){
+            this.clickReturn();       // 返回
+        }
+
+        // 返回
+        obj.prototype.clickReturn = function(){
+            $('#pageReturn').on('click', function(){
+                window.parent.window.iframeObj.goBackBefore('通讯录');
+            });
+        }
+        new obj();
+        //通信薄选中行
+        var clickId=$("#pageList>li:first .listUserId").text();
+        $("#pageList li:first").addClass("liClick");
+        $("#pageList").on("click","li",function(){
+            $(this).addClass("liClick");
+            $(this).siblings().removeClass("liClick");
+            clickId=$(this).children(".listUserId").text();
+        })
+        //菜单显示隐藏
+        $("#nav").on("click",function(){               
+            if($("#navList").hasClass("active")==false){
+                $("#navList").addClass("active");                   
+            }
+        })
+        
+        $("#navList").on("click","li",function(){
+            $("#navList").removeClass("active");
+        })
+        //编辑页面显示隐藏
+        $("#navList").on("click",".edit",function(){
+            $("#editPage").css("display","block");
+            $("#mesPage").css("display","none");
+        })
+        $("#editSure").on("click",function(){
+            $("#editPage").css("display","none");
+            $("#mesPage").css("display","block");
+        })
+        $("#editReturn").on("click",function(){
+            $("#editPage").css("display","none");
+            $("#mesPage").css("display","block");
+        })
+        //发短信页面显示隐藏
+        $("#send").on("click",function(){
+            $("#main").css("display","block");
+            $("#mesPage").css("display","none");
+            $("#getName").val(clickId);
+        })
+        $("#mainSure").on("click",function(){
+            $("#main").css("display","none");
+            $("#mesPage").css("display","block");
+        })
+        $("#mainReturn").on("click",function(){
+            $("#main").css("display","none");
+            $("#mesPage").css("display","block");
+        })
+        //信息类型选择
+        var typeList=["混合","汉字","代码"];
+        var index=0;
+        $("#leftBtn").on("click",function(){
+            if(index==0){
+                index=2
+            }else{
+                index--;
+            }
+            $("#mesType").text(typeList[index]);
+        });
+        $("#rightBtn").on("click",function(){
+            if(index==2){
+                index=0;
+            }else{
+                index++;
+            }
+            $("#mesType").text(typeList[index]);
+        });
+        $("#news").on("keyup",function(){
+            // debugger
+        var len = $(this).val().length;
+        if(len > 71){
+            $(this).val($(this).val().substring(0,71));
+            $("#syNum").text(0);
+            $("#ysrNum").text(71);
+        }else{
+            $("#ysrNum").text(len);
+        }
+        var num = 71 - len;
+        if(num<0){
+            $("#syNum").text(0);
+        }else{
+            $("#syNum").text(num);
+        }
+        
+    })
+    //通信薄显示隐藏
+    $("#mesPageBtn").on("click",function(){
+            $("#main").css("display","none");
+            $("#mesPage").css("display","block");
+            $("#pageBottom").css("display","none");
+            $("#sendBottom").css("display","block");
+        })
+        $("#sendSure").on("click",function(){
+            $("#main").css("display","block");
+            $("#mesPage").css("display","none");
+            $("#pageBottom").css("display","block");
+            $("#sendBottom").css("display","none");
+            $("#getName").val(clickId);//从通讯簿获取收件人
+        })
+        $("#sendReturn").on("click",function(){
+            $("#main").css("display","block");
+            $("#mesPage").css("display","none");
+            $("#pageBottom").css("display","block");
+            $("#sendBottom").css("display","none");
+        })
+        //提示框
+        $("#navDel").on("click",function(){
+            $("#alertBox").css("display","block");
+        })
+        $("#sureButton").on("click",function(){
+            $("#alertBox").css("display","none");
+        })
+        $("#returnButton").on("click",function(){
+            $("#alertBox").css("display","none");
+        })
+        })
+        
+    </script>
+</body>
+</html>

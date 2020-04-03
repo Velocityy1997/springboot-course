@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>导航</title>
+    <link rel="stylesheet" href="../css/normal.min.css">
+    <link rel="stylesheet" href="../css/navigationMain.min.css">
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        
+        .view-box {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            color: #fff;
+        }
+        
+        .contain {
+            flex: auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .view-box .machine-view-bottom {
+            box-shadow: inset 0px 15px 14px -18px #fff;
+            display: flex;
+            justify-content: space-between;
+            color: #cfd1fe;
+            flex: 0 0 18px;
+            font-size: 13px;
+        }
+        
+        .view-box .machine-view-bottom .sure {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .view-box .machine-view-bottom .sure .sure-text {
+            margin-left: 5px;
+            margin-bottom: 3px;
+        }
+        
+        .view-box .machine-view-bottom .sure .sure-img {
+            margin-left: 5px;
+        }
+        
+        .view-box .machine-view-bottom .cancle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .view-box .machine-view-bottom .cancle .cancle-text {
+            margin-right: 5px;
+            margin-bottom: 3px;
+        }
+        
+        .view-box .machine-view-bottom .cancle .cancle-img {
+            margin-right: 5px;
+            width: 12px;
+            height: 12px;
+            background: url(../../img/machine/return.png) 0 0 no-repeat;
+            background-size: 100% 100%;
+        }
+        
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            position: absolute;
+            background: #f959a3;
+            margin-top: -5px;
+            margin-left: -5px;
+        }
+        
+        #showSimulate {
+            width: 27px;
+            height: 27px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            background: url(../img/navigation/right6.png) 0 0 no-repeat;
+            background-size: 100% 100%;
+            position: absolute;
+            bottom: 18px;
+            right: 5px;
+            display: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div class="view-box">
+        <div class="contain" id="contentImage">
+            <!-- 左侧工具栏 -->
+            <div class="navServeBox">
+                <div class="nav-item nav-item1" id="navigationItem"></div>
+                <ul class="nav-serve-ul" id="nav-serve-ul">
+                    <li class="nav-item" x-from="nav"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                    <li class="nav-item" id="editNow"></li>
+                </ul>
+            </div>
+
+            <div class="navServeBox nav-set-right" id="nav-set-right">
+                <ul class="nav-serve-ul">
+                    <li class="nav-item"></li>
+                    <li class="nav-item"></li>
+                </ul>
+            </div>
+
+            <!-- 右侧工具栏 -->
+            <ul class="right-tool">
+                <li class="tool-item"></li>
+                <li class="tool-item" id="bigBtn"></li>
+                <li class="tool-item" id="scaleBtn"></li>
+                <li class="tool-item"></li>
+            </ul>
+            <div class="canvas-container" style="width: 193px; height: 201px;">
+                <canvas id="canvas" class="img" width="193" height="201">
+                
+                </canvas>
+            </div>
+
+            <div class="machine-view-bottom">
+                <div class="sure" id="sure">
+                    <div class="sure-text">确定</div>
+                    <div class="sure-img"></div>
+                </div>
+                <div class="cancle" id="return" onclick="returnPage()">
+                    <div class="cancle-img"></div>
+                    <div class="cancle-text" id="cancle-text">返回</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 是否将当前点设置成新的目的地 -->
+    <div class="screen-box" id="setCorScreen" x-to="nav">
+        <div class="head">
+            <div class="screen-img"></div>
+            <div class="screen-text">系统提示</div>
+        </div>
+        <div class="screen-contain">是否将当前点设置成新的目的地</div>
+        <div class="screen-bottom">
+            <div class="sure" id="setCorSure">
+                确认
+                <div class="sure-img"></div>
+            </div>
+            <div class="close" id="setCorClose">
+                <div class="close-img"></div>
+                返回
+            </div>
+        </div>
+    </div>
+
+    <!-- 是否将保存路径计算结果 -->
+    <div class="screen-box" id="isSaveCal">
+        <div class="head">
+            <div class="screen-img"></div>
+            <div class="screen-text">系统提示</div>
+        </div>
+        <div class="screen-contain">是否将保存路径计算结果</div>
+        <div class="screen-bottom">
+            <div class="sure" id="isSaveCalSure">
+                确认
+                <div class="sure-img"></div>
+            </div>
+            <div class="close" id="isSaveCalClose">
+                <div class="close-img"></div>
+                返回
+            </div>
+        </div>
+    </div>
+
+    <!-- 输入道路名称 -->
+    <div class="screen-box" id="roadName">
+        <div class="head">
+            <div class="screen-img"></div>
+            <div class="screen-text">系统提示</div>
+        </div>
+        <div class="screen-contain roadNameContain">
+            <label for="roadName" class="roadName-label">请输入道路名称:</label>
+            <input type="text" class="radName-input" name="roadName">
+        </div>
+        <div class="screen-bottom">
+            <div class="sure" id="roadNameSure">
+                确认
+                <div class="sure-img"></div>
+            </div>
+            <div class="close" id="roadNameClose">
+                <div class="close-img"></div>
+                返回
+            </div>
+        </div>
+    </div>
+    <div id="showSimulate">
+        <li class="nav-item"></li>
+    </div>
+    <script src="../js/lib/jquery-3.4.1.min.js"></script>
+    <script src="../js/navigationMain.js"></script>
+    <script>
+        $(function() {
+            new navObj();
+        });
+
+        function returnPage() {
+            location.href = "../machine-control-list.html";
+        }
+    </script>
+</body>
+
+</html>

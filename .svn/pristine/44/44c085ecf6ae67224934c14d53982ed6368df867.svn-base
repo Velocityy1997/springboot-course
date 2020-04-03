@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        body {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .videoBox {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .myVedio {
+            position: absolute;
+            min-width: 100%;
+            min-height: 100%;
+            height: auto;
+            width: auto;
+            z-index: -100;
+            top: 50%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-50%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="videoBox">
+        <video id="myVedio" muted autoplay="autoplay" class="myVedio" loop="loop">
+            <source src="./img/login.mp4" type='video/mp4'>
+            </source>
+        </video>
+    </div>
+
+    <script src="./js/lib/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function(){
+            setTimeout(function(){
+                window.location.href="./login.html";
+            },5000)
+        })
+    </script>
+</body>
+
+</html>

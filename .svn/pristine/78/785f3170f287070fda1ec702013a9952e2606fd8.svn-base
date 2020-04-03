@@ -1,0 +1,1022 @@
+		package io.ken.springboot.course.controller.exam;
+
+        import io.ken.springboot.course.bean.ChooseSelectStore;
+        import io.ken.springboot.course.bean.CommExamStore;
+        import io.ken.springboot.course.bean.DecideStore;
+        import io.ken.springboot.course.bean.Exam;
+        import io.ken.springboot.course.bean.FillBlankExamStore;
+        import io.ken.springboot.course.bean.HandExamStore;
+        import io.ken.springboot.course.bean.User;
+        import io.ken.springboot.course.model.CheckExamPaper;
+        import io.ken.springboot.course.model.ExamModel;
+        import io.ken.springboot.course.model.PaperModel;
+        import io.ken.springboot.course.model.exam.MobileInModel;
+        import io.ken.springboot.course.model.exam.MobileInModel1;
+        import io.ken.springboot.course.service.IChooseSelectStoreService;
+        import io.ken.springboot.course.service.ICommExamService;
+        import io.ken.springboot.course.service.IDecideStoreService;
+        import io.ken.springboot.course.service.IExamService;
+        import io.ken.springboot.course.service.IFillExamService;
+        import io.ken.springboot.course.service.IHandExamService;
+        import io.ken.springboot.course.service.implement.ExamInfoServiceImpl;
+        import io.ken.springboot.course.service.implement.ExamServiceImpl;
+        import io.ken.springboot.course.tools.PhotoUtil;
+        import io.ken.springboot.course.tools.Result;
+        import io.ken.springboot.course.tools.Result2;
+        import io.ken.springboot.course.tools.TypeUtil;
+        import io.swagger.annotations.ApiOperation;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.stereotype.Controller;
+        import org.springframework.web.bind.annotation.RequestMapping;
+        import org.springframework.web.bind.annotation.RequestMethod;
+        import org.springframework.web.bind.annotation.ResponseBody;
+        import javax.servlet.http.HttpServletRequest;
+        import java.sql.Timestamp;
+        import java.util.ArrayList;
+        import java.util.Calendar;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Map;
+
+		/**
+		 * 我的考试
+		 * @author lq
+		 *ExamController.java
+		 * 2019年11月20日
+		 */
+		@Controller
+		@RequestMapping("/exam")
+		public class ExamController {
+
+			@Autowired
+			private ExamInfoServiceImpl examInfoServiceImpl;
+
+			@Autowired
+			private IExamService examService;
+
+			@Autowired
+			private ExamServiceImpl examServiceImpl;
+
+			@Autowired
+			private IHandExamService handService;
+			@Autowired
+			private IFillExamService  fillExamService;
+			@Autowired
+			private ICommExamService commExamService;
+			@Autowired
+			private IChooseSelectStoreService chooseSelectStoreService;
+			@Autowired
+			private IDecideStoreService decideStoreService;
+
+			@RequestMapping("/getmyexam")
+			@ResponseBody
+			public Result2 getMyExam(HttpServletRequest request) {
+
+
+				Exam model = new Exam();
+				Result2 result2 = new Result2();
+				List<Exam> list = new ArrayList<Exam>();
+				List<ExamModel> modelList = new ArrayList<ExamModel>();
+
+				try {
+					User user = (User) request.getSession().getAttribute("loginInfo");// 取得当前登录用户
+					list = examService.getMyExam(user.getIdNumber());
+					String regex = "^-?\\d+(\\.\\d+)?$";
+
+					for (int i = 0; i < list.size(); i++) {
+							ExamModel t1 = new ExamModel();
+							String examId = list.get(i).getExamId();
+							String time = list.get(i).getStartTime().toString();
+							String examName = list.get(i).getExamName();
+							String type = TypeUtil.getSubject(list.get(i).getType());
+							t1.setObject(examName);
+							String grade = list.get(i).getGrade();
+							int grades = 0;
+							if(grade != null && !(grade.equals(""))) {
+								grades = Integer.valueOf(grade);
+							}
+
+							int totalGrade = 0;
+
+							if (list.get(i).getTotalGrade().matches(regex)) {
+
+								totalGrade  = Integer.valueOf(list.get(i).getTotalGrade());
+
+								if(grades >= totalGrade * 0.6) {
+									t1.setJudge("合格");
+								}else {
+									t1.setJudge("不合格");
+								}
+							}
+
+
+							t1.setExamId(examId);
+							t1.setTime(time);
+							t1.setGrade(grade);
+							t1.setOperation("查看试卷");
+							t1.setType(type);
+							modelList.add(t1);
+					}
+
+					result2.setRows(modelList);
+					result2.setCode(200);
+					result2.setMsg("msg");
+
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+					result2.setCode(404);
+					result2.setMsg("msg");
+					result2.setRows(null);
+				}
+
+				return result2;
+
+			}
+
+			/**
+			 * 试卷管理获取所有的试卷
+			 * @param subject
+			 * @return
+			 * author:all
+			 * update:gyd
+			 */
+			@ApiOperation(value = "根据科目获取试卷",notes = "根据科目获取试卷")
+			@RequestMapping(value = "/getPapers",method = RequestMethod.GET)
+			@ResponseBody
+			public Map<String, Object> getPapers(String subject) {
+
+				List<PaperModel> modelList = new ArrayList<PaperModel>();
+				Map<String, Object> map = new HashMap<String, Object>();
+				try {
+
+		//			List<String> nameList = examServiceImpl.getExamName();
+					List<String> nameList = examServiceImpl.getExamNameBySubject(subject);
+
+					for(String name:nameList) {
+
+		//				List<Exam> exams = examServiceImpl.getExamByName(name);
+						List<Exam> exams = examServiceImpl.getExamByNameAndSub(name,subject);
+
+		//				List<Exam> exams1 = examServiceImpl.getExamByNameYiKao(name);
+						List<Exam> exams1 = examServiceImpl.getFinishedExamByNameSub(name,subject);
+
+						PaperModel model = new PaperModel();
+						model.setExamName(name);
+						model.setGrade("");
+						model.setPeopleNum("");
+						model.setNums(0);
+						model.setType("未开始");
+
+						if(exams!= null && exams.size() > 0) {
+							model.setPeopleNum(exams1.size() + "/" + exams.size());
+							model.setGrade(exams.get(0).getTotalGrade());
+							model.setNums(exams.get(0).getQuestionNum());
+							Timestamp st = exams.get(0).getStartTime();
+							Calendar newTime = Calendar.getInstance();
+							Calendar startTime = Calendar.getInstance();
+							newTime.setTime(st);
+							startTime.setTime(st);
+							newTime.add(Calendar.MINUTE,exams.get(0).getDuration());
+							Calendar now = Calendar.getInstance();
+							if(now.getTimeInMillis()<startTime.getTimeInMillis()) {
+								model.setType("未开始");
+							}
+							else if(now.getTimeInMillis()>newTime.getTimeInMillis()) {
+								model.setType("已结束");
+							}
+							else {
+								model.setType("考试中");
+							}
+							modelList.add(model);
+						}
+					}
+					map.put("rows", modelList);
+					map.put("total", nameList.size());
+				} catch (Exception e) {
+					// TODO: handle exception
+					e.printStackTrace();
+
+				}
+				return map;
+			}
+
+
+
+
+
+			 /**
+			* 批量删除,按试卷名称删除
+		 * @param id
+		 * @return
+		 * @author lq
+		 */
+		@RequestMapping("/Delete")
+		@ResponseBody
+		 public Result delPaper(String name) {
+
+
+			 Result result = new Result();
+			 try {
+				 String names [] = name.split(";");
+				 List<String> nameList = new ArrayList<String>();
+
+				 for (int i = 0; i < names.length; i++) {
+					 String name1  = names[i];
+					 List<Exam> lists = examService.getExamByNameYiKao(name1);
+					 if(lists != null && lists.size() >0) {
+
+						 result.setCode(404);
+						 result.setMsg("被删除的试卷已经被学员考过了，不能删除");
+						 continue;
+					 }
+					 nameList.add(name1);
+				}
+
+//				 for (int i = 0; i < names.length; i++) {
+//					 String name1  = names[i];
+//
+//				}
+
+				 int num = examService.delUserByNames(nameList);
+				 if (num <=  0 ) {
+					result.setData(false);
+				} else {
+					result.setData(true);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				result.setData(false);
+			}
+			return result;
+
+		 }
+
+		/*
+		 * 查看试卷 cll
+		 */
+		@RequestMapping("/checkPapers")
+		@ResponseBody
+		public Map<String, Object> checkPapers(String examId) {
+
+			List<CheckExamPaper> modelList = new ArrayList<CheckExamPaper>();
+			Map<String, Object> map = new HashMap<String, Object>();
+			try {
+				Exam exam = examService.getModel(examId);
+				int number = 0;
+				//题号
+				//操作题
+				String handCode = exam.getHandExamQuestion();
+				if (handCode == null || "".equals(handCode)) {
+
+				}else {
+					if(handCode != null && !("".equals(handCode))) {
+						String handCodes [] = handCode.split(";");
+						String handResult = exam.getHandExamResult();
+						String handResults[] = null;
+						if (handResult == null || "".equals(handResult)){
+
+						}else {
+							 handResults = handResult.split(";");
+						}
+
+						String handAnswer = exam.getHandExamAnswer();
+
+						if (handAnswer == null || "".equals(handAnswer)) {
+							for (int i = 0; i < handCodes.length; i++) {
+								number++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String handQCode = handCodes[i];//题号
+								String handRs = "";
+								if (handResults != null) {
+									 handRs = handResults[i];//正确答案
+								}else {
+									handRs = "未作答";
+								}
+
+								//String handAnsw = handAnswers[i];//考生答案
+								HandExamStore hand = handService.getNameByCode(handQCode);//题目
+								String QuesName = hand.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+								model.setRight(false);
+
+								model.setRight(false);
+								model.setAnswer("未作答");
+								model.setResult(handRs);
+
+								model.setQuestion_code(handQCode);
+								model.setSelect("");
+								model.setTable("hand_exam_store");
+								model.setType("0");
+								modelList.add(model);
+							}
+
+						} else {
+							String handAnswers []= handAnswer.split(";");
+							//操作题
+							for (int i = 0; i < handCodes.length; i++) {
+								number++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String handQCode = handCodes[i];//题号
+								String handRs = handResults[i];//正确答案
+								String handAnsw = handAnswers[i];//考生答案
+								HandExamStore hand = handService.getNameByCode(handQCode);//题目
+								String QuesName = hand.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+								model.setRight(false);
+								if (handRs.equals(handAnsw)) {
+									model.setRight(true);
+								} else {
+									model.setRight(false);
+								}
+								model.setAnswer(handAnsw);
+								model.setResult(handRs);
+
+								model.setQuestion_code(handQCode);
+								model.setSelect("");
+								model.setTable("hand_exam_store");
+								model.setType("0");
+								modelList.add(model);
+							}
+						}
+
+
+
+					}
+				}
+
+				//填空题
+				String fillCode = exam.getFillBlankExamQuestion();
+				if (fillCode == null || "".equals(fillCode)) {
+
+				}else {
+					if(fillCode != null && !(fillCode.equals(""))) {
+						String fillCodes []= fillCode.split(";");
+						String fillResult = exam.getFillBlankExamResult();
+						String fillResults[] = fillResult.split(";");
+
+						String fillAnswer = exam.getFillBlankExamAnswer();
+
+						if (fillAnswer == null || "".equals(fillAnswer)) {
+							//考生填空题答案为空
+							//答案
+							for (int i = 0; i < fillCodes.length; i++) {
+								number++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String fillQCode = fillCodes[i];//题号
+								String fillRs = fillResults[i];//正确答案
+								//String fillAnsw = fillAnswers[i];//考生答案
+								FillBlankExamStore fill = fillExamService.getNameByCode(fillQCode);//题目
+								String QuesName = fill.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+								if(fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+									model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+								}
+
+								model.setRight(false);
+								model.setAnswer("未作答");
+								model.setResult(fillRs);
+								model.setQuestion_code(fillQCode);
+								model.setSelect("");
+								model.setTable("comm_exam_store");
+								model.setType("0");
+								modelList.add(model);
+							}
+
+						}else {
+							String fillAnswers [] = fillAnswer.split(";");//fillAnswer 为null
+							for (int i = 0; i < fillCodes.length; i++) {
+								number++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String fillQCode = fillCodes[i];//题号
+								String fillRs = fillResults[i];//正确答案
+								String fillAnsw = fillAnswers[i];//考生答案
+								FillBlankExamStore fill = fillExamService.getNameByCode(fillQCode);//题目
+								String QuesName = fill.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+								if(fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+									model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+								}
+								if (fillRs.equals(fillAnsw)) {
+									model.setRight(true);
+								} else {
+									model.setRight(false);
+								}
+								model.setAnswer(fillAnsw);
+								model.setResult(fillRs);
+								model.setQuestion_code(fillQCode);
+								model.setSelect("");
+								model.setTable("comm_exam_store");
+								model.setType("0");
+								modelList.add(model);
+							}
+						}
+
+					}
+				}
+
+
+				//选择题
+				String selectCode = exam.getChooseExamQuestion();
+
+				if (selectCode == null || "".equals(selectCode)) {
+				}else {
+					if(selectCode != null && !(selectCode.equals(""))) {
+						String selectCodes[] = selectCode.split(";");
+						String selectResult = exam.getChooseExamResult();
+						String selectResults[] = selectResult.split(";");
+						String selectAnswer = exam.getChooseExamAnswer();
+
+						if (selectAnswer == null || "".equals(selectAnswer)) {
+							//选择
+							for (int i = 0; i < selectCodes.length; i++) {
+								number++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String selectQCode = selectCodes[i];//题号
+								String selectRs = selectResults[i];//正确答案
+								//String selectAnsw = selectAnswers[i];//考生答案
+								ChooseSelectStore fill = chooseSelectStoreService.getNameByCode(selectQCode);//题目
+								String QuesName = fill.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+
+								if (fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+									model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+								}
+
+								model.setRight(false);
+
+								model.setAnswer("未作答");
+								model.setResult(selectRs);
+								model.setQuestion_code(selectQCode);
+								model.setSelect(fill.getSelectA());
+								model.setTable("choose_select_store");
+								if (fill.getFlag() == 0) {
+									model.setType("3");
+								}
+								if (fill.getFlag() == 1) {
+									model.setType("4");
+								}
+								modelList.add(model);
+							}
+						}else {
+							String selectAnswers [] = selectAnswer.split(";");
+							//选择
+							for (int i = 0; i < selectCodes.length; i++) {
+								number++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String selectQCode = selectCodes[i];//题号
+								String selectRs = selectResults[i];//正确答案
+								String selectAnsw = selectAnswers[i];//考生答案
+								ChooseSelectStore fill = chooseSelectStoreService.getNameByCode(selectQCode);//题目
+								String QuesName = fill.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+								if(fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+									model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+								}
+								if (selectRs.equals(selectAnsw)) {
+									model.setRight(true);
+								} else {
+									model.setRight(false);
+								}
+								model.setAnswer(selectAnsw);
+								model.setResult(selectRs);
+								model.setQuestion_code(selectQCode);
+								model.setSelect(fill.getSelectA());
+								model.setTable("choose_select_store");
+								if(fill.getFlag() == 0) {
+									model.setType("3");
+								}
+								if(fill.getFlag() == 1) {
+									model.setType("4");
+								}
+								modelList.add(model);
+
+							}
+						}
+
+
+
+					}
+				}
+
+
+
+				String commCode = exam.getCommExamQuestion();
+				if (commCode == null || "".equals(commCode)) {
+
+				}else {
+					if(commCode != null && !(commCode.equals(""))) {
+						String commCodes[] = commCode.split(";");
+						String commResult = exam.getCommExamResult();
+						String commResults[] = commResult.split(";");
+						String commAnswer = exam.getCommExamAnswer();
+
+						if (commAnswer == null || "".equals(commAnswer)){
+							for (int i = 0; i < commCodes.length; i++) {
+								number ++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String comCode = commCodes[i];//题号
+								String comRs = commResults[i];//正确答案
+								String comAnws = "";
+								/*if(commAnswers.length > i) {
+									comAnws = commAnswers[i];//考生答案
+								}*/
+								CommExamStore comm= commExamService.getNameByCode(comCode);//题目
+								String QuesName = comm.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+
+
+								model.setRight(false);
+								model.setAnswer("未作答");
+								model.setResult(comRs);
+								model.setQuestion_code(comCode);
+								model.setSelect("");
+								model.setTable("comm_exam_store");
+								model.setType("1");
+								if(comm.getPassTableId() != null && !(comm.getPassTableId().equals(""))) {
+									model.setImg(PhotoUtil.sqlTophoto(comm.getPassTableId()));
+									model.setType("2");
+								}
+								modelList.add(model);
+							}
+						}else {
+							String commAnswers [] = commAnswer.split(";");
+							//通信题
+
+							for (int i = 0; i < commCodes.length; i++) {
+								number ++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String comCode = commCodes[i];//题号
+								String comRs = commResults[i];//正确答案
+								String comAnws = "";
+								if(commAnswers.length > i) {
+									comAnws = commAnswers[i];//考生答案
+								}
+								CommExamStore comm= commExamService.getNameByCode(comCode);//题目
+								String QuesName = comm.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+								if (comRs.equals(comAnws)) {
+									model.setRight(true);
+								} else {
+									model.setRight(false);
+								}
+								model.setAnswer(comAnws);
+								model.setResult(comRs);
+								model.setQuestion_code(comCode);
+								model.setSelect("");
+								model.setTable("comm_exam_store");
+								model.setType("1");
+								if(comm.getPassTableId() != null && !(comm.getPassTableId().equals(""))) {
+									model.setImg(PhotoUtil.sqlTophoto(comm.getPassTableId()));
+									model.setType("2");
+								}
+								modelList.add(model);
+							}
+						}
+
+
+					}
+				}
+
+
+				//判断题
+				String decideCode = exam.getDecideExamQuestion();
+
+				if (decideCode == null || "".equals(decideCode)) {
+				}else {
+					if(decideCode != null && !(decideCode.equals(""))) {
+						String decideCodes[] = decideCode.split(";");
+						String decideResult = exam.getDecideExamResult();
+						String decideResults[] = decideResult.split(";");
+						String decideAnswer = exam.getDecideExamAnswer();
+
+						if (decideAnswer == null || "".equals(decideAnswer)) {
+							for (int i = 0; i < decideCodes.length; i++) {
+								number++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String decideQCode = decideCodes[i];//题号
+								String decideRs = decideResults[i];//正确答案
+								//String decideAnsw = decideAnswers[i];//考生答案
+								DecideStore fill = decideStoreService.getNameByCode(decideQCode);//题目
+								String QuesName = fill.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+								if(fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+									model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+								}
+
+								model.setRight(false);
+								model.setAnswer("未作答");
+								model.setResult(decideRs);
+								model.setQuestion_code(decideQCode);
+								model.setSelect(fill.getSelectA());
+								model.setTable("decide_store");
+								model.setType("3");
+
+								modelList.add(model);
+							}
+						} else {
+							String decideAnswers [] = decideAnswer.split(";");
+							//判断
+							for (int i = 0; i < decideCodes.length; i++) {
+								number++;
+								CheckExamPaper model = new CheckExamPaper();
+								model.setNumber(number);
+								String decideQCode = decideCodes[i];//题号
+								String decideRs = decideResults[i];//正确答案
+								String decideAnsw = decideAnswers[i];//考生答案
+								DecideStore fill = decideStoreService.getNameByCode(decideQCode);//题目
+								String QuesName = fill.getQuestionName();
+								model.setQuestion_name(QuesName);
+								model.setImg(null);
+								if(fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+									model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+								}
+								if (decideRs.equals(decideAnsw)) {
+									model.setRight(true);
+								} else {
+									model.setRight(false);
+								}
+								model.setAnswer(decideAnsw);
+								model.setResult(decideRs);
+								model.setQuestion_code(decideQCode);
+								model.setSelect(fill.getSelectA());
+								model.setTable("decide_store");
+								model.setType("3");
+
+								modelList.add(model);
+							}
+						}
+
+
+					}
+				}
+
+
+				Map<String, MobileInModel1> fillmap = examInfoServiceImpl.getMobileExamByCodeTrain();//填空题
+				map.put("scjData", fillmap);
+				map.put("data", modelList);
+				map.put("code", 200);
+
+
+			}catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+
+			}
+
+			return map;
+		}
+
+		/*
+		 * 查看收藏的试题，具体题目 cll
+		 */
+		@RequestMapping("/checkCollectPapers")
+		@ResponseBody
+		public Map<String, Object> checkCollectPapers(String questionCode,String table) {
+
+			List<CheckExamPaper> modelList = new ArrayList<CheckExamPaper>();
+			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, MobileInModel> fillmap = examInfoServiceImpl.getMobileExamByCode(new String[] {questionCode}, 0);//填空题
+			try {
+					if(table.equals("hand_exam_store")) {
+						HandExamStore hand = handService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = hand.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						model.setRight(false);
+						model.setAnswer("");
+						model.setResult("true");
+						model.setQuestion_code(questionCode);
+						model.setSelect("");
+						model.setTable("hand_exam_store");
+						model.setType("0");
+						modelList.add(model);
+					}
+					if(table.equals("fill_blank_exam_store")) {
+						FillBlankExamStore fill = fillExamService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = fill.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						if(fill.getPassTableId() != null) {
+							model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+						}
+						model.setRight(false);
+						model.setAnswer("");
+						if(questionCode.equals("2.1")) {
+							model.setResult(fillmap.get("bjid").getValue());
+						}
+						if(questionCode.equals("2.2")) {
+							model.setResult(fillmap.get("txdj").getValue());
+						}
+						if(questionCode.equals("2.3")) {
+							model.setResult(fillmap.get("fwpd").getValue());
+						}
+						if(questionCode.equals("2.4")) {
+							model.setResult(fillmap.get("xlh").getValue());
+						}
+						if(questionCode.equals("2.5")) {
+							model.setResult(fillmap.get("RDSSgszbX").getValue()+","+fillmap.get("RDSSgszbY").getValue()+"," +
+							fillmap.get("RDSSgszbgc").getValue());
+						}
+						if(questionCode.equals("2.51")) {
+							model.setResult(fillmap.get("RNSSgszbX").getValue()+","+fillmap.get("RNSSgszbY").getValue()+"," +
+							fillmap.get("RNSSgszbgc").getValue());
+						}
+						if(questionCode.equals("2.6")) {
+							model.setResult(fillmap.get("RDSSddzbX").getValue()+","+fillmap.get("RDSSddzbY").getValue()+"," +
+							fillmap.get("RDSSddzbgc").getValue());
+						}
+						if(questionCode.equals("2.61")) {
+							model.setResult(fillmap.get("RNSSddzbX").getValue()+","+fillmap.get("RNSSddzbY").getValue()+"," +
+							fillmap.get("RNSSddzbgc").getValue());
+						}
+						if(questionCode.equals("2.7")) {
+							model.setResult(fillmap.get("RDSSkjzbX").getValue()+","+fillmap.get("RDSSkjzbY").getValue()+"," +
+							fillmap.get("RDSSkjzbZ").getValue());
+						}
+						if(questionCode.equals("2.71")) {
+							model.setResult(fillmap.get("RNSSkjzbX").getValue()+","+fillmap.get("RNSSkjzbY").getValue()+"," +
+							fillmap.get("RNSSkjzbZ").getValue());
+						}
+						if(questionCode.equals("2.8")) {
+							model.setResult(fillmap.get("RDSSmktzbX").getValue()+","+fillmap.get("RDSSmktzbY").getValue()+"," +
+							fillmap.get("RDSSmktzbgc").getValue());
+						}
+						if(questionCode.equals("2.81")) {
+							model.setResult(fillmap.get("RNSSmktzbX").getValue()+","+fillmap.get("RNSSmktzbY").getValue()+"," +
+							fillmap.get("RNSSmktzbgc").getValue());
+						}
+						model.setQuestion_code(questionCode);
+						model.setSelect("");
+						model.setTable("fill_blank_exam_store");
+						model.setType("");
+						modelList.add(model);
+					}
+					if(table.equals("comm_exam_store")) {
+						CommExamStore comm= commExamService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = comm.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						model.setType("1");
+						if(comm.getPassTableId() != null) {
+							model.setImg(PhotoUtil.sqlTophoto(comm.getPassTableId()));
+							model.setType("2");
+						}
+						model.setRight(false);
+						model.setAnswer("");
+						model.setResult(comm.getResult());
+						model.setQuestion_code(questionCode);
+						model.setSelect("");
+						model.setTable("comm_exam_store");
+						modelList.add(model);
+					}
+					if(table.equals("choose_select_store")) {
+						ChooseSelectStore fill = chooseSelectStoreService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = fill.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						if(fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+							model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+						}
+						model.setRight(false);
+						model.setAnswer("");
+						model.setResult(fill.getResult());
+						model.setQuestion_code(questionCode);
+						model.setSelect(fill.getSelectA());
+						model.setTable("choose_select_store");
+						if(fill.getFlag() == 0) {
+							model.setType("3");
+						}
+						if(fill.getFlag() == 1) {
+							model.setType("4");
+						}
+						modelList.add(model);
+					}
+					if(table.equals("decide_store")) {
+						DecideStore fill = decideStoreService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = fill.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						if(fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+							model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+						}
+						model.setRight(false);
+						model.setAnswer("");
+						model.setResult(fill.getResult());
+						model.setQuestion_code(questionCode);
+						model.setSelect(fill.getSelectA());
+						model.setTable("decide_store");
+						model.setType("3");
+						modelList.add(model);
+					}
+				map.put("data", modelList);
+				map.put("scjData", fillmap);
+				map.put("code", 200);
+
+			}catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+
+			}
+
+			return map;
+		}
+
+		/*
+		 * 查看错误的的试题，具体题目 cll
+		 */
+		@RequestMapping("/checkErrPapers")
+		@ResponseBody
+		public Map<String, Object> checkErrPapers(String questionCode,String table) {
+
+			List<CheckExamPaper> modelList = new ArrayList<CheckExamPaper>();
+			Map<String, Object> map = new HashMap<String, Object>();
+			Map<String, MobileInModel> fillmap = examInfoServiceImpl.getMobileExamByCode(new String[] {questionCode}, 0);//填空题
+			try {
+					if(table.equals("hand_exam_store")) {
+						HandExamStore hand = handService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = hand.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						model.setRight(false);
+						model.setAnswer("");
+						model.setResult("true");
+						model.setQuestion_code(questionCode);
+						model.setSelect("");
+						model.setTable("hand_exam_store");
+						model.setType("0");
+						modelList.add(model);
+					}
+					if(table.equals("fill_blank_exam_store")) {
+						FillBlankExamStore fill = fillExamService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = fill.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						if(fill.getPassTableId() != null) {
+							model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+						}
+						model.setRight(false);
+						model.setAnswer("");
+						if(questionCode.equals("2.1")) {
+							model.setResult(fillmap.get("bjid").getValue());
+						}
+						if(questionCode.equals("2.2")) {
+							model.setResult(fillmap.get("txdj").getValue());
+						}
+						if(questionCode.equals("2.3")) {
+							model.setResult(fillmap.get("fwpd").getValue());
+						}
+						if(questionCode.equals("2.4")) {
+							model.setResult(fillmap.get("xlh").getValue());
+						}
+						if(questionCode.equals("2.5")) {
+							model.setResult(fillmap.get("RDSSgszbX").getValue()+","+fillmap.get("RDSSgszbY").getValue()+"," +
+							fillmap.get("RDSSgszbgc").getValue());
+						}
+						if(questionCode.equals("2.51")) {
+							model.setResult(fillmap.get("RNSSgszbX").getValue()+","+fillmap.get("RNSSgszbY").getValue()+"," +
+							fillmap.get("RNSSgszbgc").getValue());
+						}
+						if(questionCode.equals("2.6")) {
+							model.setResult(fillmap.get("RDSSddzbX").getValue()+","+fillmap.get("RDSSddzbY").getValue()+"," +
+							fillmap.get("RDSSddzbgc").getValue());
+						}
+						if(questionCode.equals("2.61")) {
+							model.setResult(fillmap.get("RNSSddzbX").getValue()+","+fillmap.get("RNSSddzbY").getValue()+"," +
+							fillmap.get("RNSSddzbgc").getValue());
+						}
+						if(questionCode.equals("2.7")) {
+							model.setResult(fillmap.get("RDSSkjzbX").getValue()+","+fillmap.get("RDSSkjzbY").getValue()+"," +
+							fillmap.get("RDSSkjzbZ").getValue());
+						}
+						if(questionCode.equals("2.71")) {
+							model.setResult(fillmap.get("RNSSkjzbX").getValue()+","+fillmap.get("RNSSkjzbY").getValue()+"," +
+							fillmap.get("RNSSkjzbZ").getValue());
+						}
+						if(questionCode.equals("2.8")) {
+							model.setResult(fillmap.get("RDSSmktzbX").getValue()+","+fillmap.get("RDSSmktzbY").getValue()+"," +
+							fillmap.get("RDSSmktzbgc").getValue());
+						}
+						if(questionCode.equals("2.81")) {
+							model.setResult(fillmap.get("RNSSmktzbX").getValue()+","+fillmap.get("RNSSmktzbY").getValue()+"," +
+							fillmap.get("RNSSmktzbgc").getValue());
+						}
+						model.setQuestion_code(questionCode);
+						model.setSelect("");
+						model.setTable("fill_blank_exam_store");
+						model.setType("");
+						modelList.add(model);
+					}
+					if(table.equals("comm_exam_store")) {
+						CommExamStore comm= commExamService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = comm.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						model.setType("1");
+						if(comm.getPassTableId() != null) {
+							model.setImg(PhotoUtil.sqlTophoto(comm.getPassTableId()));
+							model.setType("2");
+						}
+						model.setRight(false);
+						model.setAnswer("");
+						model.setResult(comm.getResult());
+						model.setQuestion_code(questionCode);
+						model.setSelect("");
+						model.setTable("comm_exam_store");
+						model.setType("");
+						modelList.add(model);
+					}
+					if(table.equals("choose_select_store")) {
+						ChooseSelectStore fill = chooseSelectStoreService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = fill.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						if(fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+							model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+						}
+						model.setRight(false);
+						model.setAnswer("");
+						model.setResult(fill.getResult());
+						model.setQuestion_code(questionCode);
+						model.setSelect(fill.getSelectA());
+						model.setTable("choose_select_store");
+						if(fill.getFlag() == 0) {
+							model.setType("3");
+						}
+						if(fill.getFlag() == 1) {
+							model.setType("4");
+						}
+						modelList.add(model);
+					}
+					if(table.equals("decide_store")) {
+						DecideStore fill = decideStoreService.getNameByCode(questionCode);//题目
+						CheckExamPaper model = new CheckExamPaper();
+						model.setNumber(1);
+						String QuesName = fill.getQuestionName();
+						model.setQuestion_name(QuesName);
+						model.setImg(null);
+						if(fill.getPassTableId() != null && !(fill.getPassTableId().equals(""))) {
+							model.setImg(PhotoUtil.sqlTophoto(fill.getPassTableId()));
+						}
+						model.setRight(false);
+						model.setAnswer("");
+						model.setResult(fill.getResult());
+						model.setQuestion_code(questionCode);
+						model.setSelect(fill.getSelectA());
+						model.setTable("decide_store");
+						model.setType("3");
+						modelList.add(model);
+					}
+				map.put("data", modelList);
+				map.put("scjData", fillmap);
+				map.put("code", 200);
+
+			}catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+
+			}
+
+			return map;
+		}
+
+
+
+		}

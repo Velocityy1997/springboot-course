@@ -1,0 +1,30 @@
+.btns-box{display:flex;justify-content:flex-end;padding-bottom:15px}
+.btns-box .btn {
+    margin-right: 15px;
+}
+.modal-dialog .form-box .form-control {
+    padding: 6px;
+}
+.modal-dialog .form-box .form-group {
+    margin-bottom: 5px;
+}
+.modal-dialog .form-box .control-label {
+    padding-right: 0;
+    line-height: 34px;
+    font-weight: 500;
+}
+.modal-dialog .form-box .col-sm-10 {
+    padding-left: 0;
+}
+.modal-dialog .form-box .form-group:first-child .form-control {
+    padding-top: 3px;
+}
+
+/* 重写layui样式 */
+.modal-body .layui-form-label {
+    padding: 9px 5px;
+    width: 110px;
+}
+.modal-body .layui-input-block {
+    margin-left: 110px;
+}

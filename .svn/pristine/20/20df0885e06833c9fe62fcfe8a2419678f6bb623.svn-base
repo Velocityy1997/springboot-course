@@ -1,0 +1,191 @@
+.view-box {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.view-box .view-head {
+  flex: 0 0 100px;
+  padding-left: 30px;
+  padding-top: 10px;
+}
+
+.view-box .view-head .exam-head {
+  font-size: 24px;
+  color: #6f737a;
+  display: flex;
+  line-height: 55px;
+  letter-spacing: 2px;
+}
+
+.view-box .view-head .exam-head .exam-time {
+  padding-left: 50px;
+}
+
+.view-box .view-head .exam-list .exam-li {
+  display: inline-flex;
+  font-size: 18px;
+  color: #6f737a;
+  margin-left: 20px;
+}
+
+.view-box .view-head .exam-list .exam-li .exam-span {
+  padding-left: 10px;
+}
+
+.view-box .view-head .exam-list .exam-li .unquaLified {
+  color: red;
+}
+
+.view-box .view-head .exam-list .exam-li .quaLified {
+  color: #29ca14;
+}
+
+.view-box .view-head .exam-list .exam-li .exam-score {
+  font-size: 30px;
+  line-height: 12px;
+}
+
+.view-box .view-head .exam-list .exam-li:first-child {
+  margin-left: 0;
+}
+
+.view-box .view-head .close {
+  float: right;
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1;
+  color: #000;
+  text-shadow: 0 1px 0 #fff;
+  filter: alpha(opacity=20);
+  opacity: .2;
+  -webkit-appearance: none;
+  padding: 0;
+  cursor: pointer;
+  background: 0 0;
+  border: 0;
+  margin-top: -2px;
+  position: absolute;
+  right: 0;
+  top: 10px;
+  right: 16px;
+}
+
+.view-box .view-body {
+  flex: auto;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  overflow: hidden;
+}
+
+.view-box .view-body .view-body-ul {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.view-box .view-body .view-body-ul .view-body-li:first-child {
+  margin-top: 5px;
+}
+
+.view-box .view-body .view-body-ul .view-body-li:last-child {
+  margin-bottom: 5px;
+}
+
+.view-box .view-body .view-body-ul .view-body-li {
+  height: 139px;
+  margin: 2.5px 0;
+  display: flex;
+}
+
+.view-box .view-body .view-body-ul .view-body-li .view-left-box {
+  flex: 0 0 50px;
+  background-color: #b3e0ad;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.view-box .view-body .view-body-ul .view-body-li .view-right-box {
+  flex: auto;
+  font-size: 16px;
+  color: #6f737a;
+  position: relative;
+}
+
+.view-box .view-body .view-body-ul .view-body-li .view-right-box .examQuestion {
+  background-color: #f2f2f2;
+  flex: 1;
+  height: 50px;
+  padding-top: 17px;
+  padding-left: 20px;
+  letter-spacing: 2px;
+  word-wrap: break-word;
+  word-break: normal;
+  width: calc(100% - 20px);
+}
+
+.view-box .view-body .view-body-ul .view-body-li .view-right-box .examQuestion .score {
+  padding-left: 10px;
+}
+
+.view-box .view-body .view-body-ul .view-body-li .view-right-box .answer-box {
+  height: calc(100% - 50px);
+  padding-left: 20px;
+  padding-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.view-box .view-body .view-body-ul .view-body-li .view-right-box .answer-box .my-answer, .view-box .view-body .view-body-ul .view-body-li .view-right-box .answer-box .ref-answer {
+  line-height: 36px;
+}
+
+.view-box .view-body .view-body-ul .view-body-li .view-right-box .answer-box .my-answer .text, .view-box .view-body .view-body-ul .view-body-li .view-right-box .answer-box .ref-answer .text {
+  padding-left: 5px;
+}
+
+.view-box .view-body .view-body-ul .view-body-li .view-right-box .answer-box .my-answer .text {
+  color: #5492ff;
+}
+
+.view-box .view-body .view-body-ul .view-body-li .view-right-box .answer-box .right-score {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 60px;
+  color: #5492ff;
+  cursor: default;
+}
+
+.view-box .view-body .view-body-ul .even .view-left-box {
+  background-color: #f959a3;
+}
+
+.view-box .view-body .view-body-ul .even .view-right-box .answer-box .my-answer .text {
+  color: #f959a3;
+}
+
+.view-box .view-footer {
+  flex: 0 0 50px;
+}
+
+.view-box .view-footer .banner-items {
+  display: flex;
+  padding: 15px 20px 0 40px;
+}
+
+.view-box .view-footer .item {
+  width: 30px;
+  height: 30px;
+  color: #6f737a;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.view-box .view-footer .item:hover, .view-box .view-footer .active {
+  background-color: #04331a;
+  color: #fff;
+}

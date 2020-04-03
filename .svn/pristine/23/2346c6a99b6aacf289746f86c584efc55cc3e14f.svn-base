@@ -1,0 +1,88 @@
+package io.ken.springboot.course.dao;
+
+import io.ken.springboot.course.bean.FillBlankExamStore;
+import io.ken.springboot.course.model.ExcelModel;
+import io.ken.springboot.course.model.exam.newExam.CreatNewExam;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author lq
+ * FillExamMapper.java
+ * 2019年11月28日
+ */
+@Mapper
+public interface FillExamMapper {
+
+    @Select("SELECT *  FROM  fill_blank_exam_store WHERE question_code =#{fillQCode}")
+    FillBlankExamStore getNameByCode(@Param("fillQCode") String fillQCode);
+
+    @Select("SELECT *  FROM  fill_blank_exam_store ")
+    List<FillBlankExamStore> queryAll();
+
+    @Select("SELECT *  FROM  fill_blank_exam_store WHERE question_name =#{name}")
+    List<FillBlankExamStore> getByName(@Param("name") String name);
+
+    @Insert({
+            "INSERT INTO fill_blank_exam_store(id,question_name,question_code,type,grade,flag,result,pass_table_id,subject,level_id) "
+                    + "VALUES(#{id},#{questionName},#{questionCode},#{type},#{grade},#{flag},#{result} ,#{passTableId},#{subject},#{levelId})"})
+    int add(FillBlankExamStore exam);
+
+    @Select("select question_name,question_code,result FROM fill_blank_exam_store where subject =#{subject}  ORDER BY rand() LIMIT 0, #{limitm} ")
+    List<Map<String, String>> getFillQuestionRandom(@Param("subject") String subject, @Param("limitm") int limitm);
+
+    /**
+     * excel批量导入试题
+     *
+     * @param excelmode
+     * @return
+     */
+    @Insert("<script>" +
+            "Insert into fill_blank_exam_store(id,question_name,question_code,result,subject,flag,type,grade,picture_path,level_id,pass_table_id)" +
+            "values" +
+            "<foreach collection='list'  item='value'  separator=','>" +
+            "(#{value.id},#{value.questionName},#{value.questionCode},#{value.result},#{value.subject},#{value.flag},#{value.type},#{value.grade},#{value.picturePath},#{value.levelId},#{value.passTableId})" +
+            "</foreach>" +
+            "</script>")
+    int addExcel(List<ExcelModel> excelmode);
+
+    /**
+     * excel去重查询
+     *
+     * @param name
+     * @return
+     */
+    @Select("select id from fill_blank_exam_store where question_name=#{name} and picture_path=#{picturePath}")
+    ExcelModel queryName(@Param("name") String name, @Param("picturePath") String picturePath);
+
+    /**
+     * excel导入试题覆盖同名称试题
+     *
+     * @param excelModel
+     * @return
+     */
+    @Update("update fill_blank_exam_store set result=#{result},subject=#{subject},flag=#{flag},type=#{type},grade=#{grade} level_id=#{levelId},pass_table_id=#{passTableId} where id=#{id}")
+    int updateQuestions(ExcelModel excelModel);
+
+    /**
+     * 统计可选择的题数
+     *
+     * @param subject 科目
+     * @param level   级别
+     * @return
+     */
+    @Select("SELECT count(*) FROM fill_blank_exam_store WHERE subject=#{subject} AND level_id LIKE CONCAT('%',#{level},'%')")
+    int getCount(@Param("subject") String subject, @Param("level") String level);
+    /**
+     * 随机取出一定数的题
+     * @param creatNewExam
+     * @return
+     */
+@Select("SELECT * from fill_blank_exam_store where subject=#{subject} AND level_id=#{level} LIKE CONCAT('%',#{level},'%') order by rand() limit #{pack}")
+    List<FillBlankExamStore> getQUestion(CreatNewExam creatNewExam);
+}

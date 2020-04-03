@@ -1,0 +1,86 @@
+package io.ken.springboot.course.service.implement;
+
+import io.ken.springboot.course.bean.DecideStore;
+import io.ken.springboot.course.dao.DecideStoreMapper;
+import io.ken.springboot.course.model.ExcelModel;
+import io.ken.springboot.course.model.exam.newExam.CreatNewExam;
+import io.ken.springboot.course.service.IDecideStoreService;
+import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author cll
+ * FillExamServiceImpl.java
+ * 2019年11月28日
+ */
+@Service("DecideStoreService")
+public class DecideStoreServiceImpl implements IDecideStoreService {
+
+    @Resource
+    private DecideStoreMapper decideStoreMapper;
+
+    @Override
+    public DecideStore getNameByCode(String fillQCode) {
+        // TODO Auto-generated method stub
+        DecideStore fill = decideStoreMapper.getNameByCode(fillQCode);
+        return fill;
+    }
+
+    @Override
+    public List<DecideStore> getByName(String name) {
+        // TODO Auto-generated method stub
+
+        List<DecideStore> comm = decideStoreMapper.getByName(name);
+        return comm;
+    }
+
+    @Override
+    public int add(DecideStore exam) {
+        // TODO Auto-generated method stub
+        return decideStoreMapper.add(exam);
+    }
+
+    @Override
+    public List<Map<String, Object>> getDecideQuestionRandom(String subject, int limitm) {
+        List<Map<String, Object>> list = decideStoreMapper.getDecideQuestionRandom(subject, limitm);
+        return list;
+    }
+
+    @Override
+    public int addExcel(List<ExcelModel> excelModel) {
+
+        return decideStoreMapper.addExcel(excelModel);
+    }
+
+    @Override
+    public ExcelModel queryName(String name, String picturePath) {
+
+        ExcelModel excelModel = decideStoreMapper.queryName(name, picturePath);
+        return excelModel;
+    }
+
+    @Override
+    public int updateQuestions(ExcelModel excelModel) {
+
+        return decideStoreMapper.updateQuestions(excelModel);
+    }
+
+    @Override
+    public int addModel(DecideStore exam) {
+        // TODO Auto-generated method stub
+        return decideStoreMapper.add(exam);
+    }
+
+    @Override
+    public int getCount(String subject, String level) {
+        return decideStoreMapper.getCount(subject, level);
+    }
+
+    @Override
+    public List<DecideStore> getQuestion(CreatNewExam creatNewExam) {
+        List<DecideStore> decideStoreList = decideStoreMapper.getQuestion(creatNewExam);
+        return decideStoreList;
+    }
+}

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>电源管理</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .machine-view-box {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* 列表信息 */
+    .machine-view-box .machine-view-main {
+      flex: auto;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      height: 100%;
+      padding: 5px 0;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li {
+      display: flex;
+      margin-top: 8px;
+    }
+
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li .machine-view-text {
+      flex: 0 0 35%;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      padding-left: 3px;
+      cursor: default;
+      justify-content: center;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li .machine-view-input {
+      flex: 0 0 65%;
+      display: flex;
+      align-items: center;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li .machine-view-input>input {
+      font-size: 12px;
+      width: 113px;
+      background-color: #82a8e9;
+      border: 1px solid #cccff9;
+      margin-left: 3px;
+      color: #333;
+      height: 20px;
+      line-height: 20px;
+      outline: 0;
+      text-align: center;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .rmp .machine-view-input>input {
+      background-color: #23237b;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li .machine-view-input>input:focus {
+      border: 1px solid #fff;
+    }
+
+    /* 底部栏 */
+    .machine-view-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 18px;
+      font-size: 13px;
+    }
+
+    .machine-view-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .machine-view-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .machine-view-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/sure.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .machine-view-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .machine-view-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .machine-view-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    /* 省电模式 */
+    .response-beam-box {
+      flex: 0 0 27px;
+      display: flex;
+      align-items: center;
+    }
+
+    .response-beam-box .response-beam-text {
+      flex: 0 0 35%;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      padding-left: 3px;
+      cursor: default;
+      justify-content: center;
+    }
+
+    .response-beam-box .response-beam-contain {
+      display: flex;
+      margin: 5px 10px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0;
+      border: 1px solid transparent;
+      cursor: default;
+    }
+
+    .response-beam-box .response-beam-contain.active {
+      border: 1px solid #ffd400;
+    }
+
+    .left-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/left-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #0c12a4;
+    }
+
+    .right-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/right-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #0c12a4;
+    }
+
+    .auto-btn {
+      background-color: #0d1291;
+      line-height: 27px;
+      text-align: center;
+      width: 54px;
+      color: #fff;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="machine-view-box">
+    <div class="machine-view-main" id="machine-view-main">
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">确认</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var obj = function (option) {
+        this.option = option || {};
+        this.init(); // 初始化
+        this.autoText = '正常';
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        this.allEvents(); // 各种点击事件
+        this.drawList(); // 渲染列表
+      }
+
+      // 渲染列表
+      obj.prototype.drawList = function () {
+        var machineList = this.option.powerList;
+        var $ul = $('<ul class="machine-view-ul">');
+
+        for (var i = 0; i < machineList.length; i++) {
+
+          if (machineList[i].text != '工作状态') {
+            var $li = $('<li class="machine-view-li">');
+            $('<div class="machine-view-text">' + machineList[i].text + '</div>').appendTo($li);
+            $('<div class="machine-view-input"><input type="text" value="' + machineList[i].value + '" readonly></div>')
+              .appendTo($li);
+            $li.appendTo($ul);
+          } else {
+            $('<div class="response-beam-box" > <div class = "response-beam-text" > 工作状态 </div> <div class = "response-beam-contain" ><div class = "left-btn" > </div> <div class = "auto-btn" > 正常 </div> <div class = "right-btn" > </div> </div> </div>')
+              .appendTo($ul);
+          }
+        }
+
+        $ul.appendTo($('#machine-view-main'));
+      }
+
+      // 各种点击事件
+      obj.prototype.allEvents = function () {
+        this.clickReturn(); // 返回
+        this.clickSure(); // 确定
+        this.clickLeftBtn(); 
+        this.clickRightBtn(); 
+        this.clickRsponse(); // 自动激活状态
+      }
+
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('电源管理');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // 确定
+      obj.prototype.sureActive = function () {
+        window.parent.window.iframeObj.goBackBefore('电源管理');
+      }
+      obj.prototype.clickSure = function () {
+        var _this = this;
+        $('#sure').on('click', function () {
+          _this.sureActive();
+        });
+      }
+
+      // 点击左侧按钮
+      obj.prototype.clickLeftBtn = function () {
+        var _this = this;
+        $('#machine-view-main').on('click', '.left-btn', function () {
+          if (_this.autoText == '正常') {
+            _this.autoText = '省电';
+          } else {
+            _this.autoText = '正常';
+          }
+
+          $(this).siblings('.auto-btn').text(_this.autoText);
+        });
+      }
+
+      // 点击右侧按钮
+      obj.prototype.clickRightBtn = function () {
+        var _this = this;
+        $('#machine-view-main').on('click', '.right-btn', function () {
+
+         
+          if (_this.autoText == '正常') {
+            _this.autoText = '省电';
+          } else {
+            _this.autoText = '正常';
+          }
+
+          $(this).siblings('.auto-btn').text(_this.autoText);
+        });
+      }
+
+      // 选择的激活状态
+      obj.prototype.clickRsponse = function () {
+        $('#machine-view-main').on('click', '.response-beam-contain', function () {
+          $('.response-beam-contain').removeClass('active');
+          $(this).addClass('active');
+        });
+      }
+
+      // ________________________________________________________________
+      var option = {
+        powerList: [{
+            "text": "电源来源",
+            "value": "电池"
+          },
+          {
+            "text": "剩余电量",
+            "value": "43%"
+          },
+          {
+            "text": "充电状态",
+            "value": "否"
+          },
+          {
+            "text": "工作状态",
+            "value": "正常"
+          }
+        ]
+      };
+      window.powerObj = new obj(option);
+
+    });
+  </script>
+</body>
+
+</html>

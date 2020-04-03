@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="layui-form-item">
+        <label class="layui-form-label">下拉选择框</label>
+        <div class="layui-input-block">
+            <select id="selectId" name="interest" lay-filter="city">
+      </select>
+        </div>
+    </div>
+
+    <script src="./js/lib/jquery-3.4.1.min.js"></script>
+    <script src="./js/lib/bootstrap.min.js"></script>
+    <script src="./layui/layui.js"></script>
+
+    <script>
+        layui.use(['form', 'jquery'], function() {
+
+            //----------模块----------
+            var form = layui.form,
+                $ = layui.$;
+
+            //动态添加下拉框     同时可以设置默认值
+            $.ajax({
+                url: 'json/selectId.json',
+                dataType: 'json',
+                //type:'post',
+                success: function(data) {
+
+                    $.each(data, function(index, item) {
+                        console.log(item);
+                        //option  第一个参数是页面显示的值，第二个参数是传递到后台的值
+                        $('#selectId').append(new Option(item.cityName, item.cityId)); //往下拉菜单里添加元素
+                        //设置value（这个值就可以是在更新的时候后台传递到前台的值）为2的值为默认选中
+                        $('#selectId').val(2);
+                    })
+
+                    form.render(); //更新全部表单内容
+                    //form.render('select'); //刷新表单select选择框渲染
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

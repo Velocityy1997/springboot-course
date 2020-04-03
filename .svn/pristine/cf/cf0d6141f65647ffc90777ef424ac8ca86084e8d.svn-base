@@ -1,0 +1,31 @@
+package io.ken.springboot.course.dao;
+
+import io.ken.springboot.course.bean.HandExamStore;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import java.util.List;
+import java.util.Map;
+
+@Mapper
+public interface HandExamMapper {
+
+	
+	@Select("SELECT *  FROM  hand_exam_store WHERE question_code =#{handQCode}")
+	HandExamStore getNameByCode(@Param("handQCode")String handQCode);
+	
+	@Select("select question_name,question_code FROM hand_exam_store where  question_code != '1.1'  and subject =#{subject} ORDER BY rand() LIMIT 0, 1")
+	List<Map<String,String>> getQuestionRandom(@Param("subject")String subject);
+	
+	@Select("select * FROM hand_exam_store where  question_code != '1.1'  and subject =#{subject} ORDER BY rand() LIMIT 0, #{limitm}")
+	List<HandExamStore> getQuestionRandom1(@Param("subject")String subject,@Param("limitm")int limitm);
+
+
+	@Select("SELECT *  FROM  hand_exam_store WHERE question_name =#{name}")
+	List<HandExamStore> getByName(@Param("name")String name);
+
+	//新增
+	@Insert("insert into hand_exam_store(id,question_name,question_code,type,grade,subject,level_id) values(#{id},#{questionName},#{questionCode},#{type},#{grade},#{subject},#{levelId})")
+	int insertModel(HandExamStore handExam);
+}

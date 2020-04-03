@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="../fonts/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../fonts/iconfont/iconfont.css">
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-table.min.css">
+
+    <link rel="stylesheet" href="../css/class.css">
+    <style>
+        .main {
+            position: absolute;
+            top: 0;
+            padding: 30px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+        .table {
+            width: 100%;
+            height: 100%;
+        }
+
+        .thead-light {
+            background-image: linear-gradient(to bottom, #f8f8f8 0, #ececec 100%);
+        }
+
+        .must-fill {
+            width: 20%;
+            float: left;
+            margin-left: 5px;
+            display: inline-block;
+            margin-right: 5px;
+            color: #ff0000;
+            font-size: 18px;
+            line-height: 26px;
+        }
+
+        .subject {
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="btns-box">
+            <form class="layui-form subject">
+                <div class="layui-inline">
+                    <label class="layui-form-label">类别:</label>
+                    <div class="layui-input-block">
+                        <select id="subjectSelect" lay-filter="subjectSelect">
+                            <option value="北斗手持机">北斗手持机</option>
+                            <option value="电台操作">电台操作</option>
+                            <option value="理论知识">理论知识</option>
+                            <option value="航片判读">航片判读</option>
+                            <option value="作战计算">作战计算</option>
+                            <option value="识图用图">识图用图</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+            <div class="btn btn-success" data-toggle="modal" id="btn-add">添加</div>
+            <div class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2" id="btn-edit">修改</div>
+            <div class="btn btn-danger" data-toggle="modal" data-target="#exampleModal3" id="btn-del">删除</div>
+        </div>
+        <table class="table table-hover" id="GridBox" data-unique-id="idx">
+        </table>
+
+    </div>
+
+    <!-- 添加 -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" style="z-index: 0;" role="dialog"
+        aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document" style="
+    z-index: 9999;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">添加数据</h4>
+                </div>
+                <form class="layui-form">
+                    <div class="modal-body">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">类别名称<b class="must-fill">*</b>:</label>
+                            <div class="layui-input-block">
+                                <input type="text" lay-verify="required" autocomplete="off" placeholder="请输入类别名称"
+                                    class="layui-input" id="name">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary" data-dismiss="" id="add" data-toggle="modal"
+                            data-target="" lay-submit="" lay-filter="demo1">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- 删除 -->
+    <div class="modal fade delete" id="" tabindex="-1" style="z-index: 0;" role="dialog"
+        aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document" style="
+    z-index: 9999;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">删除数据</h4>
+                </div>
+                <div class="modal-body" style="height: 73px;">
+                    确认删除吗？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="delete" data-toggle="modal"
+                        data-target="#exampleModal4">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 修改 -->
+    <div class="modal fade edit" id="" tabindex="-1" style="z-index: 0;" role="dialog"
+        aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document" style="z-index: 9999;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="exampleModalLabel">修改数据</h4>
+                </div>
+                <div class="modal-body" style="height: 73px;">
+                    <form class="form-box">
+                        <div class="form-group">
+                            <label for="name" class="control-label col-sm-2">类别名称:</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="editName">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="edit" data-toggle="modal"
+                        data-target="#exampleModal4">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 修改个数提醒 -->
+    <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel4">
+        <div class="modal-dialog" role="document" style="z-index: 9999;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="tipMess">
+                    请选择一条数据进行修改
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="delete">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="../js/lib/jquery-3.4.1.min.js"></script>
+<script src="../js/lib/bootstrap.min.js"></script>
+<script src="../js/lib/bootstrap-table.min.js"></script>
+<script src="../js/lib/bootstrap-table-zh-CN.min.js"></script>
+<script src="../layui/layui.js"></script>
+<script>
+    $(function () {
+        $("#btn-add").on("click",function(){
+            if(subject=="北斗手持机"){
+                $('#exampleModal4').modal();
+                $("#tipMess").text("北斗手持机暂不能修改添加及删除");
+                return;
+            }else{
+                $('#exampleModal1').modal();
+            }
+        })
+        var subject=$("#subjectSelect").val();
+        layui.use(['form', 'layedit', 'laydate'], function () {
+            var form = layui.form,
+                layer = layui.layer;
+            //监听提交
+            form.on('submit(demo1)', function (data) {
+                $('#exampleModal1').modal('hide')
+                $('#exampleModal4').modal();
+                var typeName = $('#name').val();
+                new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: '/springboot-course/questionType/addQuestionType?subject=' + subject+'&typeName='+typeName,
+                        type: 'get',
+                        dataType: 'json',
+                        success: function (res) {
+                            resolve(res);
+                            $("#tipMess").text(res.msg);
+                        }
+                    });
+                }).then(res => {
+                    tableInit();
+                })
+                return false;
+            });
+            //下拉框选择表格联动
+            form.on('select(subjectSelect)',function(){
+                subject=$("#subjectSelect").val();
+                tableInit();
+            })
+        });
+
+        tableInit();
+        window.updata = function () {
+            tableInit();
+        }
+
+        function tableInit() {
+            var subject=$("#subjectSelect").val();
+            //先销毁表格
+            $('#GridBox').bootstrapTable('destroy');
+            //加载表格
+            $('#GridBox').bootstrapTable({
+
+                showHeader: true, //是否显示列头
+                //classes: 'table-no-bordered',
+                theadClasses: "thead-light", //这里设置表头样式
+                undefinedText: '',
+                toolbar: '#toolbar',
+                toolbarAlign: 'left',
+                paginationHAlign: 'right',
+                silent: true,
+                url: "/springboot-course/questionType/selectQuestionType?subject="+subject,
+                method: 'get', //工具按钮用哪个容器
+                striped: true, //是否显示行间隔色
+                cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true, //是否显示分页（*）
+                sortable: false, //是否启用排序
+                sortOrder: "asc", //排序方式
+                //queryParams: InitTable.queryParams,  //传递参数（*）
+                sidePagination: "server", //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1, //初始化加载第一页，默认第一页
+                pageSize: 15, //每页的记录行数（*）
+                pageList: [10, 15, 20], //可供选择的每页的行数（*）
+                search: false, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+
+                minimumCountColumns: 2, //最少允许的列数
+                clickToSelect: false, //是否启用点击选中行
+                //height: 680,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+                uniqueId: "id", //每一行的唯一标识，一般为主键列
+
+                columns: [{
+                    checkbox: true
+                }, {
+                    field: 'typeName',
+                    title: '类别名称',
+                    align: 'center'
+                }]
+            });
+
+        }
+
+        // 删除
+        var flag = false;
+        var id = '';
+        var editFlag = false;
+        var editId = '';
+        var editName = '';
+
+        $('#btn-del').off('click').on('click', function () {
+            if(subject=="北斗手持机"){
+                $('#exampleModal4').modal();
+                $("#tipMess").text("北斗手持机暂不能修改添加及删除");
+                return;
+            }
+            idList = $('#GridBox').bootstrapTable('getAllSelections').map(data => data.id);
+            idList = idList.join(',');
+
+            if ($('#GridBox').bootstrapTable('getAllSelections').length != 0) {
+                $('.delete').attr('id', 'exampleModal3');
+
+                $('#delete').off('click').on('click', function () {
+                    new Promise((resolve, reject) => {
+                        $.ajax({
+                            url: '/springboot-course/questionType/deleteQuestionType?id=' + idList,
+                            type: 'get',
+                            dataType: 'json',
+                            success: function (res) {
+                                resolve(res);
+                                $("#tipMess").text(res.msg);
+                            }
+                        });
+                    }).then(res => {
+                        tableInit();
+                        flag = false;
+                    })
+                });
+
+            } else {
+                $('.delete').attr('id', '');
+            }
+        });
+
+        $('#GridBox').on('check.bs.table', function (row, $element, field) {
+
+            flag = true;
+
+            editFlag = true;
+            editId = $element.id;
+            editName = $element.className;
+        });
+
+        // 修改
+        $('#btn-edit').off('click').on('click', function () {
+            if(subject=="北斗手持机"){
+                $('#exampleModal4').modal();
+                $("#tipMess").text("北斗手持机暂不能修改添加及删除");
+                return;
+            }
+            if ($('#GridBox').bootstrapTable('getAllSelections').length == 1) {
+                $('.edit').attr('id', 'exampleModal2');
+                $('#btn-edit').attr("data-target", "#exampleModal2");
+                $('#editName').val(editName);
+                $('#edit').off('click').on('click', function () {
+
+                    let editTypeName = $('#editName').val();
+                    new Promise((resolve, reject) => {
+                        $.ajax({
+                            url: '/springboot-course/questionType/updateQuestionType?typeName=' + editTypeName + '&id=' + editId,
+                            type: 'get',
+                            dataType: 'json',
+                            success: function (res) {
+                                resolve(res);
+                                $("#tipMess").text(res.msg);
+                            }
+                        });
+                    }).then(res => {
+                        tableInit();
+                        editFlag = false;
+                    })
+                });
+
+            } else {
+                $('.edit').attr('id', '');
+                $("#tipMess").text("请选择一条数据进行更改");
+                $('#btn-edit').attr("data-target", "#exampleModal4");
+                return;
+            }
+        });
+        
+    })
+</script>
+
+</html>

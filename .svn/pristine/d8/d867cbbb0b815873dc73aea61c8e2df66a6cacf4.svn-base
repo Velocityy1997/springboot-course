@@ -1,0 +1,274 @@
+// 左侧工具栏
+.navServeBox {
+  position: absolute;
+  bottom: 0px;
+  left: 5px;
+  z-index: 9999;
+
+  .nav-item {
+    width: 27px;
+    height: 27px;
+    margin-bottom: 5px;
+    cursor: pointer;
+  }
+
+  .nav-item1 {
+    position: absolute;
+    bottom: 0;
+    background: url(../img/navigation/left1.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .nav-serve-ul {
+    position: absolute;
+    bottom: 32px;
+    display: none;
+
+    .nav-item:first-child {
+      background: url(../img/navigation/left2.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .nav-item:nth-child(2) {
+      background: url(../img/navigation/left3.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .nav-item:nth-child(3) {
+      background: url(../img/navigation/left4.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .nav-item:nth-child(4) {
+      background: url(../img/navigation/left5.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .nav-item:nth-child(5) {
+      background: url(../img/navigation/left6.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+  }
+
+  .nav-set-after {
+    display: none;
+    background: url(../img/navigation/left7.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    bottom: 32px;
+  }
+}
+
+.nav-set-right {
+  left: auto;
+  right: 0;
+  display: none;
+
+  .nav-serve-ul { 
+    display: block;
+    bottom: 0;
+    right: 5px;
+
+    .nav-item:first-child {
+      background: url(../img/navigation/right6.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .nav-item:nth-child(2) {
+      background: url(../img/navigation/right7.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+  }
+}
+
+// 右侧工具栏
+.right-tool {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  z-index: 9999;
+
+  .tool-item {
+    width: 26px;
+    cursor: pointer;
+    height: 26px;
+    margin-top: 5px;
+  }
+
+  .tool-item:first-child {
+    background: url(../img/navigation/right1.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .tool-item:nth-child(2) {
+    background: url(../img/navigation/right2.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .tool-item:nth-child(3) {
+    background: url(../img/navigation/right3.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+  }
+
+  .tool-item:nth-child(4) {
+    background: url(../img/navigation/right4.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+  }
+}
+
+
+// 地图
+.img,
+.svgcontainer {
+  width: 1000px;
+  height: 800px;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.svgcontainer.active {
+  z-index: 999;
+}
+
+.img.big,
+.svgcontainer.big {
+  transform: scale(1.5);
+  transform-origin: left top;
+}
+
+.img.small,
+.svgcontainer.small {
+  transform: scale(.5);
+  transform-origin: left top;
+}
+
+.img {
+  background: url(../img/timg.jpg) 0 0 no-repeat;
+  background-size: 100% 100%;
+}
+
+.coordinate {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: -20px;
+  margin-top: -20px;
+  background: url(../img/cor.png) 0 0 no-repeat;
+  background-size: 100% 100%;
+  z-index: 999;
+}
+
+
+// 系统提示
+.screen-box {
+  z-index: 99999;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  width: 150px;
+  height: 130px;
+  margin-left: -75px;
+  margin-top: -70px;
+  background-color: #555cff;
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+  box-shadow: 0 0 3px #333;
+  display: none;
+
+  .head {
+    flex: 0 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-image: linear-gradient(to bottom, #7375a5, #e9f1fc);
+    padding: 0 5px;
+
+    .screen-img {
+      background: url(../img/machine/system-img.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      width: 18px;
+      height: 20px;
+    }
+  }
+
+  .screen-contain {
+    flex: auto;
+    display: flex;
+    justify-content: center;
+    line-height: 25px;
+    color: #f1ff89;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    text-align: center;
+  }
+
+  .roadNameContain {
+    padding: 10px 10px;
+    flex-direction: column;
+    text-align: left;
+
+    .radName-input {
+      margin-top: 5px;
+    }
+
+    .roadName-label {
+      color: #ffeb8f;
+    }
+  }
+
+  .screen-bottom {
+    flex: 0 0 20px;
+    display: flex;
+    justify-content: space-between;
+
+    .sure,
+    .close {
+      width: 50px;
+      height: 20px;
+      background-image: linear-gradient(to bottom, #1d2347, #c8cbfe);
+      cursor: pointer;
+    }
+
+    .sure {
+      margin-left: 15px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .sure-img {
+        margin-left: 5px;
+        width: 12px;
+        height: 12px;
+        background: url(../img/machine/sure.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+
+    .close {
+      margin-right: 15px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .close-img {
+        margin-right: 5px;
+        width: 12px;
+        height: 12px;
+        background: url(../img/machine/return.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+      }
+    }
+  }
+}
+
+.screen-box.active {
+  display: flex;
+}

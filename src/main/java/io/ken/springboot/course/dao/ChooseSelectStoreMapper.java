@@ -1,0 +1,100 @@
+package io.ken.springboot.course.dao;
+
+import io.ken.springboot.course.bean.ChooseSelectStore;
+import io.ken.springboot.course.model.ExcelModel;
+import io.ken.springboot.course.model.exam.newExam.CreatNewExam;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author FillExamMapper.java
+ * 2019年11月28日
+ */
+@Mapper
+public interface ChooseSelectStoreMapper {
+
+    @Select("SELECT *  FROM  choose_select_store WHERE question_code =#{fillQCode}")
+    ChooseSelectStore getNameByCode(@Param("fillQCode") String fillQCode);
+
+    @Select("SELECT *  FROM  choose_select_store WHERE question_name =#{name}")
+    List<ChooseSelectStore> getByName(@Param("name") String name);
+
+    @Select("SELECT *  FROM  choose_select_store ")
+    List<ChooseSelectStore> queryAll();
+
+    @Insert({
+            "INSERT INTO choose_select_store(id,question_name,question_code,type,grade,flag,result,pass_table_id,select_a,subject,level_id) "
+                    + "VALUES(#{id},#{questionName},#{questionCode},#{type},#{grade},"
+                    + "#{flag},#{result},#{passTableId},#{selectA},#{subject},#{levelId})"})
+    int add(ChooseSelectStore exam);
+
+    @Select("select question_name,question_code,type,pass_table_id,result,select_a,subject,flag FROM "
+            + "choose_select_store where subject =#{subject}")
+    List<Map<String, Object>> getSelectQuestionRandom(@Param("subject") String subject);
+
+    /**
+     * excel文件添加试题
+     *
+     * @param chooseSelectStoreList
+     * @return
+     */
+    @Insert("<script>" +
+            " insert into choose_select_store " +
+            "(id,question_name,question_code,result,select_a,subject,flag,type,grade,picture_path,level_id,pass_table_id,transflag)" +
+            " values" +
+            " <foreach collection='list'  item='value'  separator=','>" +
+            "(#{value.id},#{value.questionName},#{value.questionCode},#{value.result},#{value.selectA},#{value.subject},#{value.flag},#{value.type},#{value.grade},#{value.picturePath},#{value.levelId},#{value.passTableId},#{value.transflag})" +
+            "</foreach> " +
+            "</script>")
+    int addExcel(List<ExcelModel> chooseSelectStoreList);
+
+    /**
+     * excel去重查询
+     *
+     * @param name 试题名字
+     * @return
+     */
+    @Select("select id,picture_path from choose_select_store where question_name=#{name} and result=#{result}")
+    ExcelModel queryName(@Param("name") String name, @Param("result") String result);
+
+    /**
+     * excel导入试题：覆盖重复题目，更新试题
+     *
+     * @param excelModel
+     * @return
+     */
+    @Update("update choose_select_store set result=#{result},select_a=#{selectA},subject=#{subject},flag=#{flag},type=#{type},grade=#{grade},level_id=#{levelId},pass_table_id=#{passTableId},transflag=#{transflag} where id=#{id}")
+    int updateQuestions(ExcelModel excelModel);
+
+    /**
+     * 统计可选择的题数
+     *
+     * @param subject 科目
+     * @param flag    单选0，多选1
+     * @param level   级别
+     * @return
+     */
+    @Select("<script>SELECT count(*) FROM choose_select_store WHERE subject=#{subject}" +
+            "<if test='subject==4'> And transflag=1</if>" +
+            " AND flag=#{flag} AND level_id LIKE CONCAT('%',#{level},'%')</script>")
+    int getCount(@Param("subject") String subject, @Param("flag") int flag, @Param("level") String level);
+
+    /**
+     * 随机取出一定数的题
+     * @param creatNewExam 筛选条件
+     * @return
+     */
+    @Select("<script>" +
+            "SELECT * from choose_select_store  where subject=#{subject}" +
+            "<if test='subject==4'> And transflag=1</if>" +
+            " AND level_id LIKE CONCAT('%',#{level},'%') AND flag=#{flag} order by rand() limit " +
+            "<if test='flag==0'> #{radio} </if>" +
+            "<if test='flag==1'> #{checkbox}</if>" +
+            "</script>")
+    List<ChooseSelectStore> getQuestion(CreatNewExam creatNewExam);
+}

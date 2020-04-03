@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .main{
+            width: 193px;
+            height: 219px;
+            overflow: hidden;
+            position: relative; 
+            color: #fff; 
+            
+        }
+        .tittle{
+            width:100%;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            font-size: 18px;  
+        }
+        .totle-box{
+            width: 100%;
+            height: 20px;
+            padding: 0 5px;
+            font-size: 14px;
+            line-height: 20px;
+            text-align: right;
+        }
+        .noreadNumber{
+            float: left;
+        }
+        .totleNumber{
+            float: right;
+        }
+        .listBox{
+            width: 85%;
+            height: 60%;
+            margin: 0 auto;
+            overflow-y: auto;
+            border: 1px solid #fff;
+            background: #515DE8;
+        }
+        .listBox li{
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            font-size: 16px;
+            background: #515DE8;
+            border-bottom: 1px solid #7F8DEC;
+            padding: 0 5px;
+            cursor: pointer;
+        }
+        .listBox .active{
+            background-image: linear-gradient(to bottom,#0016bf,#939de0);
+        }
+        .mainBottom{
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            height: 20px;
+            padding: 0 5px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .mainReturn{
+            width:auto;
+            height: 100%;
+            float:right;
+            cursor: pointer;
+        }
+        .mainReturn .mainReturn-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/return.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .mainReturn .mainReturn-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+        .mainSure{
+            width:auto;
+            height: 100%;
+            float:left;
+            cursor: pointer;
+        }
+        .mainSure .mainSure-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/message/navIcon.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .mainSure .mainSure-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+        .nav-list {
+            width: 80px;
+            height: 100px;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            text-align: center;
+            display: none;
+        }
+
+        .nav-list li {
+            width: 100%;
+            height: 25px;
+            color: #fff;
+            line-height: 25px;
+            background: #1B31BA;
+            border: 1px solid #25308F;
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-list li:hover {
+            background-image: linear-gradient(to bottom, #C3D642, #C04825);
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="tittle">收件箱</div>
+        <div class="totle-box">
+            <span id="noreadNumber" class="noreadNumber">未读短信：0</span>
+            <span id="totleNumber" class="totleNumber">短信总数：0</span>
+        </div>
+        <ul class="listBox" id="listBox">
+            <!-- <li class="active">455-混合</li>
+            <li>455-混合</li> -->
+        </ul>
+        <div class="mainBottom" >
+            <div class="mainSure" id="contentNav">
+                    <div class="mainSure-text">菜单</div>
+                    <div class="mainSure-img nav-img"></div>
+            </div>
+            <div class="mainReturn" id="mainReturn">
+                <div class="mainReturn-img"></div>
+                <div class="mainReturn-text">返回</div>
+            </div>
+        </div>
+        <ul class="nav-list" id="navList">
+            <li class="see" id="see">查看</li>
+            <li class="save" id="save">全部删除</li>
+            <li class="line" id="line">反向排序</li>
+            <li class="nav-return" id="navReate">返回</li>
+        </ul>
+    </div>
+    <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function(){
+             //返回按钮
+        var obj = function(option){
+            this.option = option || {};
+            this.init();      // 初始化
+            }
+
+        // 初始化
+        obj.prototype.init = function(){
+            this.allEvents(); // 各种点击事件
+            this.contentShow();
+        }
+
+        // 各种点击事件
+        obj.prototype.allEvents = function(){
+            this.clickReturn();       // 返回
+        }
+
+        // 返回
+        obj.prototype.clickReturn = function(){
+            $('#mainReturn').on('click', function(){
+                window.parent.window.iframeObj.goBackBefore('通讯录');
+            });
+        }
+        //详情页面返回按钮及菜单按钮
+        obj.prototype.contentShow=function(){
+            $("#contentNav").on("click",function(){
+                $("#navList").show();
+            })
+            $("#navList").on("click","li",function(){
+                $("#navList").hide();
+            })
+        }
+        new obj();
+
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>本机信息</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .machine-view-box {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    /* 列表信息 */
+    .machine-view-box .machine-view-main {
+      flex: auto;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      width: 100%;
+      height: 100%;
+      padding: 5px 0;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li {
+      display: flex;
+    }
+
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li .machine-view-text {
+      flex: 0 0 35%;
+      display: flex;
+      align-items: center;
+      color: #fff;
+      padding-left: 3px;
+      cursor: default;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li .machine-view-input {
+      flex: 0 0 65%;
+      display: flex;
+      align-items: center;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li .machine-view-input>input {
+      font-size: 12px;
+      width: 113px;
+      background-color: #82a8e9;
+      border: 1px solid #cccff9;
+      margin-left: 3px;
+      color: #333;
+      height: 12px;
+      line-height: 12px;
+      outline: 0;
+      padding-left: 2px;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .rmp .machine-view-input>input {
+      background-color: #23237b;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .machine-view-box .machine-view-main .machine-view-ul .machine-view-li .machine-view-input>input:focus {
+      border: 1px solid #fff;
+    }
+
+    /* 底部栏 */
+    .machine-view-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 18px;
+      font-size: 13px;
+    }
+
+    .machine-view-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .machine-view-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .machine-view-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/menu.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .machine-view-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .machine-view-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .machine-view-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="machine-view-box">
+    <div class="machine-view-main" id="machine-view-main">
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">菜单</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var obj = function (option) {
+        this.option = option || {};
+        this.init(); // 初始化
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        this.bjid="";
+        this.txdj="";
+        this.fwpd="";
+        this.xlh="";
+        this.currentIndex = Number(window.parent.window.iframeObj.thisMachineIndex);
+        this.allEvents(); // 各种点击事件
+        this.drawList(); // 渲染列表
+        this.parentRes();//调用考试数据
+        
+      }
+    //从父级拿到考试数据
+    obj.prototype.parentRes=function(){
+            _this=this;
+            _this.bjid=window.parent.window.iframeObj.scjAllContent.bjid;
+            _this.txdj=window.parent.window.iframeObj.scjAllContent.txdj;
+            _this.fwpd=window.parent.window.iframeObj.scjAllContent.fwpd;
+            _this.xlh=window.parent.window.iframeObj.scjAllContent.xlh;
+
+            $("#bjid").val(_this.bjid);
+            $("#txdj").val(_this.txdj);
+            $("#fwpd").val(_this.fwpd);
+            $("#xlh").val(_this.xlh);
+          }
+      // 渲染列表
+      obj.prototype.drawList = function () {
+        var machineList = this.option.machineList;
+        var $ul = $('<ul class="machine-view-ul">');
+
+        for (var i = 0; i < machineList.length; i++) {
+
+          var $li = $('<li class="machine-view-li">');
+          if (machineList[i].text == 'PRM有效期') {
+            var $li = $('<li class="machine-view-li rmp">');
+          }
+          $('<div class="machine-view-text">' + machineList[i].text + '</div>').appendTo($li);
+          if (machineList[i].text == 'PRM有效期') {
+            $('<div class="machine-view-input" id="RPM"><input type="text" id="'+machineList[i].id+'"value="' + machineList[i].value + '" readonly></div>').appendTo($li);
+          }else{
+            $('<div class="machine-view-input"><input type="text" id="'+ machineList[i].id +'" value="' + machineList[i].value + '"></div>').appendTo($li);
+          }
+          
+          $li.appendTo($ul);
+        }
+
+        $ul.appendTo($('#machine-view-main'));
+      }
+
+      // 各种点击事件
+      obj.prototype.allEvents = function () {
+        this.clickReturn();   // 返回
+        this.clickSure();     // 确定
+        this.nextIframe();    // 点击下个页面 
+        // this.clickRPM();      // 点击查看RPM
+      }
+
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('本机信息');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // 确定
+      obj.prototype.sureActive = function () {
+        window.parent.window.iframeObj.goBackBefore('本机信息');
+      }
+      obj.prototype.clickSure = function () {
+        var _this = this;
+        $('#sure').on('click', function () {
+          _this.sureActive();
+        });
+      }
+
+      // 点击下个页面
+      obj.prototype.nextIframe = function () {
+        $('#machine-view-ul').on('click', '.machine-view-li', function () {
+          var name = $(this).children('.machine-view-text').text();
+          window.parent.window.iframeObj.changeIframe(name);
+        });
+      }
+
+
+
+      // _______________________________________________________________
+      var option = {};
+      $.ajax({
+        type: "get",
+        url: "../../js/json/thisMachine.json",
+        dataType: "JSON",
+        async: false,
+        success: function (res) {
+          option.machineList = res.data.data;
+          window.thisMachineObj = new obj(option);
+        },
+        error: function (err) {
+          console.log('本机信息数据返回错误', err);
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>波束状态</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .state-box {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+      color: #fff;
+    }
+
+    .title {
+      flex: 0 0 30px;
+      text-align: center;
+      padding-top: 15px;
+    }
+
+    /* 底部栏 */
+    .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 18px;
+      font-size: 13px;
+    }
+
+    .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/sure.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+
+    /* 柱子 */
+    .state-ul {
+      flex: auto;
+      display: flex;
+    }
+
+    .state-ul .state-li {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      margin-top: 3px;
+      margin-left: 1%;
+    }
+
+    .state-ul .state-li .state1,
+    .state-ul .state-li .state2 {
+      flex: 0 0 20px;
+      line-height: 20px;
+    }
+
+    .state-ul .state-li .state {
+      flex: auto;
+      background-color: #94b5f5;
+      width: 14px;
+    }
+
+    .response-beam-box {
+      flex: 0 0 27px;
+      display: flex;
+      align-items: center;
+    }
+
+    .response-beam-box .response-beam-text {
+      flex: 40%;
+      padding-left: 20px;
+      margin-bottom: 6px;
+    }
+
+    .response-beam-box .response-beam-contain {
+      display: flex;
+      margin: 5px 10px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0;
+      border: 1px solid transparent;
+      cursor: default;
+    }
+
+    .response-beam-box .response-beam-contain.active {
+      border: 1px solid #ffd400;
+    }
+
+    .left-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/left-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #0c12a4;
+    }
+
+    .right-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/right-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #0c12a4;
+    }
+
+    .auto-btn {
+      background-color: #0d1291;
+      line-height: 27px;
+      text-align: center;
+      width: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="state-box">
+    <div class="title">波束状态</div>
+    <ul class="state-ul">
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">1</div>
+      </li>
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">2</div>
+      </li>
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">3</div>
+      </li>
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">4</div>
+      </li>
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">5</div>
+      </li>
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">6</div>
+      </li>
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">7</div>
+      </li>
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">8</div>
+      </li>
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">9</div>
+      </li>
+      <li class="state-li">
+        <div class="state1">0</div>
+        <div class="state"></div>
+        <div class="state2">10</div>
+      </li>
+    </ul>
+    <div class="response-beam-box" id="response-beam-box1">
+      <div class="response-beam-text">响应波束：</div>
+      <div class="response-beam-contain">
+        <div class="left-btn"></div>
+        <div class="auto-btn">自动</div>
+        <div class="right-btn"></div>
+      </div>
+    </div>
+    <div class="response-beam-box" id="response-beam-box2">
+      <div class="response-beam-text">响应波束：</div>
+      <div class="response-beam-contain">
+        <div class="left-btn"></div>
+        <div class="auto-btn">自动</div>
+        <div class="right-btn"></div>
+      </div>
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">确认</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var obj = function (option) {
+        this.option = option || {};
+        this.autoText1 = '自动';
+        this.autoText2 = '自动';
+
+        this.init(); // 初始化
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        this.allEvents(); // 各种点击事件
+      }
+
+
+      // 各种点击事件
+      obj.prototype.allEvents = function () {
+        this.clickReturn();      // 返回
+        this.clickSure();        // 确定
+        this.clickLeftBtn();     // 点击下个页面 
+        this.clickRightBtn();    // 点击下个页面 
+        this.clickRsponse();     // 自动激活状态
+      }
+
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('波束状态');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // 确定
+      obj.prototype.sureActive = function () {
+        window.parent.window.iframeObj.goBackBefore('波束状态');
+      }
+      obj.prototype.clickSure = function () {
+        var _this = this;
+        $('#sure').on('click', function () {
+          _this.sureActive();
+        });
+      }
+
+      // 点击左侧按钮
+      obj.prototype.clickLeftBtn = function () {
+        var _this = this;
+        $('#response-beam-box1').on('click', '.left-btn', function () {
+
+          if (_this.autoText1 == '自动') {
+            _this.autoText1 = 10;
+          } else if (_this.autoText1 == 0) {
+            _this.autoText1 = '自动';
+          } else {
+            _this.autoText1--;
+          }
+
+          $(this).siblings('.auto-btn').text(_this.autoText1);
+        });
+
+        $('#response-beam-box2').on('click', '.left-btn', function () {
+
+          if (_this.autoText2 == '自动') {
+            _this.autoText2 = 10;
+          } else if (_this.autoText2 == 0) {
+            _this.autoText2 = '自动';
+          } else {
+            _this.autoText2--;
+          }
+
+          $(this).siblings('.auto-btn').text(_this.autoText2);
+        });
+      }
+
+      // 点击右侧按钮
+      obj.prototype.clickRightBtn = function () {
+        var _this = this;
+        $('#response-beam-box1').on('click', '.right-btn', function () {
+
+          if (_this.autoText1 == '自动') {
+            _this.autoText1 = 0;
+          } else if (_this.autoText1 == 10) {
+            _this.autoText1 = '自动';
+          } else {
+            _this.autoText1++;
+          }
+
+          $(this).siblings('.auto-btn').text(_this.autoText1);
+        });
+
+        $('#response-beam-box2').on('click', '.right-btn', function () {
+
+          if (_this.autoText2 == '自动') {
+            _this.autoText2 = 0;
+          } else if (_this.autoText2 == 10) {
+            _this.autoText2 = '自动';
+          } else {
+            _this.autoText2++;
+          }
+
+          $(this).siblings('.auto-btn').text(_this.autoText2);
+        });
+      }
+
+      // 选择的激活状态
+      obj.prototype.clickRsponse = function(){
+        $('.response-beam-box').on('click', '.response-beam-contain', function(){
+          $('.response-beam-contain').removeClass('active');
+          $(this).addClass('active');
+        });
+      }
+
+      // ________________________________________________________________
+      var option = {};
+      window.beamStateObj = new obj();
+    });
+  </script>
+</body>
+
+</html>

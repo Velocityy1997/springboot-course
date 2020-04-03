@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>编辑页</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .view-box {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+
+
+    .main {
+      flex: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* 标题和时间 */
+    .head-box {
+      flex: 0 0 30px;
+      padding: 0 10px;
+      line-height: 30px;
+      display: flex;
+      justify-content: space-between;
+      color: #fff;
+      font-size: 13px;
+    }
+
+
+    /* 输入框 */
+    .main-box {
+      flex: auto;
+      padding:5px 15px 20px 15px;
+    }
+    .textArea {
+      height: 100%;
+      overflow: auto;
+      width: 100%;
+      outline: 0;
+    }
+
+    /* 底部栏 */
+    .view-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 19px;
+      font-size: 13px;
+    }
+
+    .view-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/menu.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .view-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    /* 菜单列表 */
+    .menu-list {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      z-index: 999;
+      box-shadow: 0 0 3px #404567;
+      display: none;
+    }
+
+    .menu-list-li {
+      text-align: center;
+      line-height: 20px;
+      height: 21px;
+      cursor: pointer;
+      background-color: #3869e4;
+      width: 80px;
+      color: #fff;
+      border-top: 1px solid #86a8ec;
+    }
+
+    .menu-list-li:hover,
+    .menu-list-li.active {
+      background-image: linear-gradient(to bottom, #e6e613, #f95f05);
+    }
+
+    .menu-list-li.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="view-box">
+    <div class="main">
+      <div class="head-box">
+        <div class="head-title" id="head-title"></div>
+        <div class="head-time" id="head-time"></div>
+      </div>
+      <div class="main-box">
+        <textarea class="textArea" id="putContent"></textarea>
+      </div>
+    </div>
+    <!-- 菜单列表 -->
+    <div class="menu-list" id="menu-list">
+      <ul class="menu-list-ul" id="menu-list-ul">
+
+      </ul>
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">菜单</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      class editPage {
+        constructor() {
+          this.option = {
+            menuList: [
+              '发送',
+              '转发',
+              '编辑',
+              '删除',
+              '返回'
+            ]
+          }
+          this.currentIndex = Number(window.parent.window.iframeObj.editPageIndex);
+          this.init();
+        }
+
+        // 初始化
+        init() {
+          this.drawHead(); // 渲染标题和时间
+          this.drawMenuList(); // 渲染菜单列表  
+          this.allClickEvents(); // 所有点击事件
+        }
+
+        // 所有的点击事件
+        allClickEvents() {
+          this.clickReturn(); // 点击返回
+          this.clickSure(); // 点击菜单栏
+        }
+
+        // 点击返回
+        returnActive() {
+          window.parent.window.iframeObj.goBackBefore('编辑页');
+        }
+        clickReturn() {
+          let _this = this;
+          $('#return').on('click', function () {
+            _this.returnActive();
+          });
+        }
+
+
+        // 点击菜单栏
+        sureActive() {
+          $('#menu-list').show();
+        }
+        clickSure() {
+          let _this = this;
+
+          $('#sure').on('click', function () {
+            _this.sureActive();
+          });
+
+          $('#menu-list').on('click', '.menu-list-li', function () {
+            $(this).addClass('active').siblings('.menu-list-li').removeClass('active');
+            window.parent.window.iframeObj.editPageIndex = $(this).attr('data-index');
+
+            if ($(this).text() == '返回') {
+              $('#menu-list').hide();
+            } else if ($(this).text() == '位置报告1') {
+              var text = 'RDSS' + $(this).text();
+              window.parent.window.iframeObj.changeIframe(text);
+            }
+          });
+        }
+
+
+        // 渲染菜单列表
+        drawMenuList() {
+          for (let i = 0; i < this.option.menuList.length; i++) {
+            $('<li class="menu-list-li" data-index="' + i + '">' + this.option.menuList[i] + '</li>').appendTo($(
+              '#menu-list-ul'));
+          }
+
+          $('.menu-list-li').eq(this.currentIndex).addClass('active');
+        }
+
+        // 渲染标题和时间
+        drawHead() {
+          $('#head-title').text(window.parent.window.iframeObj.draftText);
+          $('#head-time').text(window.parent.window.iframeObj.draftTime);
+        }
+
+        // 上下按键
+        upActive() {
+          let len = $('.menu-list-li').length - 1;
+          if (this.currentIndex == 0) {
+            this.currentIndex = len
+
+          } else {
+            this.currentIndex -= 1;
+          }
+          this.changeActive();
+        }
+        downActive() {
+          let len = $('.menu-list-li').length - 1;
+          if (this.currentIndex == len) {
+            this.currentIndex = 0
+          } else {
+            this.currentIndex = Number(this.currentIndex) + 1;
+          }
+          this.changeActive();
+        }
+        changeActive() {
+          var currentIndex = this.currentIndex;
+          window.parent.window.iframeObj.editPageIndex = currentIndex;
+          $('.menu-list-li').eq(currentIndex).addClass('active').siblings('.menu-list-li').removeClass('active');
+        }
+      }
+
+      // new实例
+      window.editPageObj = new editPage();
+    })
+  </script>
+</body>
+
+</html>

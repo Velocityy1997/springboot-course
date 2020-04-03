@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>识图用图考核</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/normal.min.css">
+    <link rel="stylesheet" href="./css/dragger.css">
+    <link rel="stylesheet" href="./css/image.min.css">
+</head>
+<style>
+    .content-image {
+        width: 75%;
+        height: 100%;
+    }
+
+    svg {
+        width: 100%;
+        height: 100%;
+        position: relative;
+        z-index: 9999999999999999;
+    }
+
+    ._old path,
+    ._old text {
+        stroke: #666;
+    }
+</style>
+
+<body>
+    <div class="machine-box">
+        <div class="machine-head">
+            <div class="return-box" id="returnBox">
+                <div class="return-img"></div>
+                <div class="return-text">返回</div>
+            </div>
+            <div class="is-now-test">
+                <div class="test-img"></div>
+                <div class="test-text"><span id="handText">考核</span>-识图用图</div>
+            </div>
+            <div class="test-time">
+                <div class="timed-box" id="timedBox">
+                    已考时间：<span class="time" id="timed"></span>
+                    <lable class="remain-time-text">剩余时间：</lable><span class="time remain-time" id="remain-time"></span>
+                </div>
+            </div>
+            <div class="hand" data-toggle="modal" data-target="#isHand" id="handBtn">交卷</div>
+        </div>
+        <div class="machine-body">
+            <ul class="leftNav" id="leftNav">
+                <li class="itemIcon bigIcon" id="bigIcon"></li>
+                <li class="itemIcon reduceIcon" id="reduceIcon"></li>
+                <li class="itemIcon ruleIcon" id="ruleIcon" x-target="ruleBox"></li>
+                <li class="itemIcon circle-ruleIcon" id="circleRuleIcon" x-target="circlrRuleBox"></li>
+                <li class="itemIcon short-ruler-icon" id="short-ruler-icon" x-target="shortRuler"></li>
+                <!-- <li class="drawLineIcon" id="drawLineIcon"></li> -->
+            </ul>
+            <div class="right-content">
+                <div class="content-image" id="contentImage">
+                    <!-- <svg width="100%" height="100%" class="_svg" shape-rendering="auto" id="svgBox">
+                        <defs>
+                            <marker id="markerSquare" markerWidth="2" markerHeight="8" refX="1" refY="4" orient="auto"
+                                markerUnits="strokeWidth">
+                                <rect x="1" y="1" width="1" height="8" style="stroke: none; fill:#000;" />
+                            </marker>
+                        </defs>
+                        <g class="_old"></g>
+                        <g class="_current">
+                            <path fill="none" stroke="#000" stroke-width="2" class="_path"
+                                style="marker-start: url(#markerSquare); marker-end: url(#markerSquare);"></path>
+                        </g>
+                    </svg> -->
+                    <div class="compassBox">
+                        <i class="compassLine"></i>
+                    </div>
+                    <!-- <div class="ruleBox sizemiddle" id="ruleBox" onmousedown="startRotate()"
+                        ontouchstart="startRotate()">
+                        <i class="glyphicon glyphicon-repeat roteIcon" id="ruleRote"></i>
+                        <i class="glyphicon glyphicon-arrow-right moveIcon" id="ruleMove"></i>
+                    </img>
+                    <div class="ruleBox circleRule" id="circlrRuleBox">
+                        <i class="glyphicon glyphicon-repeat roteIcon" id="circleRuleRote"></i>
+                        <i class="glyphicon glyphicon-arrow-right moveIcon" id="circleRuleMove"></i>
+                    </div> -->
+
+                    <!---------------- made by mc ---------------->
+                    <div alt="" class="imgBox" id="imgBox"></div>
+                    <div class="ruleBox sizemiddle" id="shortRuler">
+                    </div>
+                    <div class="ruleBox circleRule" id="circlrRuleBox">
+                    </div>
+                    <div class="ruleBox short-ruler" id="ruleBox"></div>
+                </div>
+                <div class="test-content" id="item-bank">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 首题和末题收藏提示 -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="tipMess">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal"
+                        id="collectButtonSure">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认交卷 -->
+    <div class="modal fade" id="isHand" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body">
+                    确认交卷？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="hand" data-toggle="modal"
+                        data-target="#handSuccess">确认</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交卷成功 -->
+    <div class="modal fade" id="handSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"
+                            id="closeBtn">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="handSuccessText">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="handSure">确认</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="handcancle">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/lib/jquery-3.4.1.min.js"></script>
+
+    <!-- <script src="./js/propeller.js"></script> -->
+    <script src="./js/lib/dragger.js"></script>
+    <script src="./js/lib/jquery.cookie.js"></script>
+    <script src="./js/lib/bootstrap.min.js"></script>
+    <script src="./js/image1.js"></script>
+
+    <script>
+        $(function () {
+            var option = {};
+            window.imgObj = new machineObj(option);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,518 @@
+// $(function(){
+var tableData = [];
+var totalScore = 0;
+var people = "";
+var peopleName = "";
+var type = $("#sendType").val();
+var category = $("#sendCategory").val();
+var rank = $("#rank")[0].value;
+var subject = $("#sendSubject")[0].value;
+function loadtime() {
+	$('#startTime').blur();
+	$('#startTime').datetimepicker({
+		format: 'yyyy-mm-dd hh:ii',
+		autoclose: true,
+		/* minView: "month",  *///选择日期后，不会再跳转去选择时分秒 
+		language: 'zh-CN',
+		dateFormat: 'yyyy-mm-dd',//日期显示格式
+		timeFormat: 'HH:mm:ss',//时间显示格式
+		todayBtn: 1,
+		autoclose: 1,
+		minView: 0,  //0表示可以选择小时、分钟   1只可以选择小时
+		minuteStep: 1,//分钟间隔1分钟
+	});
+	getTable(tableData);
+	//先销毁表格  
+}
+
+function getTable(tableData) {
+	$('#GridBox').bootstrapTable('destroy');
+	//加载表格
+	$('#GridBox').bootstrapTable({
+
+		showHeader: true,     //是否显示列头
+		//classes: 'table-no-bordered',
+		data: tableData,
+		undefinedText: '',
+
+		toolbarAlign: 'left',
+		paginationHAlign: 'right',
+		silent: true,
+		striped: true,                      //是否显示行间隔色
+		cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+		pagination: false,                   //是否显示分页（*）
+		sortable: false,                     //是否启用排序
+		sortOrder: "asc",                   //排序方式
+		//queryParams: InitTable.queryParams,  //传递参数（*）	        
+		search: false,                      //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+		sidePagination: 'client',
+		pageNumber: 1,
+		pageList: [8, 12, 15],
+		pageSize: 8,//单页记录数
+		minimumCountColumns: 2,             //最少允许的列数
+		//height: 680,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+		uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+
+		columns: [{
+			checkbox: true
+		},
+
+		{
+			field: 'typeOf',
+			title: '类别'
+		}, {
+			field: 'type',
+			title: '类型'
+		}, {
+			field: 'topic',
+			title: '题目'
+		}, {
+			field: 'score',
+			title: '分数'
+		}, {
+			field: 'questionCode',
+			title: '分数',
+			visible: false
+		}]
+	});
+}
+
+var paperId = "";
+
+
+function addPeoples() {
+
+	// made by mc -------------------------------- 创建树
+	layui.use(['tree', 'util'], function () {
+		let tree = layui.tree,
+			layer = layui.layer,
+			util = layui.util;
+
+
+		// 创建树
+		new Promise((resolve, reject) => {
+			let level = $('#rank').val();
+			debugger
+			
+			$.ajax({
+				cache: true,
+				dataType: "json",
+				type: "POST",
+				url: "/springboot-course/newexam/getclassandstu?level=" + level, //获取json数据  
+				success: function (data) {
+					resolve(data);
+				},
+				error: function (err) {
+					reject(err);
+				}
+			});
+		}).then(res => {
+			//手风琴模式
+			tree.render({
+				elem: '#tree',
+				data: res,
+				showCheckbox: true,
+				accordion: true,
+				id: 'tree',
+				onlyIconControl: false
+			});
+		}).catch(err => {
+			console.log(err);
+		});
+
+		// 提交
+		$('#addPersonCommit').off('click').on('click', function () {
+			peopleName = "";
+			people = "";
+			let treeList = tree.getChecked('tree');
+			$.each(treeList, function (i, item) {
+				if (treeList[i].children.length > 0) {
+
+					for (var j = 0; j < treeList[i].children.length; j++) {
+						if (treeList[i].children[j].type == 2) {
+							if (people != "") {
+								people += ",";
+								peopleName += ",";
+							}
+							people += treeList[i].children[j].id;
+							peopleName += treeList[i].children[j].name;
+						}
+					}
+				} else {
+					if (treeList[i].type == 2) {
+						if (people != "") {
+							people += ",";
+							peopleName += ",";
+						}
+						people += treeList[i].id;
+						peopleName += treeList[i].name;
+					}
+				}
+
+			});
+			$("#peopleNames").text(peopleName);
+		})
+	});
+}
+
+function addQuestionByType() {
+
+
+	var obj = document.getElementById('sendType'); //定位id
+	var index = obj.selectedIndex; // 选中索引
+	var type = obj.options[index].value;
+	var type1 = "操作";
+
+	if (type == 1) {
+		type1 = "操作";
+	}
+	if (type == 2) {
+		type1 = "填空";
+	}
+	if (type == 3) {
+		type1 = "选择";
+	}
+	if (type == 4) {
+		type1 = "判断";
+	}
+	var h = $('#GridBoxQuestion').bootstrapTable('getAllSelections');
+	var jy;
+	var ylqk;
+	for (var i = 0; i < h.length; i++) {
+		if (h[i].questionName == "音量全开") {
+			ylqk = 1;
+		} else if (h[i].questionName == "音量设置为静音") {
+			jy = 1;
+		}
+	}
+	if (jy == 1 && ylqk == 1) {
+		$("#tipMess").text("音量全开和音量设置为静音只能一道");
+		$("#exampleModal2").modal("show");
+		// alert("音量全开和音量设置为静音只能一道");
+	}
+	else {
+		for (var i = 0; i < h.length; i++) {
+			for (var j = 0; j < tableData.length; j++) {
+				if (h[i].questionName == tableData[j].topic) {
+					$("#tipMess").text("这道题已经被添加过了");
+					$("#exampleModal2").modal("show");
+					return;
+				}
+			}
+
+		}
+		for (var i = 0; i < h.length; i++) {
+			var obj = {
+				typeOf: h[i].typeQ,
+				type: type1,
+				topic: h[i].questionName,
+				score: h[i].grade,
+				questionCode: h[i].questionCode
+			}
+			tableData.push(obj);
+			totalScore += parseInt(h[i].grade);
+		}
+
+		if ($('#sendType').val() != '') {
+			$('#addQuestionDialog').dialog('close');
+		}
+
+		getTable(tableData);
+		$("#score").text(totalScore + "分");
+	}
+}
+
+function getQuestions() {
+	let level = $('#rank').val();
+	var aaa = document.getElementById('addQuestionDialog');
+	aaa.setAttribute('top', '45');
+	var obj = document.getElementById('sendType'); //定位id
+	var index = obj.selectedIndex; // 选中索引
+	var type = obj.options[index].value;
+	//先销毁表格
+	$('#GridBoxQuestion').bootstrapTable('destroy');
+	//加载表格
+	$('#GridBoxQuestion').bootstrapTable({
+
+		showHeader: true,     //是否显示列头
+		//classes: 'table-no-bordered',
+
+		undefinedText: '',
+		contentType: 'application/x-www-form-urlencoded',
+		toolbarAlign: 'left',
+		paginationHAlign: 'right',
+		silent: true,
+		url: "/springboot-course/newexam/getneweam",
+		method: 'POST',                 //工具按钮用哪个容器
+		striped: true,                      //是否显示行间隔色
+		cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+		pagination: false,                   //是否显示分页（*）
+		sortable: false,                     //是否启用排序
+		sortOrder: "asc",                   //排序方式
+		//queryParams: InitTable.queryParams,  //传递参数（*）	        
+		search: false,                      //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+		pagination: true, //设置为 true 会在表格底部显示分页条
+		pageNumber: 1,//初始化加载第一页，默认第一页
+		pageSize: 5,//每页的记录行数（*）
+		pageList: [3, 5, 8], //可供选择的每页的行数（*）	
+		queryParams: function (params) {//上传服务器的参数
+			var temp = {//如果是在服务器端实现分页，limit、offset这两个参数是必须的
+				limit: params.limit, // 每页显示数量
+				offset: params.pageNumber, // SQL语句起始索引
+				type: type,
+				subject,
+				level
+			};
+			return temp;
+		},
+		paginationPreText: '上一页',
+		paginationNextText: '下一页',
+		sidePagination: "server", //服务端处理分页
+		minimumCountColumns: 2,             //最少允许的列数
+		//height: 680,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+		uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+
+		columns: [{
+			checkbox: true
+		},
+		{
+			title: '序号',
+			field: '',
+			align: 'center',
+			formatter: function (value, row, index) {
+				var pageSize = $('#GridBoxQuestion').bootstrapTable('getOptions').pageSize;     //通过table的#id 得到每页多少条
+				var pageNumber = $('#GridBoxQuestion').bootstrapTable('getOptions').pageNumber; //通过table的#id 得到当前第几页
+				return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
+			}
+		},
+		{
+			field: 'questionName',
+			title: '题目名称'
+		}, {
+			field: 'grade',
+			title: '分数'
+		}, {
+			field: 'id',
+			title: '题目',
+			visible: false
+		}, {
+			field: 'questionCode',
+			title: '分数',
+			visible: false
+		}]
+	});
+}
+
+
+function delQuestions() {
+	var h = $('#GridBox').bootstrapTable('getAllSelections');
+	for (var i = 0; i < h.length; i++) {
+		for (var j = 0; j < tableData.length; j++) {
+			if (h[i].topic == tableData[j].topic) {
+				tableData.splice(j, 1);
+				totalScore = totalScore - parseInt(h[i].score);
+			}
+		}
+	}
+	getTable(tableData);
+	$("#score").text(totalScore + "分");
+}
+
+function addExams() {
+	var testName = $("#testName").val();
+	var startTime = $("#startTime").val();
+	startTime += ":00";
+	var duration = $("#duration").val();
+	var typeQ = "";
+	var questionCode = "";
+
+	if (testName == null || testName == "") {
+		$("#tipMess").text("请输入试卷名称");
+		$("#exampleModal2").modal("show");
+	}
+	else if (people == null || people == "") {
+		$("#tipMess").text("请选择考试人员");
+		$("#exampleModal2").modal("show");
+	}
+	else if (startTime == null || startTime == "") {
+		$("#tipMess").text("请输入考试时间");
+		$("#exampleModal2").modal("show");
+	}
+	else if (duration == null || duration == "") {
+		$("#tipMess").text("请输入考试时长");
+		$("#exampleModal2").modal("show");
+	} else if (isNaN(duration)) {
+		$("#tipMess").text("考试时长必须是数字");
+		$("#exampleModal2").modal("show");
+	}
+
+	else {
+		window.szt = 0;
+		window.txt = 0;
+		window.bjxxcxt = 0;
+		window.dwt = 0;
+		for (var i = 0; i < tableData.length; i++) {
+
+
+			if (i != 0) {
+				typeQ += ",";
+				questionCode += ",";
+			}
+
+			typeQ += tableData[i].typeOf;
+			questionCode += tableData[i].questionCode;
+		}
+
+		$.ajax({
+			type: "post",
+			url: "/springboot-course/exampaper/gettest",
+			dataType: "JSON",
+			data: "testName=" + testName + "&startTime=" + startTime + "&duration=" + duration
+				+ "&idNumber=" + people + "&typeQ=" + typeQ + "&questionCode=" + questionCode + "&grade=" + totalScore + "&subject="+subject,
+			success: function (res) {
+				// if(res.)
+				$("#tipMess").text(res.msg);
+				$("#exampleModal2").modal("show");
+				if (res.code != 500) {
+					window.top.window.indexObj.refreshTest();
+					location.href = "../manage/testPaper.html";
+				}
+			},
+			error: function (err) {
+				console.log('数据返回错误', err);
+			}
+		});
+	}
+}
+
+function cacelExams() {
+	location.href = "../manage/testPaper.html";
+}
+//初始化表格
+function addQuestions() {
+
+	$("#addQuestionDialog").dialog({
+		autoOpen: true,
+		height: "auto",
+		width: 600,
+		resizable: false,
+		modal: true
+	});
+	$('#sendType').val("全部");
+	$('#GridBoxQuestion').bootstrapTable('destroy');
+	getCategory();
+	getGrid(subject, "全部", "全部", rank);
+
+}
+//考试科目类别联动
+function getCategory() {
+	$.ajax({
+		type: "post",
+		url: "/springboot-course/paper/getSubectInfo",
+		dataType: "JSON",
+		data: "subject=" + subject,
+		success: function (res) {
+			var data = res.data;
+			$("#sendCategory").empty();
+			$.each(data, function (i, item) {
+				$('<option value="' + item.text + '">' + item.text + '</option>').appendTo($("#sendCategory"));
+			})
+		},
+		error: function (err) {
+			console.log('数据返回错误', err);
+		}
+	});
+}
+
+//加载表格
+function getGrid(subject, type, category, rank) {
+	$('#GridBoxQuestion').bootstrapTable('destroy');
+	$('#GridBoxQuestion').bootstrapTable({
+		showHeader: true,     //是否显示列头
+		//classes: 'table-no-bordered',
+
+		undefinedText: '',
+		contentType: 'application/x-www-form-urlencoded',
+		toolbarAlign: 'left',
+		paginationHAlign: 'right',
+		silent: true,
+		url: "/springboot-course/newexam/getneweam",
+		method: 'POST',                 //工具按钮用哪个容器
+		striped: true,                      //是否显示行间隔色
+		cache: false,                       //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+		pagination: false,                   //是否显示分页（*）
+		sortable: false,                     //是否启用排序
+		sortOrder: "asc",                   //排序方式
+		//queryParams: InitTable.queryParams,  //传递参数（*）	        
+		search: false,                      //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+		pagination: true, //设置为 true 会在表格底部显示分页条
+		pageNumber: 1,//初始化加载第一页，默认第一页
+		pageSize: 5,//每页的记录行数（*）
+		pageList: [3, 5, 8], //可供选择的每页的行数（*）	
+		queryParams: function (params) {//上传服务器的参数
+			var temp = {//如果是在服务器端实现分页，limit、offset这两个参数是必须的
+				limit: params.limit, // 每页显示数量
+				offset: params.pageNumber, // SQL语句起始索引
+				type: type,
+				level: rank,
+				subject: subject,
+				category: category
+
+
+			};
+			return temp;
+		},
+		paginationPreText: '上一页',
+		paginationNextText: '下一页',
+		sidePagination: "server", //服务端处理分页
+		minimumCountColumns: 2,             //最少允许的列数
+		//height: 680,                        //行高，如果没有设置height属性，表格自动根据记录条数觉得表格高度
+		uniqueId: "id",                     //每一行的唯一标识，一般为主键列
+
+		columns: [{
+			checkbox: true
+		},
+		{
+			title: '序号',
+			field: '',
+			align: 'center',
+			formatter: function (value, row, index) {
+				var pageSize = $('#GridBoxQuestion').bootstrapTable('getOptions').pageSize;     //通过table的#id 得到每页多少条
+				var pageNumber = $('#GridBoxQuestion').bootstrapTable('getOptions').pageNumber; //通过table的#id 得到当前第几页
+				return pageSize * (pageNumber - 1) + index + 1;    // 返回每条的序号： 每页条数 *（当前页 - 1 ）+ 序号
+			}
+		},
+		{
+			field: 'questionName',
+			title: '题目名称'
+		}, {
+			field: 'grade',
+			title: '分数'
+		}, {
+			field: 'id',
+			title: '题目',
+			visible: false
+		}, {
+			field: 'questionCode',
+			title: '分数',
+			visible: false
+		}]
+	});
+}
+//获取参数刷新表格
+function getParams(flag) {
+	subject = $("#sendSubject").val();
+	type = $("#sendType").val();
+	category = $("#sendCategory").val();
+	rank = $("#rank")[0].value;
+	if (flag == 1) {
+		getCategory();
+		return;
+	}
+	getGrid(subject, type, category, rank);
+}
+
+// })
+
+
+

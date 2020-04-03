@@ -1,0 +1,526 @@
+$(function () {
+
+    window.updata = function () {
+        tableInit('1');
+    }
+    tableInit('1');
+    function tableInit(subject) {
+
+        //先销毁表格
+        $('#GridBox').bootstrapTable('destroy');
+        //加载表格
+        $('#GridBox').bootstrapTable({
+            showHeader: true, //是否显示列头
+            undefinedText: '',
+            theadClasses: "thead-light",//这里设置表头样式
+            toolbar: '#toolbar',
+            toolbarAlign: 'left',
+            paginationHAlign: 'right',
+            silent: true,
+            url: "/springboot-course/paper/getallQuestions",
+            contentType: "application/x-www-form-urlencoded",
+            dataType: "json",
+            striped: true, //是否显示行间隔色
+            cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+            pagination: true, //是否显示分页（*）
+            sortable: false, //是否启用排序
+            sortOrder: "asc", //排序方式
+            queryParams: function (params) { //上传服务器的参数
+                var temp = { //如果是在服务器端实现分页，limit、offset这两个参数是必须的
+                    limit: params.limit,               // 每页显示数量
+                    offset: params.pageNumber,         // SQL语句起始索引
+                    name: $('#findName').val(),
+                    subject: subject                   // 考试科目
+                };
+
+                return temp;
+            },
+            paginationPreText: '上一页',
+            paginationNextText: '下一页',
+            sidePagination: "server", //服务端处理分页
+            // sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
+            pageNumber: 1, //初始化加载第一页，默认第一页
+            pageSize: 12, //每页的记录行数（*）
+            pageList: [5, 8, 12], //可供选择的每页的行数（*）
+            search: false, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+            clickToSelect: false,
+            uniqueId: "id", //每一行的唯一标识，一般为主键列
+            columns: [
+                {
+                    checkbox: true
+                }, {
+                    field: 'object',
+                    title: '科目',
+                    align: 'center'
+                },
+                {
+                    field: 'type',
+                    title: '类别',
+                    align: 'center'
+                },
+                {
+                    field: 'famliy',
+                    title: '类型',
+                    align: 'center'
+                },
+                {
+                    field: 'question',
+                    title: '题目',
+                    align: 'center'
+                },
+                {
+                    field: 'grade',
+                    title: '分数',
+                    align: 'center'
+                },
+                {
+                    field: 'operation',
+                    title: '操作',
+                    align: 'center'
+                }
+            ],
+
+            onLoadSuccess: function (data) {
+                $('#GridBox').find('td').each(function () {
+                    if ($(this).text() == '查看') {
+                        $(this).attr('style', 'text-align:center;cursor:pointer;');
+                        $(this).addClass('needWatchExam');
+                    }
+                });
+
+                $('#GridBox').on('click', '.needWatchExam', function () {
+                    seeQuestion(window.needSeeId, window.needSeeType1);
+                    $("#cover").fadeIn(300);
+                });
+            },
+            onClickRow: function (row, $element) {
+                window.needSeeId = row.id;
+                window.needSeeType = row.type;
+                window.needSeeType1 = row.type1;
+            }
+        });
+    }
+
+    $('#btn-del').on('click', function () {
+        deleteData();
+    });
+    // 删除数据
+    function deleteData() {
+        var that = this;
+        var needDeleteList = [];
+        var needDeleteId = '';
+        var needDeleteType = '';
+        var needDeleteType1 = '';
+        var needExamType = '';
+        needDeleteList = $('#GridBox').bootstrapTable('getAllSelections');
+
+        $.each(needDeleteList, function (i, item) {
+            needDeleteId += item.id + ',';
+            needDeleteType += item.type + ',';
+            needDeleteType1 += item.type1 + ',';
+            needExamType += item.famliy + ',';
+
+        });
+        needDeleteId = needDeleteId.slice(0, needDeleteId.length - 1);
+        needDeleteType1 = needDeleteType1.slice(0, needDeleteType1.length - 1);
+        needDeleteType = needDeleteType.slice(0, needDeleteType.length - 1);
+        needExamType = needExamType.slice(0, needExamType.length - 1);
+
+        if (needDeleteId != '') {
+            // $('#btn-del').attr('data-target', "#exampleModal3");
+            $('#exampleModal3').modal();
+        }
+
+        $('#delete').on('click', function () {
+            let $subject = $('#subjectSelect').val();
+            new Promise((resolve, reject) => {
+                $.post('/springboot-course/paper/delQuestions', { id: needDeleteId, type: needDeleteType, examType: needExamType, type1: needDeleteType1, subject: $subject }, function (res) {
+                    resolve(res);
+                });
+            }).then(res => {
+                $('#exampleModal4').modal();
+                $("#tipMess").text(res.message);
+                tableInit($subject);
+            }).catch(err => console.log(err));
+
+        });
+    }
+
+    //试题查看
+    function seeQuestion(params1, params2) {
+
+        $.get("/springboot-course/exampaper/getsubject", { code: params1, type: params2 }, function (res) {
+            var data = res.data;
+            $('#choice-question').empty();
+            var text = data.question;
+            var answer = data.answer;
+            if (data.select && data.select != "") {
+                var selectArr;
+                selectArr = data.select.split(';');
+
+                $.each(selectArr, function (index, item) {
+                    if (data.flag === 0) {
+                        $('<li class="selectLi"><label><input type="radio" class="selectRadio oneSelect" name="flag" value="' + item + '"/>' + item + '</label></li>').appendTo($('#choice-question'));
+                    } else {
+                        $('<li class="selectLi"><label><input type="checkbox" class="selectRadio moreSelect" value="' + item + '"/>' + item + '</label></li>').appendTo($('#choice-question'));
+                    }
+                });
+            }
+            if (data.flag === 0) {
+                text = text + '（单选题）';
+            } else if (data.flag === 1) {
+                text = text + '（多选题）';
+            }
+
+            if (data.type === "判断题") {
+                text = text + '（判断题）';
+                if (answer == 'A') {
+                    answer = '对';
+                } else {
+                    answer = '错';
+                }
+            }
+
+            $("#questionType").text(data.type);
+            $("#question").text(text);
+            if (data.img == '' || data.img == null) {
+                $("#questionPic").hide().attr("src", "");
+            } else {
+                $("#questionPic").show().attr("src", "data:image/png;base64," + data.img);
+            }
+
+
+            $("#answer").text(answer);
+        }, "json")
+    }
+
+    $("#delIcon").on("click", function () {
+        $("#cover").fadeOut(300);
+    })
+
+
+    // ----------------- made by mc -------------
+    class addQuestions {
+        constructor() {
+            this.examType = '1';
+            this.init();            // 初始化
+        }
+
+        init() {
+            this.useLayuiForm();    // 使用layui表单渲染
+            this.addSelectOption(); // 添加选项
+            this.issue();           // 出题
+            this.getTypeSelect();   // 渲染类型下拉框
+            this.drawTitleLevel();  // 渲染题目级别多选框
+            this.clickAdd();        // 点击添加
+            this.downLoad();        // 下载模板
+        }
+
+        // 使用layui表单渲染
+        useLayuiForm() {
+            let _this = this;
+
+            layui.use(['form', 'layedit', 'upload'], function () {
+
+                var form = layui.form,
+                    layer = layui.layer,
+                    layedit = layui.layedit;
+
+                //自定义验证规则
+                form.verify({
+                    title: function (value) {
+                        if (value.length < 5) {
+                            return '标题至少得5个字符啊';
+                        }
+                    },
+                    pass: [
+                        /^[\S]{6,12}$/, '密码必须6到12位，且不能出现空格'
+                    ],
+                    content: function (value) {
+                        layedit.sync(editIndex);
+                    }
+                });
+
+                //多图片上传
+                var $ = layui.jquery
+                    , upload = layui.upload;
+
+                upload.render({
+                    elem: '#test10',
+                    auto: false,
+                    multiple: true,
+                    choose: function (obj) {
+                        //预读本地文件示例，不支持ie8
+                        obj.preview(function (index, file, result) {
+                            if ($('#imgList').find('img').length >= 1) {
+                                $("#tipMess").text("只能上传一张图片")
+                                $("#exampleModal4").modal("show");
+                            } else {
+                                $('#imgList').append('<img src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
+                            }
+                        });
+                    }
+                });
+
+                $('#testAdd').on('click', function () {
+                    $('#imgList').empty();
+                });
+
+                //监听提交
+                form.on('submit(commit)', function (data) {
+                    let imgSrc = '';
+                    $('#imgList').find('.layui-upload-img').each(function () {
+                        imgSrc = $(this).attr('src').split(',');
+                        imgSrc = imgSrc[1];
+                    });
+                    // debugger
+                    let type = $('#selectChange').val();
+                    let typeName = $('.selectChange-item[value=' + type + ']').text();
+
+                    let $issue = $('#issue').val();
+                    if ($issue.indexOf('@') != -1) {
+                        $issue = $issue.replace(/@/g, '_');
+                    }
+                    let select = '';
+                    let option = $('#selectChangeOption').val();
+                    $('.select-item').find('.layui-input').each(function () {
+                        if ($(this).val() != "") {
+                            select = select + $(this).parent('.layui-input-inline').siblings('.label-select').text() + '.' + $(this).val() + ';';
+                        }
+                    });
+                    let subject = $('#subjectSelect').val();
+
+
+                    select = select.slice(0, select.length - 1);
+
+                    // 题目级别多选
+                    let levelStr = '';
+                    $('.check-box:checked').each((index, item) => {
+                        let levelId = $(item).attr('data-id') + ',';
+                        levelStr += levelId;
+                    });
+
+                    let levelNewStr = levelStr.slice(0, levelStr.length - 1);
+
+                    if (type !== '') {
+                        new Promise((resolve, reject) => {
+                            $.post('/springboot-course/paper/addQuestion', {
+                                answer: $('#result').val(),
+                                issue: $issue,
+                                fileList: imgSrc,
+                                typeId: type,
+                                score: $('#score').val(),
+                                selectA: select,
+                                option,
+                                subject: subject,
+                                flag: data.field.flag,
+                                typeName,
+                                level: levelNewStr
+                            }, function (res) {
+                                resolve(res);
+                            });
+                        }).then(data => {
+                            $('#exampleModal1').modal('hide');
+                            $('#addSuccessText').text(data.data);
+                            $('#addSuccess').modal();
+                            tableInit(subject);
+
+                            $("#formAddQuestion")[0].reset();
+                            $('#imgList').empty();
+
+                            // 恢复到四个选项
+                            $('.select-item').each(function (i) {
+                                if (i > 3) {
+                                    $(this).remove();
+                                }
+                            });
+                            layui.form.render();
+                        });
+                    }
+                    return false;
+                });
+
+                // 监听select的change事件
+                form.on('select(selectChange)', function (data) {
+                    form.render('select');
+                });
+
+                // 监听选框
+                form.on('select(selectChangeOption)', function (data) {
+
+                    if (data.value != '选择题') {
+                        $('#select-box').hide();
+                    } else {
+                        $('#select-box').show();
+                    }
+
+                    if (data.value != '填空题') {
+                        $('#showPic').hide();
+                    } else {
+                        $('#showPic').show();
+                    }
+                    form.render('select');
+                });
+
+                // 考试科目
+                form.on('select(subjectSelect)', function (data) {
+                    let val = data.value;
+                    _this.examType = $(`#subjectSelect`).val();
+
+                    _this.getTypeSelect();             // 渲染类型
+                    tableInit(data.value);
+                    form.render('select');              //select是固定写法 不是选择器
+                });
+
+                // 上传文件
+                //指定允许上传的文件类型
+                upload.render({
+                    elem: '#uploadFile',
+                    url: '/springboot-course/paper/addExcel',
+                    auto: false,
+                    accept: 'file', //普通文件
+                    exts: 'xlsx|xls',
+                    size: 10240,
+                    bindAction: '#file-commit',
+                    before(obj) {
+                        let path = $('#upload-path').val();
+                        path = path.split('\\');
+                        path = path.join('/');
+                        this.data = { path };
+                    },
+                    done: function (res) {
+                        if(res.code !== 400) {
+                            let str = `${res.msg}<br/><br/>`;
+                            if (res.type) {
+                                if (res.type.length > 0) {
+                                    str += '<div class="type" style="text-indent: 24px;">不存在类型:';
+                                    str += res.type.join(',');
+                                    str += '</div>'
+                                }
+                                if (res.questionType.length > 0) {
+                                    str += '<div class="questionType" style="text-indent: 24px;">类型:';
+                                    str += res.questionType.join(',');
+                                    str += '</div>'
+                                }
+                                if (res.picture.length > 0) {
+                                    str += '<div class="picture" style="text-indent: 24px;">类型:';
+                                    str += res.picture.join(',');
+                                    str += '</div>'
+                                }
+    
+                                str = str + '</div>';
+                            }
+    
+                            layer.msg(str, { icon: 1 });
+                            $('#upload-modal').modal('hide');
+                            tableInit(_this.examType);
+                        }
+                    }
+                });
+
+                $('.layui-btn[type="reset"]').off('click').on('click', function () {
+                    $('#imgList').empty();
+                    $('#qusetionText').text('');
+                });
+
+                window.setFormInit = function () { form.render() };
+            });
+        }
+
+        // 出题
+        issue() {
+            let $val;
+            let $str = '';
+            $("textarea[name='issue']").on('keyup', function (event) {
+                $val = $(this).val();
+                if ($(this).val().indexOf('@') != -1) {
+                    $val = $val.replace(/@/g, '_');
+                }
+                $('#qusetionText').html($val);
+            });
+        }
+
+
+        // 添加选择题选项
+        addSelectOption() {
+            $('#addSelectOption').off('click').on('click', function () {
+                let $prev = $(this).prev('.select-item');
+                let str = $prev.children('.label-select').text();
+                str = String.fromCharCode(str.charCodeAt() + 1);
+
+                let $strDom = `
+                <div class="layui-inline select-item">
+                <label class="layui-form-label label-select">${str}</label>
+                    <div class="layui-input-inline">
+                    <input type="text" name="number" autocomplete="off" class="layui-input">
+                    </div>
+                </div>
+                `;
+                $(this).before($strDom);
+            });
+        }
+
+        // 点击添加按钮
+        clickAdd() {
+            let _this = this;
+            $('#testAdd').off('click').on('click', () => {
+                $('#exampleModal1').modal('show');
+            });
+        }
+
+        // 渲染类型
+        getTypeSelect() {
+            // debugger
+            let _this = this;
+            new Promise((resolve, reject) => {
+                $.ajaxSettings.async = false;
+                $.post('/springboot-course/paper/getSubectInfo', { subject: _this.examType }, function (data) {
+                    resolve(data);
+                });
+            }).then(res => {
+                _this.drawTypeSelect(res.data);
+            }).catch(err => console.log('err'));
+        }
+
+        // 渲染类型
+        drawTypeSelect(data) {
+            $('#selectChange').empty();
+            $(`<option value="">请选择题目</option>`).appendTo($('#selectChange'));
+            $.each(data, function (index, item) {
+                $(`<option value="${item.id}" class="selectChange-item">${item.text}</option>`).appendTo($('#selectChange'));
+            });
+
+            // window.setFormInit();
+        }
+
+        // 下载模板
+        downLoad() {
+            $('#down-load').off('click').on('click', () => {
+                let a = document.createElement("a");
+                a.download = "导入试题.xls";
+                a.href = '../img/导入试题.xls';
+                $("body").append(a); // 修复firefox中无法触发click
+                a.click();
+                $(a).remove();
+            });
+        }
+
+        // 渲染题目级别多选框
+        drawTitleLevel() {
+            $.ajax({
+                url: '/springboot-course/userlevel/list',
+                dataType: 'json',
+                type: 'get',
+                success(res) {
+                    $.each(res, (key, val) => {
+                        $(`<input type="checkbox" lay-skin="primary" name="levelId" data-id="${val.levelId}" title="${val.name}" class="check-box">`).appendTo($('#title-level'));
+                    });
+                }
+            });
+        }
+
+    }
+    // ------------ 实例化对象 ----------
+    new addQuestions();
+})
+

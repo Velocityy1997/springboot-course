@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/normal.min.css">
+</head>
+<style>
+    body {
+        margin: 0;
+    }
+    
+    .my-answer-img {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .machine-box {
+        display: flex;
+        height: 100vh;
+        flex-direction: column;
+    }
+    
+    .machine-head {
+        flex: 0 0 70px;
+        display: flex;
+        font-size: 18px;
+        background-color: #fff;
+        color: #6f737a;
+    }
+    
+    .machine-head .return-box {
+        flex: 1.5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+    
+    .machine-head .return-box .return-img {
+        width: 38px;
+        height: 39px;
+        background: url(./img/test/return.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+        margin-left: 20px;
+    }
+    
+    .machine-head .return-box .return-text {
+        color: #6f737a;
+        margin-left: 14px;
+    }
+    
+    .machine-head .is-now-test {
+        flex: 2;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: linear-gradient(to right, #046b3a, #b6e2ae);
+    }
+    
+    .machine-head .is-now-test .test-img {
+        width: 36px;
+        height: 41px;
+        background: url(./img/test/nowTest.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+    }
+    
+    .machine-head .is-now-test .test-text {
+        color: #fff;
+        letter-spacing: 1px;
+        font-weight: 300;
+        margin-left: 20px;
+    }
+    
+    .machine-head .test-time {
+        flex: 4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    .machine-head .test-time .remain-time-text {
+        padding-left: 15px;
+    }
+    
+    .machine-head .test-time .time {
+        padding-left: 10px;
+    }
+    
+    .machine-head .test-time .remain-time {
+        color: #f959a3;
+    }
+    
+    .machine-head .hand {
+        flex: 2;
+        text-align: center;
+        line-height: 70px;
+        color: #fff;
+        letter-spacing: 2px;
+        background-color: #827de6;
+        cursor: pointer;
+        font-family: "SimHei";
+        font-size: 23px;
+    }
+    
+    .machine-head .hand .collectIcon {
+        vertical-align: top;
+        margin-top: 22px;
+        margin-right: 10px;
+        font-size: 27px;
+    }
+    
+    .machine-head .collectButton {
+        display: none;
+    }
+    
+    .machine-body {
+        flex: auto;
+        margin-top: 5px;
+        background-color: #fff;
+        display: flex;
+    }
+    
+    .test-content {
+        width: 100%;
+        height: 100%;
+        border-left: 1px solid #eee;
+        display: inline-block;
+        vertical-align: top;
+        overflow-y: auto;
+    }
+    
+    .test-content .questions-ul {
+        width: 100%;
+        height: auto;
+        padding: 15px 50px 20px 50px;
+        font-size: 18px;
+        color: #6f737a;
+        letter-spacing: 2px;
+    }
+    
+    .test-content .questions-ul .questions-item {
+        line-height: 30px;
+        margin-top: 30px;
+    }
+    
+    .test-content .questions-ul .questions-item .answer-line {
+        border: none;
+        border-bottom: 1px solid #93969b;
+        outline: 0;
+        text-align: center;
+        line-height: 22px;
+        font-size: 16px;
+        color: #6f737a;
+        width: auto;
+    }
+    
+    .test-content .questions-ul .questions-item .img-box {
+        margin-top: 20px;
+    }
+    
+    .test-content .questions-ul .questions-item .select-box {
+        width: 100%;
+        height: auto;
+    }
+    
+    .test-content .questions-ul .questions-item .select-box .selectLi {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+    }
+    
+    .test-content .questions-ul .questions-item .select-box .selectLi label {
+        font-weight: normal;
+    }
+    
+    .test-content .questions-ul .questions-item .select-box .selectLi label .selectRadio {
+        margin-right: 10px;
+    }
+    
+    .test-content .questions-ul .questions-item .answerIcon {
+        width: 30px;
+        height: 20px;
+        font-size: 20px;
+        cursor: pointer;
+        color: #f959a3;
+        display: block;
+        margin: 10px 0 0 0;
+    }
+    
+    .test-content .questions-ul .questions-item .answerBox {
+        width: 100%;
+        line-height: 30px;
+        color: #f959a3;
+        display: none;
+    }
+</style>
+
+<body>
+    <div class="machine-box">
+        <div class="machine-body">
+            <div class="test-content" id="item-bank">
+
+            </div>
+        </div>
+
+    </div>
+    <script src="../js/lib/jquery-3.4.1.min.js"></script>
+    <script src="../js/lib/bootstrap.min.js"></script>
+    <script>
+        $(function() {
+
+            var option = {};
+            var machineObj = function(option) {
+                this.option = {
+                    testJsonList: [], // 试题及答案JSON
+                    questionsList: {
+                        data: []
+                    }, // 考试题
+                    answerList: [], // 答案
+                    examId: '', // 考试卷子id号,
+                    examName: '', // 考试卷子名称
+                    idNumber: '', // 考生id
+                    type: 3, // 考试类型
+                };
+
+                this.selectType = '';
+
+                this.option = $.extend(option, this.option);
+                this.PropellerObj = {};
+                this.timerDown = null; // 剩余时间
+                this.timerUp = null; // 已过时间
+                this.examId = '';
+                this.init();
+
+
+            };
+
+            // 初始化
+            machineObj.prototype.init = function() {
+
+                this.$itemBtnBox = $('#item-btn-ul'); // 选题父级DOM
+                this.$machineBtnBox = $('#machine-btn-box'); // 按键
+                this.$itemBank = $('#item-bank'); // 题库
+                this.$answerBank = $('#answerBank');
+                this.$hand = $('#hand'); // 交卷按钮
+
+
+            }
+
+
+            // 考试题及答案
+            machineObj.prototype.questionsList = function(id, name) {
+                    var _this = this;
+                    // debugger
+                    $.ajax({
+                        type: "post",
+                        url: '/springboot-course/exam/checkPapers?table=' + name + '&questionCode=' + id,
+                        dataType: "JSON",
+                        async: false,
+                        success: function(res) {
+                            // debugger
+                            _this.examId = res.data.examId;
+                            if (res.data == "") {
+                                if (res.msg.indexOf('/') != -1) {
+                                    let time = res.msg.split('/');
+                                    window.parent.window.setOption.openEmptyTest(time[1], time[0]);
+                                } else {
+                                    window.parent.window.setOption.openEmptyTest(0, res.msg);
+                                }
+
+                            } else { //
+                                _this.option.testJsonList = res.data;
+
+                                // ----------------- made by mc ---------------------
+
+                                _this.option.examId = res.data.examId; //卷子id号
+                                if (_this.selectType != 0) {
+                                    _this.option.examName = res.data.examName; // 考试卷子名称
+                                    _this.option.idNumber = res.data.idNumber; // 考生id
+                                    _this.option.type = 1; // 考试类型
+                                }
+
+
+                                _this.option.questionsList.data = res.data;
+                                // _this.drawAnswer(_this.option.testJsonList);
+                                _this.drawQusetions(_this.option.questionsList.data.testData);
+                                // window.parent.window.setOption.openFullTest();
+                                // window.top.window.titleOpen();
+                            }
+                        },
+                        error: function(err) {
+                            console.log('数据返回错误', err);
+                        }
+                    });
+                }
+                // 渲染题库
+            machineObj.prototype.drawQusetions = function(data) {
+                var _this = this;
+                var j = 0;
+                var $ul = $('<ul id="questions-ul" class="questions-ul">');
+                var $li = $('<li class="questions-item">');
+
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].type == "0" || data[i].type == "5") {
+                        $li = $('<li class="questions-item" data-id="' + data[i].number + '">');
+                    } else if (data[i].type == "3") {
+                        $li = $('<li class="questions-item danSelect" data-id="' + data[i].number + '" >');
+                    } else if (data[i].type == "4") {
+                        $li = $('<li class="questions-item multSelect" data-id="' + data[i].number + '" >');
+                    }
+
+                    var subject = data[i].number + "." + data[i].question_name.replace(/_/g,
+                        '<input class="answer-line" data-id="' + data[i].number + '">');
+                    $li.html(subject);
+
+                    if (data[i].img != null && data[i].img != "") {
+                        $('<div class="img-box"><img src="data:image/png;base64,' + data[i].img +
+                            '" class="img" id="questionImg"/></div>').appendTo($li);
+                    }
+                    // if(data[i].picturePath!=null && data[i].picturePath !=""){
+                    //   $('<div class="img-box"><img src="' + data[i].picturePath + '" class="img" id="questionImg"/></div>').appendTo($li);
+                    // }
+                    if (data[i].select != null && data[i].select != "") {
+                        var selectArr = data[i].select.split(";");
+                        var $selectBox = $('<ul class="select-box"></ul>');
+                        $.each(selectArr, function(index, item) {
+                            if (data[i].type == "2") {
+                                $('<li class="selectLi"><label><input type="radio" name="' + i +
+                                    '" class="selectRadio oneSelect" value="' + item + '"/>' +
+                                    item + '</label></li>').appendTo($selectBox);
+                            } else if (data[i].type == "3") {
+                                $('<li class="selectLi"><label><input name="~' + i +
+                                    '" type="checkbox" class="selectRadio moreSelect" value="' +
+                                    item + '""/>' + item + '</label></li>').appendTo($selectBox);
+                            }
+                        })
+                        $selectBox.appendTo($li);
+                    }
+                    // var $answerBox = $(
+                    //     '<div class="answerIcon glyphicon glyphicon-eye-close"></div><div class="answerBox" id="answerBox">参考答案：' +
+                    //     data[i].result + '</div>');
+                    // $answerBox.appendTo($li);
+
+                    // 我的答案正确
+                    $('<div class="my-answer">我的答案: <img class="my-answer-img" src="../img/false.png"/></div>').appendTo($li);
+
+                    // 我的答案
+                    if (data[i].answer === 'true') {
+                        $('<div class="answer">操作成功</div>').appendTo($li);
+                    } else if (data[i].answer === 'false') {
+                        $('<div class="answer">操作失败</div>').appendTo($li);
+                    } else {
+                        $('<div class="answer">' + data[i].answer + '</div>').appendTo($li);
+                    }
+
+
+                    // 正确答案
+                    $('<div class="my-answer">正确答案:</div>').appendTo($li);
+                    if (data[i].result === 'true' || data[i].result === 'false') {
+                        $('<div class="answer">此题为操作题</div>').appendTo($li);
+                    } else {
+                        $('<div class="answer">' + data[i].result + '</div>').appendTo($li);
+                    }
+                    $li.appendTo($ul);
+                }
+                for (var i = 0; i < j; i++) {
+                    Object.defineProperty(_this.option, `messageNews${i + 1}`, {
+                        value: '未作答。未作答',
+                        writable: true
+                    });
+                }
+
+                this.$itemBank.empty();
+
+                $ul.appendTo(this.$itemBank);
+                //训练查看答案
+                $("#item-bank").on("click", ".answerIcon", function() {
+                    if ($(this).hasClass("glyphicon-eye-close")) {
+                        $(this).removeClass("glyphicon-eye-close");
+                        $(this).addClass("glyphicon-eye-open");
+                    } else {
+                        $(this).removeClass("glyphicon-eye-open");
+                        $(this).addClass("glyphicon-eye-close");
+                    }
+                    $(this).siblings("#answerBox").toggle();
+                })
+            }
+
+            machineObj.prototype.reset = function() {
+                $("#answerBank").css("display", "none");
+                $("#item-bank").html('');
+                $("#answerBank").html('');
+            }
+
+            // 考题映射
+            machineObj.prototype.examMapper = function() {
+                var _this = this;
+                var arr = [];
+                $.each(_this.option.questionsList.data, function(index, item) {
+                    arr[item.number] = {
+                        questionCode: item.question_code,
+                        table: item.table
+                    }
+                });
+
+                return arr;
+            }
+
+            window.interpreObj = new machineObj(option);
+        });
+    </script>
+</body>
+
+</html>

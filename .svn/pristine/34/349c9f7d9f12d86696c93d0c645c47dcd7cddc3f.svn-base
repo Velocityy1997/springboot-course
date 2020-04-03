@@ -1,0 +1,43 @@
+package io.ken.springboot.course.dao;
+
+import java.util.List;
+import java.util.Map;
+
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import io.ken.springboot.course.bean.CommExamStore;
+
+/**
+ * 
+ * @author lq
+ *CommExamMapper.java
+ * 2019年11月28日
+ */
+@Mapper
+public interface CommExamMapper {
+
+	
+	@Select("SELECT *  FROM  comm_exam_store WHERE question_code =#{comCode}")
+	CommExamStore getNameByCode(@Param("comCode")String comCode);
+	
+	@Select("SELECT *  FROM  comm_exam_store WHERE question_name =#{name}")
+	List<CommExamStore> getByName(@Param("name")String name);
+	
+	
+	@Insert({
+		"INSERT INTO comm_exam_store(id,question_name,result,question_code,type,grade,pass_table_id,t_f_table_id,level_id) "
+		+ "VALUES(#{id},#{questionName},#{result},#{questionCode},#{type},#{grade},"
+				+ "#{passTableId},#{tFTableId},#{levelId})" })
+    int add(CommExamStore exam);
+	
+	@Select("select question_name,question_code,type,pass_table_id,result FROM "
+			+ "comm_exam_store ORDER BY rand() LIMIT 0, 1")
+	List<Map<String,Object>> getCommQuestionRandom();
+
+	
+	
+
+}

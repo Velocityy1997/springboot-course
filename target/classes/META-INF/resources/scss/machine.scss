@@ -1,0 +1,599 @@
+.machine-box {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+
+
+  .machine-head {
+    flex: 0 0 70px;
+    display: flex;
+    font-size: 18px;
+    background-color: #fff;
+    color: #6f737a;
+
+    // 返回
+    .return-box {
+      flex: 1.5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+      .return-img {
+        width: 38px;
+        height: 39px;
+        background: url(../img/test/return.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+        margin-left: 20px;
+      }
+
+      .return-text {
+        color: #6f737a;
+        margin-left: 14px;
+      }
+    }
+
+    // 考核内容
+    .is-now-test {
+      flex: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: linear-gradient(to right, #046b3a, #b6e2ae);
+
+      .test-img {
+        width: 36px;
+        height: 41px;
+        background: url(../img/test/nowTest.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+      }
+
+      .test-text {
+        color: #fff;
+        letter-spacing: 1px;
+        font-weight: 300;
+        margin-left: 20px;
+      }
+    }
+
+    // 考核时间
+    .test-time {
+      flex: 4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .remain-time-text {
+        padding-left: 15px;
+      }
+
+      .time {
+        padding-left: 10px;
+      }
+
+      .remain-time {
+        color: #f959a3;
+      }
+    }
+
+    // 交卷
+    .hand {
+      flex: 2;
+      text-align: center;
+      line-height: 70px;
+      color: #fff;
+      letter-spacing: 2px;
+      background-color: #827de6;
+      cursor: pointer;
+      font-family: "SimHei";
+      font-size: 23px;
+
+      .collectIcon {
+        vertical-align: top;
+        margin-top: 22px;
+        margin-right: 10px;
+        font-size: 27px;
+      }
+    }
+
+    .collectButton {
+      display: none;
+    }
+  }
+
+  // 主体
+  .machine-body {
+    flex: auto;
+    margin-top: 5px;
+    background-color: #fff;
+    display: flex;
+
+    // 手持机
+    .machine-body-left {
+      flex: 0 0 35%;
+      display: flex;
+      justify-content: center;
+
+      .machine-main {
+        width: 311px;
+        height: 714px;
+        background: url(../img/machine/machine.png) 0 0 no-repeat;
+        background-size: 100% 100%;
+        padding-top: 92px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        // 手持机屏幕
+        .machine-view {
+          width: 245px;
+          height: 317px;
+          padding-top: 32px;
+          position: relative;
+
+          .machine-view-body {
+            margin: 0 auto;
+            width: 193px;
+            height: 239px;
+
+            .machine-view-iframe {
+              width: 100%;
+              height: 100%;
+            }
+          }
+
+          .cover {
+            width: 194px;
+            height: 241px;
+            position: absolute;
+            top: 31px;
+            left: 26px;
+            display: none;
+            background: #6f737a;
+          }
+
+          .starting {
+            background: url(../img/cover.png) no-repeat;
+            background-size: 100% 100%;
+          }
+        }
+
+        // 手持机按键
+        .machine-btn-box {
+          width: 229px;
+          height: 255px;
+          margin-top: 16px;
+          padding: 10px;
+          display: flex;
+          flex-direction: column;
+
+          .machine-btn-head {
+            flex: 0 0 63px;
+            margin-top: 2px;
+            position: relative;
+
+            .machine-btn {
+              position: absolute;
+              width: 53px;
+              height: 35px;
+              cursor: pointer;
+              transition: background .1s ease-in-out;
+            }
+
+            .F1-btn {
+              top: 6px;
+              left: -1px;
+              background: url(../img/machine/F1-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .F1-btn.active {
+              background: url(../img/machine/F1.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .F2-btn {
+              top: 5px;
+              right: 0px;
+              background: url(../img/machine/F2-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .F2-btn.active {
+              background: url(../img/machine/F2.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .nav-btn {
+              left: -1px;
+              bottom: -15px;
+              background: url(../img/machine/nav-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .nav-btn.active {
+              background: url(../img/machine/nav-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .open-btn {
+              right: 0px;
+              bottom: -15px;
+              background: url(../img/machine/open-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .open-btn.active {
+              background: url(../img/machine/open-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .up-btn {
+              top: 5px;
+              width: 69px;
+              height: 23px;
+              left: 71px;
+              background: url(../img/machine/up-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .up-btn.active {
+              background: url(../img/machine/up-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .bottom-btn {
+              bottom: -19px;
+              width: 69px;
+              height: 23px;
+              left: 70px;
+              background: url(../img/machine/bottom-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .bottom-btn.active {
+              background: url(../img/machine/bottom-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .left-btn {
+              top: 15px;
+              width: 29px;
+              height: 55px;
+              left: 54px;
+              background: url(../img/machine/left-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .left-btn.active {
+              background: url(../img/machine/left-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .right-btn {
+              top: 15px;
+              width: 29px;
+              height: 55px;
+              right: 54px;
+              background: url(../img/machine/right-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .right-btn.active {
+              background: url(../img/machine/right-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .sure-btn {
+              top: 29px;
+              width: 39px;
+              height: 27px;
+              left: 85px;
+              background: url(../img/machine/sure-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .sure-btn.active {
+              background: url(../img/machine/sure-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+          }
+
+          .machine-btn-body {
+            flex: auto;
+            padding-top: 22px;
+            display: flex;
+            justify-content: space-between;
+            align-content: space-between;
+            flex-wrap: wrap;
+
+            .machine-btn {
+              width: 68px;
+              height: 35px;
+              cursor: pointer;
+              transition: background .5s ease-in-out;
+            }
+
+            .num1-btn {
+              background: url(../img/machine/1-active-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num1-btn.active {
+              background: url(../img/machine/1-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num2-btn {
+              background: url(../img/machine/2-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num2-btn.active {
+              background: url(../img/machine/2-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num3-btn {
+              background: url(../img/machine/3-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num3-btn.active {
+              background: url(../img/machine/3-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num4-btn {
+              background: url(../img/machine/4-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num4-btn.active {
+              background: url(../img/machine/4-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num5-btn {
+              background: url(../img/machine/5-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num5-btn.active {
+              background: url(../img/machine/5-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num6-btn {
+              background: url(../img/machine/6-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num6-btn.active {
+              background: url(../img/machine/6-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num7-btn {
+              background: url(../img/machine/7-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num7-btn.active {
+              background: url(../img/machine/7-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num8-btn {
+              background: url(../img/machine/8-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num8-btn.active {
+              background: url(../img/machine/8-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num9-btn {
+              background: url(../img/machine/9-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num9-btn.active {
+              background: url(../img/machine/9-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .lock-btn {
+              background: url(../img/machine/lock-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .lock-btn.active {
+              background: url(../img/machine/lock-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num0-btn {
+              background: url(../img/machine/0-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .num0-btn.active {
+              background: url(../img/machine/0-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .change-btn {
+              background: url(../img/machine/change-btn-active.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+
+            .change-btn.active {
+              background: url(../img/machine/change-btn.png) 0 0 no-repeat;
+              background-size: 100% 100%;
+            }
+          }
+        }
+      }
+    }
+
+    // 考试题
+    .machine-body-right {
+      flex: auto;
+      border-left: 5px solid #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+
+      // 考题区域
+      .item-bank {
+        // flex: auto;
+        height: auto;
+
+        .questions-ul {
+          width: 100%;
+          height: 100%;
+          padding: 50px;
+          font-size: 18px;
+          color: #6f737a;
+          letter-spacing: 2px;
+          display: flex;
+
+
+          .questions-item {
+            line-height: 30px;
+            display: none;
+            width: 100%;
+            height: 100%;
+
+            .answer-line {
+              border: none;
+              border-bottom: 1px solid #93969b;
+              outline: 0;
+              text-align: center;
+              line-height: 22px;
+              font-size: 16px;
+              color: #6f737a;
+              width: auto;
+            }
+
+            .img-box {
+              width: 700px;
+              height: 335px;
+              margin: 0 auto;
+              margin-top: 40px;
+
+              .img {
+                width: 100%;
+                height: 100%;
+              }
+            }
+            .select-box{
+              width: 100%;
+              height: auto;
+              .selectLi{
+                width: 100%;
+                height: 40px;
+                line-height: 40px;
+
+                label{
+                  font-weight: normal;
+
+                  .selectRadio{
+                    margin-right: 10px;
+                  }
+                }
+              }
+            }
+          }
+
+          .questions-item:nth-child(1) {
+            display: block;
+          }
+        }
+      }
+
+      //答案区域
+      .answer-bank {
+        width: 100%;
+        height: auto;
+        display: none;
+
+        .answer-box {
+          width: 100%;
+          height: 100%;
+          padding: 0 50px 50px 50px;
+          font-size: 16px;
+          color: #6f737a;
+          letter-spacing: 2px;
+
+          .answer-li {
+            line-height: 30px;
+            display: none;
+            width: 100%;
+            height: 100%;
+          }
+
+          .answer-li:nth-child(1) {
+            display: block;
+          }
+        }
+      }
+
+      // 上一题
+      .item-btn-ul {
+        flex: 0 0 50px;
+        display: flex;
+        margin-bottom: 25px;
+        justify-content: center;
+        position: absolute;
+        bottom: 45px;
+        left: 50%;
+        transform: translateX(-50%);
+
+        .item-btn {
+          width: 228px;
+          height: 45px;
+          font-size: 18px;
+          text-align: center;
+          line-height: 45px;
+          border: 1px solid #718c7e;
+          border-radius: 5px;
+          margin-right: 25px;
+          letter-spacing: 2px;
+          cursor: pointer;
+          color: #04331a;
+          transition: all .5s ease;
+        }
+
+        .answer {
+          display: none;
+        }
+
+        .item-btn.active,
+        .item-btn:hover {
+          background-color: #f959a3;
+          color: #fff;
+          border: 1px solid #fba1cb;
+        }
+      }
+    }
+  }
+}
+
+.modal-dialog {
+  width: 500px;
+  z-index: 9999;
+}
+
+// 考生考试分数显示
+.stu-grad-show {
+  color: #f959a3;
+  line-height: 40px;
+  font-size: 16px;
+}
+
+.moreSelect {
+  -webkit-appearance: radio;
+}

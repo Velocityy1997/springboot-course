@@ -1,0 +1,59 @@
+.metinfotop {
+    height: 50px;
+    line-height: 50px;
+    overflow: hidden;
+    padding: 0px 5px 0px 28px;
+    border-bottom: 1px solid #eee;
+    /* margin-bottom: 45px; */
+    font-size:18px;
+}
+.metinfotop .position {
+    float: left;
+    height: 33.5px;
+    line-height: 42.5px;
+    font-size: 20px;
+}
+.table {
+    width: 100%;
+    margin-top: 20px;
+}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+    border-top: 0px;
+}
+.table td.text {
+    white-space: nowrap;
+    padding: 8px 0px 8px 10px;
+    line-height: 1.5;
+    font-size: 17px;
+    text-align: right;
+    color: #666;
+}
+.ui-dialog{
+    top:95px !important;
+    bottom: auto !important;
+}
+#btn_add,#btn_delete{
+    border-radius: 3px !important;
+    margin-right: 10px;
+}
+input{
+    font-size: 16px !important;
+    color: #666;
+    border-radius: 2px;
+}
+.btn-group>.btn, .btn-group+.btn{
+    border-width: 1px;
+}
+
+/* 树 */
+.layui-tree-icon{
+height: 14px;
+line-height: 10px;
+width: 14px;
+}
+
+.layui-tree-line .layui-tree-entry:hover .layui-tree-txt{
+color: #448656;
+text-decoration: none;
+transition: .3s;
+}

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>导航模式选择</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .view-box {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .view-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 18px;
+      font-size: 13px;
+    }
+
+    .view-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/sure.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .view-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .view-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    /* contain */
+    .contain {
+      flex: auto;
+    }
+
+    .response-beam-contain {
+      display: flex;
+      margin: 5px 10px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0;
+      border: 1px solid transparent;
+      cursor: default;
+      width: 144px;
+      margin: 0 auto;
+      margin-top: 7px;
+    }
+
+    .response-beam-contain.active {
+      border: 1px solid #ffd400;
+    }
+
+    .left-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/left-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #3741f0;
+      z-index: 10;
+      box-shadow: 0 0 2px #8189fe;
+    }
+
+    .right-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/right-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #3741f0;
+      z-index: 10;
+      box-shadow: 0 0 2px #8189fe;
+    }
+
+    .auto-btn {
+      background-color: #535fe5;
+      line-height: 27px;
+      text-align: center;
+      width: 80px;
+      height: 27px;
+    }
+
+    /* 高级设置 */
+    .mute-box {
+      width: 144px;
+      text-align: center;
+      line-height: 27px;
+      background-image: linear-gradient(to right, #5f72db, #1b2ce1);
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin-top: 7px;
+    }
+
+    .mute-img-box {
+      width: 18px;
+      height: 18px;
+      background-color: #fff;
+      border: 1px solid #333;
+      margin-right: 21px;
+      cursor: pointer;
+      margin-left: 12px;
+    }
+
+    .mute-img {
+      width: 15px;
+      height: 15px;
+      background: url(../../img/machine/system/sure-wx.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      display: none;
+    }
+
+    .pl1 {
+      display: flex;
+      align-items: center;
+    }
+
+    .pl1 .response-beam-contain {
+      margin-top: 7px;
+    }
+
+    .title {
+      margin-top: 7px;
+      margin-left: 5px;
+    }
+
+    .response-beam-contain0 {
+      margin-left: 43px;
+    }
+
+    /*  */
+    .bottom {
+      display: flex;
+    }
+
+    .mute-box-other {
+      flex: 1;
+      margin: 6px 6px;
+    }
+
+    .mute-box-other.active .mute-img {
+      display: block;
+    }
+
+    .mute-box-other .mute-img-box {
+      margin-left: 5px;
+      margin-right: 5px;
+    }
+
+    .pl-box {
+      display: none;
+    }
+
+    .pl-box.active {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="view-box">
+    <div class="contain">
+      <div class="response-beam-contain response-beam-contain0">
+        <div class="left-btn btn" id="turnLeft1"></div>
+        <div class="auto-btn" id="dp">
+          北斗II单屏
+        </div>
+        <div class="right-btn btn" id="turnRight1"></div>
+      </div>
+      <div class="mute-box response-beam-contain0" id="mute-img-box">
+        <div class="mute-img-box">
+          <div class="mute-img"></div>
+        </div>
+        高级设置
+      </div>
+      <div class="pl-box" id="pl-box">
+        <div class="pl1">
+          <div class="title">频率1</div>
+          <div class="response-beam-contain">
+            <div class="left-btn btn" id="turnLeft2"></div>
+            <div class="auto-btn" id="pl1">
+              B3
+            </div>
+            <div class="right-btn btn" id="turnRight2"></div>
+          </div>
+        </div>
+        <div class="pl1">
+          <div class="title">支路1</div>
+          <div class="response-beam-contain">
+            <div class="left-btn btn" id="turnLeft3"></div>
+            <div class="auto-btn" id="zl1">
+              P
+            </div>
+            <div class="right-btn btn" id="turnRight3"></div>
+          </div>
+        </div>
+        <div class="bottom">
+          <div class="mute-box mute-box-other">
+            <div class="mute-img-box" id="mute-img-box">
+              <div class="mute-img"></div>
+            </div>
+            引导捕获
+          </div>
+          <div class="mute-box mute-box-other">
+            <div class="mute-img-box" id="mute-img-box">
+              <div class="mute-img"></div>
+            </div>
+            直接捕获
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">确定</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+</body>
+<script src="../../js/lib/jquery-3.4.1.min.js"></script>
+<script>
+  $(function () {
+    var obj = function (option) {
+      this.option = option || {};
+      this.currentIndex1 = 0;
+      this.currentIndex2 = 0;
+      this.currentIndex3 = 0;
+      this.init(); // 初始化
+
+    }
+
+    // 初始化
+    obj.prototype.init = function () {
+      this.allEvents(); // 各种点击事件
+    }
+
+    // 各种点击事件
+    obj.prototype.allEvents = function () {
+      this.clickReturn(); // 返回
+      this.clickSure(); // 确定
+      this.clickLeft(); // 点左侧按钮
+      this.clickRight(); // 点右侧按钮
+      this.clickActive(); // 激活状态
+      this.setHighSetting(); // 高级设置
+      this.setCatptrue(); // 捕获
+    }
+
+    // 返回
+    obj.prototype.returnActive = function () {
+      window.parent.window.iframeObj.goBackBefore('导航模式选择');
+    }
+    obj.prototype.clickReturn = function () {
+      var _this = this;
+      $('#return').on('click', function () {
+        _this.returnActive();
+      });
+    }
+
+    // 确定
+    obj.prototype.sureActive = function () {
+      window.parent.window.iframeObj.goBackBefore('导航模式选择');
+    }
+    obj.prototype.clickSure = function () {
+      var _this = this;
+      $('#sure').on('click', function () {
+        _this.sureActive();
+      });
+    }
+
+    // 捕获
+    obj.prototype.setCatptrue = function () {
+      $('.bottom').on('click', '.mute-box-other', function () {
+        $('.mute-box-other').removeClass('active');
+        $(this).addClass('active');
+      });
+    }
+
+    // 点左侧按钮
+    obj.prototype.clickLeft = function () {
+      var ckhList = ['北斗II单屏'];
+      var _this = this;
+      $('#turnLeft1').on('click', function () {
+        if (_this.currentIndex1 == 0) {
+          _this.currentIndex1 = ckhList.length - 1;
+        } else {
+          _this.currentIndex1--;
+        }
+
+        $('#dp').text(ckhList[_this.currentIndex1]);
+      });
+
+      // 115200bps 4800bps 9600bps 19200bps 38400bps 57600bps
+      var btlList = ['B3'];
+      $('#turnLeft2').on('click', function () {
+
+        if (_this.currentIndex2 == 0) {
+          _this.currentIndex2 = btlList.length - 1;
+        } else {
+          _this.currentIndex2--;
+        }
+
+        $('#pl1').text(btlList[_this.currentIndex2]);
+      });
+
+      var zlList = ['P', 'C', 'A'];
+      $('#turnLeft3').on('click', function () {
+
+        if (_this.currentIndex3 == 0) {
+          _this.currentIndex3 = zlList.length - 1;
+        } else {
+          _this.currentIndex3--;
+        }
+        if (zlList[_this.currentIndex3] == 'P') {
+          $('.bottom').show();
+        } else {
+          $('.bottom').hide();
+        }
+        $('#zl1').text(zlList[_this.currentIndex3]);
+      });
+    }
+
+    // 点右侧按钮
+    obj.prototype.clickRight = function () {
+      var ckhList = ['北斗II单屏'];
+      var _this = this;
+      $('#turnRight1').on('click', function () {
+
+        if (_this.currentIndex1 == ckhList.length - 1) {
+          _this.currentIndex1 = 0;
+        } else {
+          _this.currentIndex1++;
+        }
+
+        $('#dp').text(ckhList[_this.currentIndex1]);
+      });
+
+      var btlList = ['B3'];
+      $('#turnRight2').on('click', function () {
+
+        if (_this.currentIndex2 == btlList.length - 1) {
+          _this.currentIndex2 = 0;
+        } else {
+          _this.currentIndex2++;
+        }
+
+        $('#pl1').text(btlList[_this.currentIndex2]);
+      });
+
+      var zlList = ['P', 'C', 'A'];
+      $('#turnRight3').on('click', function () {
+
+        if (_this.currentIndex3 == zlList.length - 1) {
+          _this.currentIndex3 = 0;
+        } else {
+          _this.currentIndex3++;
+        }
+        if (zlList[_this.currentIndex3] == 'P') {
+          $('.bottom').show();
+        } else {
+          $('.bottom').hide();
+        }
+        $('#zl1').text(zlList[_this.currentIndex3]);
+      });
+    }
+
+    // 激活状态
+    obj.prototype.clickActive = function () {
+      $('.contain').on('click', '.response-beam-contain', function () {
+        $('.response-beam-contain').removeClass('active');
+        $(this).addClass('active');
+      });
+    }
+
+    // 高级设置
+    obj.prototype.setHighSetting = function () {
+      $('#mute-img-box').on('click', function () {
+        if ($(this).hasClass('active')) {
+          $(this).removeClass('active');
+          $(this).find('.mute-img').hide();
+          $('#pl-box').removeClass('active');
+        } else {
+          $(this).addClass('active');
+          $(this).find('.mute-img').show();
+          $('#pl-box').addClass('active');
+        }
+      });
+    }
+    // ----------------------------------------------------
+    window.navObj = new obj();
+  });
+</script>
+
+</html>

@@ -1,0 +1,641 @@
+package io.ken.springboot.course.controller;
+
+import io.ken.springboot.course.bean.ChooseSelectStore;
+import io.ken.springboot.course.bean.CommExamStore;
+import io.ken.springboot.course.bean.DecideStore;
+import io.ken.springboot.course.bean.Exam;
+import io.ken.springboot.course.bean.FillBlankExamStore;
+import io.ken.springboot.course.bean.HandExamStore;
+import io.ken.springboot.course.model.CheckPaper;
+import io.ken.springboot.course.model.CheckPaperList;
+import io.ken.springboot.course.model.ScoreExamModel;
+import io.ken.springboot.course.model.ScoreModel;
+import io.ken.springboot.course.service.IChooseSelectStoreService;
+import io.ken.springboot.course.service.ICommExamService;
+import io.ken.springboot.course.service.IDecideStoreService;
+import io.ken.springboot.course.service.IFillExamService;
+import io.ken.springboot.course.service.IHandExamService;
+import io.ken.springboot.course.service.IUserService;
+import io.ken.springboot.course.service.implement.ExamServiceImpl;
+import io.ken.springboot.course.tools.GradeType;
+import io.ken.springboot.course.tools.Result;
+import io.ken.springboot.course.tools.TimeTools;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+
+/**
+ * 分数管理
+ * @author cll
+ *ExamController.java
+ * 2019年11月20日
+ */
+@Controller
+@RequestMapping("/score")
+public class ScoreController {
+
+	
+	@Autowired
+    private ExamServiceImpl examServiceImpl;
+
+	@Autowired
+	private IUserService userService;
+	@Autowired
+	private IHandExamService handService;
+	@Autowired
+	private IFillExamService  fillExamService;
+	@Autowired
+	private ICommExamService commExamService;
+	@Autowired
+	private IChooseSelectStoreService  chooseExamService;
+	@Autowired
+	private IDecideStoreService decideExamService;
+
+	/**
+	 * 查学生的考试分
+	 * @param name
+	 * @param subject
+	 * @return
+	 *
+	 */
+	@ApiOperation(value = "查学生的考试分",notes = "查学生的考试分")
+	@RequestMapping(value = "/getStudentsScore",method = RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> getStudentsScore(String name,String subject) {
+				
+		List<ScoreModel> modelList = new ArrayList<ScoreModel>();
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			
+			//List<Exam> examList = examServiceImpl.getExamByName(name);
+			List<Exam> examList = examServiceImpl.getExamByNameAndSub(name,subject);
+
+			for(Exam exam:examList) {
+
+				ScoreModel model = new ScoreModel();
+
+				Map<String,String> result = userService.queryByidNumber(exam.getIdNumber());
+
+				model.setExamId(exam.getExamId());
+
+				if(result != null) {
+					model.setClassName(result.get("class_name"));
+					model.setName(result.get("name"));
+				}				
+				if(exam.getStatus() == 1) {
+					model.setRefrenceState("已考");
+				}
+				else {
+					model.setRefrenceState("未考");
+				}
+
+				model.setScore(exam.getGrade());
+				model.setSubject("查看");
+				modelList.add(model);
+			}
+
+			map.put("rows", modelList);
+			map.put("code", 200);
+			map.put("total", examList.size());
+			//map.put("total", nameList.size());
+
+
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();	
+			map.put("code", 500);
+		}		
+		return map;		
+	}
+	
+	
+	
+	
+	
+	/**
+	 * 查看试卷
+	 * @author 
+	 * @param examId
+	 * @return
+	 */
+	
+	@RequestMapping("/checkPaper")
+	@ResponseBody
+    public Result getPaper(String examId) {
+		
+		List<CheckPaper> modeList = new ArrayList<CheckPaper>();
+		List<CheckPaperList> list = new ArrayList<CheckPaperList>();
+		List<Exam> examList = new ArrayList<Exam>();
+		CheckPaperList cpModel = new CheckPaperList();
+		GradeType type = new GradeType();
+		TimeTools timeTools = new TimeTools();
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		int number = 0;
+		int rightNum = 0;//正确题目数
+		int errorNum = 0; //错误题目数
+		Result result = new Result();
+		try {
+			
+			examList = examServiceImpl.getExamList(examId);
+			String examName = examList.get(0).getExamName();
+			String idNum = examList.get(0).getIdNumber();
+			String name=  userService.getNameByIdNum(idNum);
+			int createExam=examList.get(0).getCreateExam();
+			String questionGrade=examList.get(0).getQuestionGrade();
+			int subject=examList.get(0).getType();
+			String[] questionGrades=questionGrade.split(",");//自动创建试卷分数来源
+			Timestamp  startTime = examList.get(0).getStartTime();
+			Timestamp endTime = examList.get(0).getEndTime();
+			String completeTime = "";
+			if(startTime != null && endTime != null) {
+				 completeTime = timeTools.getCompleteTime(startTime, endTime);
+			}
+			
+			String score = examList.get(0).getGrade();
+			int quesNum = examList.get(0).getQuestionNum();
+			String totalGrade = examList.get(0).getTotalGrade();
+			String grade = "不合格";
+			if(score != null) {
+				 grade = type.getGradeType(score,totalGrade);
+			}
+			
+			
+			//题号
+			String handCode = examList.get(0).getHandExamQuestion();
+			
+			
+			String fillCode = examList.get(0).getFillBlankExamQuestion();
+			
+			String commCode = examList.get(0).getCommExamQuestion();
+			
+            String chooseCode = examList.get(0).getChooseExamQuestion();
+			
+			String decideCode = examList.get(0).getDecideExamQuestion();
+			
+		
+				
+				String handResult = examList.get(0).getHandExamResult();
+				
+				String fillResult = examList.get(0).getFillBlankExamResult();
+				
+				String commResult = examList.get(0).getCommExamResult();
+				
+				String chooseResult = examList.get(0).getChooseExamResult();
+				
+				String decideResult = examList.get(0).getDecideExamResult();
+				
+				
+				//考生答案
+				String handAnswer = examList.get(0).getHandExamAnswer();
+				
+				String fillAnswer = examList.get(0).getFillBlankExamAnswer();
+				
+				String commAnswer = examList.get(0).getCommExamAnswer();
+				
+				String chooseAnswer = examList.get(0).getChooseExamAnswer();
+				
+				String decideAnswer = examList.get(0).getDecideExamAnswer();
+				
+				
+				
+				
+				//操作题
+				if(handCode!=null && !handCode.equals("")) {
+					String handCodes [] = handCode.split(";");
+					String handResults []=null;
+					if(handResult!=null &&!handResult.equals("")){
+						handResults = handResult.split(";");
+					}
+					String handAnswers []=null;
+					if(handAnswer!=null &&!handAnswer.equals("")){
+						handAnswers = handAnswer.split(";");
+					}
+
+					for (int i = 0; i < handCodes.length; i++) {
+						number++;	
+						CheckPaper model = new CheckPaper();
+						String handQCode = handCodes[i];//题号
+						String handRs="";
+						if (handResults!=null){
+							 handRs = handResults[i];//正确答案
+						}
+
+						String handAnsw="";
+						if(handAnswers!=null){
+							handAnsw = handAnswers[i];//考生答案
+						}
+
+						HandExamStore hand = handService.getNameByCode(handQCode);//题目
+						String QuesName = hand.getQuestionName();
+						String grades="";
+						if (createExam==0){
+							grades=questionGrades[1];
+						}else {
+							grades= hand.getGrade();
+						}
+
+						if (handRs.equals(handAnsw)&&!handAnsw.equals("")) {
+							model.setRight(grades);
+							rightNum++;
+						} else {
+							model.setRight("0");
+							errorNum++;
+						}
+						model.setTable("hand_exam_store");
+						model.setNumber(String.valueOf(number));
+						model.setQuestion_code(handQCode);
+						model.setQuestion_name(QuesName);
+						model.setAnswer(handAnsw);
+						model.setResult(handRs);
+						model.setScore(grades);
+						modeList.add(model);
+						
+		 			}
+				}
+				
+				
+				if(fillCode!=null && !fillCode.equals("")) {
+					String fillCodes []= fillCode.split(";");
+					String fillResults []= null;
+					if (fillResult!=null &&!fillResult.equals("")){
+						 fillResults  = fillResult.split(";");
+					}
+
+					String fillAnswers [] =null;
+					if (fillAnswer!=null&&fillAnswer.equals("")){
+						fillAnswers  = fillAnswer.split(";");
+					}
+
+				//填空题
+				for (int i = 0; i < fillCodes.length; i++) {
+					number ++;
+					CheckPaper model = new CheckPaper();
+					String fillQCode = fillCodes[i];//题号
+					String fillRs="";
+					if (fillResults!=null){
+						 fillRs = fillResults[i];//正确答案
+					}
+
+					String fillAnsw = "";
+					if(fillAnswers!=null) {
+					 fillAnsw = fillAnswers[i];//考生答案
+					}
+					FillBlankExamStore fill = fillExamService.getNameByCode(fillQCode);//题目
+					String QuesName = fill.getQuestionName();
+					//分数获取
+					String grades="";
+					if(createExam==0){
+						//自动创建试卷分数
+							if(subject==1){
+								if (Integer.parseInt(fillQCode) >= 2.1 && Integer.parseInt(fillQCode) <= 2.4) {
+									grade = questionGrades[0];
+								} else if (Integer.parseInt(fillQCode) >= 2.5 && Integer.parseInt(fillQCode) <= 2.81) {
+									grade = questionGrades[2];
+								}
+							}else{
+								grades = questionGrades[2];
+							}
+
+					}else {
+						grades = fill.getGrade();
+					}
+
+					if (fillRs.equals(fillAnsw)&&!fillAnsw.equals("")) {
+						model.setRight(grades);
+						rightNum++;
+					} else {
+						model.setRight("0");
+						errorNum++;
+					}
+					model.setTable("fill_blank_exam_store");
+					model.setNumber(String.valueOf(number));
+					model.setAnswer(fillAnsw);
+					model.setResult(fillRs);
+					model.setQuestion_code(fillQCode);
+					model.setQuestion_name(QuesName);
+					model.setScore(grades);
+					modeList.add(model);
+				}
+				}
+				//通信题
+				
+				if(commCode!=null && !commCode.equals("")) {
+
+					String commCodes[] = commCode.split(";");
+					String commResults [] = commResult.split(";");
+					String commAnswers []=null;
+					if(commAnswer!=null&&!commAnswer.equals("")){
+						commAnswers  = commAnswer.split(";");
+					}
+
+				for (int i = 0; i < commCodes.length; i++) {
+					number ++;
+					CheckPaper model = new CheckPaper();
+					String comCode = commCodes[i];//题号
+					String comRs = commResults[i];//正确答案
+					String comAnws = "";
+					if(commAnswers !=null) {
+						comAnws = commAnswers[i];//考生答案
+					}
+					CommExamStore comm= commExamService.getNameByCode(comCode);//题目
+					String QuesName = comm.getQuestionName();
+					String grades = "";
+					if(createExam==0){
+						grades = questionGrades[3];
+					}else {
+						grades = comm.getGrade();
+					}
+
+					if (comRs.equals(comAnws)) {
+						model.setRight(grades);
+						rightNum++;
+					} else {
+						model.setRight("0");
+						errorNum++;
+					}
+					model.setTable("comm_exam_store");
+					model.setNumber(String.valueOf(number));
+					model.setAnswer(comAnws);
+					model.setResult(comRs);
+					model.setQuestion_code(comCode);
+					model.setQuestion_name(QuesName);
+					model.setScore(grades);
+					modeList.add(model);
+				}
+				}
+				
+				if(chooseCode!=null && !chooseCode.equals("")) {
+
+					String chooseCodes[] = chooseCode.split(";");
+					String chooseResults [] = chooseResult.split(";");
+					String chooseAnswers [] = null;
+					if(chooseAnswer!=null&&chooseAnswer.equals("")){
+						chooseAnswers  = chooseAnswer.split(";");
+					}
+
+				for (int i = 0; i < chooseCodes.length; i++) {
+					number ++;
+					CheckPaper model = new CheckPaper();
+					String comCode = chooseCodes[i];//题号
+					String comRs = chooseResults[i];//正确答案
+					String comAnws = "";
+					if(chooseAnswers!=null) {
+						comAnws = chooseAnswers[i];//考生答案
+					}
+					ChooseSelectStore comm= chooseExamService.getNameByCode(comCode);//题目
+					String QuesName = comm.getQuestionName();
+					String grades="";
+					if (createExam==0){
+						if (comm.getFlag()==0){
+							grades=questionGrades[0];
+						}else {
+							grades=questionGrades[1];
+						}
+
+					}else {
+						grades = comm.getGrade();
+					}
+
+					if (comRs.equals(comAnws)) {
+						model.setRight(grades);
+						rightNum++;
+					} else {
+						model.setRight("0");
+						errorNum++;
+					}
+					model.setTable("choose_select_store");
+					model.setNumber(String.valueOf(number));
+					model.setAnswer(comAnws);
+					model.setResult(comRs);
+					model.setQuestion_code(comCode);
+					model.setQuestion_name(QuesName);
+					model.setScore(grades);
+					modeList.add(model);
+				}
+				}
+				
+				if(decideCode!=null && !decideCode.equals("")) {
+
+					String decideCodes[] = decideCode.split(";");
+					String decideResults [] = decideResult.split(";");
+					String decideAnswers [] = null;
+					if(decideAnswer!=null&&decideAnswer.equals("")){
+						decideAnswers  = decideAnswer.split(";");
+					}
+
+				for (int i = 0; i < decideCodes.length; i++) {
+					number ++;
+					CheckPaper model = new CheckPaper();
+					String comCode = decideCodes[i];//题号
+					String comRs = decideResults[i];//正确答案
+					String comAnws = "";
+					if(decideAnswers!=null) {
+						comAnws = decideAnswers[i];//考生答案
+					}
+					DecideStore comm= decideExamService.getNameByCode(comCode);//题目
+					String QuesName = comm.getQuestionName();
+					String grades=null;
+					if (createExam==0){
+						 grades = questionGrades[3];
+					}else {
+						grades = comm.getGrade();
+					}
+
+					if (comRs.equals(comAnws)) {
+						model.setRight(grades);
+						rightNum++;
+					} else {
+						model.setRight("0");
+						errorNum++;
+					}
+					model.setTable("decide_store");
+					model.setNumber(String.valueOf(number));
+					model.setAnswer(comAnws);
+					model.setResult(comRs);
+					model.setQuestion_code(comCode);
+					model.setQuestion_name(QuesName);
+					model.setScore(grades);
+					modeList.add(model);
+				}
+				}					
+			cpModel.setStudentName(name);;
+			cpModel.setCompleteTime(completeTime);
+			cpModel.setCorretNum(String.valueOf(rightNum));
+			cpModel.setErrorNum(String.valueOf(errorNum));
+			cpModel.setExamName(examName);
+			cpModel.setExamTime(sdf.format(startTime));
+			cpModel.setTotalTimuNum(String.valueOf(quesNum));
+			cpModel.setGrade(grade);
+			cpModel.setScore(score);
+			list.add(cpModel);
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", list);
+			map.put("paper", modeList);
+			
+			
+			result.setData(map);
+			result.setCode(200);
+			result.setMsg("ok");
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("list", list);
+			map.put("paper", modeList);
+			result.setData(map);
+			result.setCode(200);
+			result.setMsg("false");
+		}
+		
+		
+			return result;
+			
+		}
+
+	/**
+	 * 获取考试卷名
+	 * @param subject
+	 * @return
+	 */
+	@ApiOperation(value = "获取考试卷名",notes = "获取考试卷名")
+	@RequestMapping(value = "/examList", method = RequestMethod.POST)
+	@ResponseBody
+	public Result getList(String subject){
+		
+		List<String> nameList = new ArrayList<String>();
+		Result result = new Result();
+
+		try {
+			
+			nameList = examServiceImpl.getExamNameBySubject(subject);
+			result.setCode(200);
+			result.setData(nameList);
+			result.setMsg("查询成功");
+			result.setSuccess(true);
+			
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			result.setCode(404);
+			result.setData(nameList);
+			result.setMsg("查询失败");
+			result.setSuccess(false);
+			
+		}
+				
+		return result;
+		
+	}
+
+	/**
+	 * 分数管理
+	 * @param examName
+	 * @param subject
+	 * @return
+	 */
+	@ApiOperation(value = "分数管理",notes = "分数管理")
+	@RequestMapping(value = "/show",method = RequestMethod.POST)
+	@ResponseBody
+	public Result getShow(String examName,String subject) {
+		
+		Result result = new Result();
+		List<Exam> examList = new ArrayList<Exam>();
+		List<ScoreExamModel> modelList = new ArrayList<ScoreExamModel>();
+		ScoreExamModel t1 = new ScoreExamModel();
+		ScoreExamModel t2 = new ScoreExamModel();
+		ScoreExamModel t3 = new ScoreExamModel();
+		ScoreExamModel t4 = new ScoreExamModel();
+
+		int total = 0;//参加考试总人数
+		int attend = 0;//实际参加考试人数
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String time = null;
+		String totalGrade = "0";
+		double grade = 0L;
+		double averGrade = 0L;
+		
+		try {
+			examList = examServiceImpl.getExamListByNameSub(examName,subject);
+			
+			if(examList.size()>0) {
+				for (int i = 0; i < examList.size(); i++) {
+					int status =  examList.get(i).getStatus();
+					if(status == 1){
+						attend++;
+					}
+					 Timestamp ts = examList.get(0).getStartTime();
+					 time = sdf.format(ts);	
+					 if(examList.get(i).getGrade() != null) {
+					 grade += Double.valueOf(examList.get(i).getGrade());
+					 }
+					 totalGrade = examList.get(0).getTotalGrade();
+				}
+			
+				String num1 = String.valueOf(examList.size());
+				double totalNum = Double.valueOf(num1);
+				averGrade =( grade / totalNum);
+				DecimalFormat df = new DecimalFormat("######0.00"); //保留两位小数
+				String num = String.valueOf(attend) + "/" + String.valueOf(examList.size());
+				t1.setText("考试时间");
+				t1.setValue(time);
+				modelList.add(t1);
+				t2.setText("参考人数");
+				t2.setValue(num);
+				modelList.add(t2);
+				t3.setText("满分");
+				t3.setValue(totalGrade);
+				modelList.add(t3);
+				t4.setText("平均分");
+				t4.setValue(df.format(averGrade));
+				modelList.add(t4);
+				result.setCode(200);
+				result.setData(modelList);
+				result.setMsg("true");
+			}else {
+				t1.setText("考试时间");
+				t1.setValue("无");
+				modelList.add(t1);
+				t2.setText("参考人数");
+				t2.setValue("0");
+				modelList.add(t2);
+				t3.setText("满分");
+				t3.setValue("0");
+				modelList.add(t3);
+				t4.setText("平均分");
+				t4.setValue("0");
+				modelList.add(t4);
+				result.setCode(200);
+				result.setData(modelList);
+				result.setMsg("true");
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			result.setCode(200);
+			result.setData(modelList);
+			result.setMsg("false");
+			
+		}
+		
+		
+		return result;
+		
+	}
+		
+}

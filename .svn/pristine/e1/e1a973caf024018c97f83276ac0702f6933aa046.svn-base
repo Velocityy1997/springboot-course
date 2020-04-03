@@ -1,0 +1,49 @@
+[
+    {
+       
+        "children":[
+
+        ],
+        "expanded":false,
+        "id":"10",
+        "name":"班级1",
+        "type":"1"
+    },
+    {
+        "children":[
+            {
+               
+                "children":[
+
+                ],
+                "expanded":false,
+                "id":"2010",
+                "type":"2",
+                "name":"张三"
+            },
+            {
+              "children":[
+
+                ],
+                "expanded":false,
+                "id":"2010",
+                "type":"2",
+                "name":"张三"
+            },
+            {
+                "children":[
+
+                ],
+                "expanded":false,
+                "id":"2010",
+                "type":"2",
+                "name":"张三"
+            }
+        ],
+        "expanded":false,
+        "id":"20",
+        "type":"1",
+        "name":"班级2"
+    }
+   
+]

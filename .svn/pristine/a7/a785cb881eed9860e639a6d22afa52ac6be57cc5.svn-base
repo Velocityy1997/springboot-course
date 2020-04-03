@@ -1,0 +1,244 @@
+class rotate {
+  constructor(id) {
+    this.option = {
+      id: id,
+      isMove: false,
+      btn1Obj: {
+        currentIndex: 0,
+        oldVal: 0,
+        direct: 1
+      },
+      btn2Obj: {
+        currentIndex: 0,
+        oldVal: 0,
+        direct: 1
+      },
+      btn3Obj: {
+        currentIndex: 0,
+        oldVal: 0,
+        direct: 1
+      },
+      btn4Obj: {
+        currentIndex: 0,
+        oldVal: 0,
+        direct: 1
+      },
+    }
+
+    this.init();
+  }
+
+  init() {
+    this.mouseDown();
+    this.mouseMove();
+    this.moseUp();
+  }
+
+  mouseDown() {
+    let _this = this;
+    $(_this.option.id).off('mousedown').on('mousedown', function (event) {
+      const element = event.target;
+      const rect = element.getBoundingClientRect();
+      element.dataset.centerX = rect.left + rect.width / 2;
+      element.dataset.centerY = rect.top + rect.height / 2;
+      element.dataset.angle = _this.getDragAngle(event);
+      _this.option.isMove = true;
+    });
+  }
+
+  turnBtn() {
+    let _this = this;
+    // 定明开关
+    if (_this.option.id === '#btn1') {
+      switch (_this.option.btn1Obj.currentIndex) {
+        case -1: _this.option.btn1Obj.currentIndex = 0; break;
+        case 0: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6'); break;
+        case 1: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn2'); break;
+        case 2: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn3'); break;
+        case 3: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn4'); break;
+        case 4: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn5'); break;
+        case 5: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn6'); break;
+        case 6: _this.option.btn1Obj.currentIndex = 5;
+      }
+      return;
+    }
+
+    // 照明开关
+    if (_this.option.id === '#btn2') {
+      switch (_this.option.btn2Obj.currentIndex) {
+        case -1: _this.option.btn2Obj.currentIndex = 0; break;
+        case 0: $(_this.option.id).removeClass('turn2'); break;
+        case 1: $(_this.option.id).removeClass('turn2').addClass('turn2'); break;
+        case 2: _this.option.btn2Obj.currentIndex = 1;
+      }
+      return;
+    }
+
+    // 电源开关
+    if (_this.option.id === '#btn3') {
+      switch (_this.option.btn3Obj.currentIndex) {
+        case -1: _this.option.btn3Obj.currentIndex = 0; break;
+        case 0: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6'); 
+        radioObj.screenFirst = "";
+        $("#screen").val(radioObj.screenFirst);//关机
+        radioObj.clickBtn();
+        $("#screenRight").text("");
+        break;
+        case 1: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn2'); break;
+        case 2: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn3'); 
+        radioObj.screenFirst = "F00000";
+        $("#screen").val(radioObj.screenFirst);//初始化电台屏幕显示
+        radioObj.clickBtn();//初始化电台内部变量
+        $("#screenRight").text("0");//初始化信道
+        break;
+        case 3: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn4'); 
+        radioObj.screenFirst = "F00000";
+        $("#screen").val(radioObj.screenFirst);//初始化电台屏幕显示
+        radioObj.clickBtn();//初始化电台内部变量
+        $("#screenRight").text("0");//初始化信道
+        break;
+        case 4: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn5'); break;
+        case 5: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn6'); break;
+        case 6: _this.option.btn3Obj.currentIndex = 5;
+      }
+      if($(btn3).attr("class")=="btn3"){
+        $("#greenLight").removeClass("active");
+      }else{
+        $("#greenLight").addClass("active");
+      }
+      return;
+    }
+
+    // 静噪开关
+    if (_this.option.id === '#btn4') {
+      switch (_this.option.btn4Obj.currentIndex) {
+        case -1: _this.option.btn4Obj.currentIndex = 0; break;
+        case 0: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6'); break;
+        case 1: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn2'); break;
+        case 2: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn3'); break;
+        case 3: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn4'); break;
+        case 4: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn5'); break;
+        case 5: $(_this.option.id).removeClass('turn2 turn3 turn4 turn5 turn6').addClass('turn6'); break;
+        case 6: _this.option.btn4Obj.currentIndex = 5;
+      }
+      return;
+    }
+  }
+
+  mouseMove() {
+    let _this = this;
+    $(_this.option.id).off('mousemove').on('mousemove', function (event) {
+      if (_this.option.isMove) {
+        let angle = _this.getDragAngle(event);
+
+        // 定明开关
+        if (_this.option.id === '#btn1') {
+          if (angle > _this.option.btn1Obj.oldVal) {
+            _this.option.btn1Obj.direct = 1;
+          } else {
+            _this.option.btn1Obj.direct = -1;
+          }
+          _this.option.btn1Obj.oldVal = angle;
+          return;
+        }
+
+        // 照明开关
+        if (_this.option.id === '#btn2') {
+          if (angle > _this.option.btn2Obj.oldVal) {
+            _this.option.btn2Obj.direct = 1;
+          } else {
+            _this.option.btn2Obj.direct = -1;
+          }
+          _this.option.btn2Obj.oldVal = angle;
+          return;
+        }
+
+        // 电源开关
+        if (_this.option.id === '#btn3') {
+          if (angle > _this.option.btn3Obj.oldVal) {
+            _this.option.btn3Obj.direct = 1;
+          } else {
+            _this.option.btn3Obj.direct = -1;
+          }
+          _this.option.btn3Obj.oldVal = angle;
+          return;
+        }
+
+        // 静噪开关
+        if (_this.option.id === '#btn4') {
+          if (angle > _this.option.btn4Obj.oldVal) {
+            _this.option.btn4Obj.direct = 1;
+          } else {
+            _this.option.btn4Obj.direct = -1;
+          }
+          _this.option.btn4Obj.oldVal = angle;
+          return;
+        }
+      }
+    });
+  }
+
+  moseUp() {
+    let _this = this;
+    $(_this.option.id).off('mouseup').on('mouseup', function (event) {
+      _this.option.isMove = false;
+
+      // 定明开关
+      if (_this.option.id === '#btn1') {
+        if (_this.option.btn1Obj.direct === 1) {
+          _this.option.btn1Obj.currentIndex++;
+        } else {
+          _this.option.btn1Obj.currentIndex--;
+        }
+      }
+
+      // 照明开关
+      else if (_this.option.id === '#btn2') {
+        if (_this.option.btn2Obj.direct === 1) {
+          _this.option.btn2Obj.currentIndex++;
+        } else {
+          _this.option.btn2Obj.currentIndex--;
+        }
+      }
+
+      // 电源开关
+      else if (_this.option.id === '#btn3') {
+        if (_this.option.btn3Obj.direct === 1) {
+          _this.option.btn3Obj.currentIndex++;
+        } else {
+          _this.option.btn3Obj.currentIndex--;
+        }
+      }
+
+      // 静噪开关
+      else if (_this.option.id === '#btn4') {
+        if (_this.option.btn4Obj.direct === 1) {
+          _this.option.btn4Obj.currentIndex++;
+        } else {
+          _this.option.btn4Obj.currentIndex--;
+        }
+      }
+
+      _this.turnBtn();
+    });
+  }
+
+  getDragAngle(event) {
+    var element = event.target;
+    var startAngle = parseFloat(element.dataset.angle) || 0;
+    var center = {
+      x: parseFloat(element.dataset.centerX) || 0,
+      y: parseFloat(element.dataset.centerY) || 0,
+    };
+
+    var angle = Math.atan2(center.y - event.clientY, center.x - event.clientX);
+    return angle - startAngle;
+  }
+
+  indexInit() {
+    this.option.btn1Obj.currentIndex=0;
+    this.option.btn2Obj.currentIndex=0;
+    this.option.btn3Obj.currentIndex=0;
+    this.option.btn4Obj.currentIndex=0;
+  }
+}

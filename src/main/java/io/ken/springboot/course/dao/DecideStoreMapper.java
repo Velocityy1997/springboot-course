@@ -1,0 +1,87 @@
+package io.ken.springboot.course.dao;
+
+import io.ken.springboot.course.bean.DecideStore;
+import io.ken.springboot.course.model.ExcelModel;
+import io.ken.springboot.course.model.exam.newExam.CreatNewExam;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author cll
+ * FillExamMapper.java
+ * 2019年11月28日
+ */
+@Mapper
+public interface DecideStoreMapper {
+
+    @Select("SELECT *  FROM  decide_store WHERE question_code =#{fillQCode}")
+    DecideStore getNameByCode(@Param("fillQCode") String fillQCode);
+
+    @Select("SELECT *  FROM  decide_store WHERE question_name =#{name}")
+    List<DecideStore> getByName(@Param("name") String name);
+
+    @Insert({
+            "INSERT INTO decide_store(id,question_name,question_code,type,grade,result,pass_table_id,subject,select_a,level_id) "
+                    + "VALUES(#{id},#{questionName},#{questionCode},#{type},#{grade},"
+                    + "#{result},#{passTableId},#{subject},#{selectA},#{levelId})"})
+    int add(DecideStore exam);
+
+    @Select("select question_name,question_code,type,pass_table_id,result,select_a,subject FROM "
+            + "decide_store  where subject =#{subject}  ")
+    List<Map<String, Object>> getDecideQuestionRandom(@Param("subject") String subject);
+
+    /**
+     * excel批量导入试题
+     *
+     * @param excelmode
+     * @return
+     */
+    @Insert("<script>" +
+            "Insert into decide_store(id,question_name,question_code,result,select_a,subject,type,grade,picture_path,level_id,pass_table_id)" +
+            "values" +
+            "<foreach collection='list'  item='value'  separator=','>" +
+            "(#{value.id},#{value.questionName},#{value.questionCode},#{value.result},#{value.selectA},#{value.subject},#{value.type},#{value.grade},#{value.picturePath},#{value.levelId},#{value.passTableId})" +
+            "</foreach>" +
+            "</script>")
+    int addExcel(List<ExcelModel> excelmode);
+
+    /**
+     * excel去重查询
+     *
+     * @param name
+     * @return
+     */
+    @Select("select picture_path from decide_store where question_name=#{name} and result=#{result}")
+    ExcelModel queryName(@Param("name") String name, @Param("result") String result);
+
+    /**
+     * excel导入试题覆盖同名称试题
+     *
+     * @param excelModel
+     * @return
+     */
+    @Update("update decide_store set result=#{result},subject=#{subject},select_a=#{selectA},type=#{type},grade=#{grade},level_id=#{levelId},pass_table_id=#{passTableId} where id=#{id}")
+    int updateQuestions(ExcelModel excelModel);
+
+    /**
+     * 获取当前级别的的试题数量
+     *
+     * @param subject 科目
+     * @param level   级别
+     * @return 总数
+     */
+    @Select("SELECT count(*) FROM decide_store WHERE subject=#{subject} AND level_id LIKE CONCAT('%',#{level},'%')")
+    int getCount(@Param("subject") String subject, @Param("level") String level);
+    /**
+     * 随机取出一定数的题
+     * @param creatNewExam
+     * @return
+     */
+    @Select("SELECT * from decide_store  where subject=#{subject} AND level_id=#{level} LIKE CONCAT('%',#{level},'%') order by rand() limit #{judge}")
+    List<DecideStore> getQuestion(CreatNewExam creatNewExam);
+}

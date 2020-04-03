@@ -1,0 +1,26 @@
+package io.ken.springboot.course.controller;
+
+import java.io.File;
+
+/**
+ * @author ZhaoWenHao
+ * @create 2020-01-08 14:37
+ *
+ **/
+public class TestFile {
+
+    public static void main(String[] a){
+        File file=new File("C:/Users/hangguang/Desktop/图片");
+       String[] fileName= file.list();
+       for(String name:fileName){
+           if(name.equals("3.jpg")){
+               System.out.println("1"+"/"+"2");
+               System.out.println(name);
+           }
+       }
+
+
+
+    }
+
+}

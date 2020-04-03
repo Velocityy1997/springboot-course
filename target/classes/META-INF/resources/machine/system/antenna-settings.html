@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>天线设置</title>
+  <link rel="stylesheet" href="../../css/normal.min.css">
+  <style>
+    .antenna-box {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+      color: #fff;
+    }
+
+    .antenna-box .machine-view-bottom {
+      box-shadow: inset 0px 15px 14px -18px #fff;
+      display: flex;
+      justify-content: space-between;
+      color: #cfd1fe;
+      flex: 0 0 20px;
+      font-size: 13px;
+    }
+
+    .antenna-box .machine-view-bottom .sure {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .antenna-box .machine-view-bottom .sure .sure-text {
+      margin-left: 5px;
+      margin-bottom: 3px;
+    }
+
+    .antenna-box .machine-view-bottom .sure .sure-img {
+      margin-left: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/sure.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .antenna-box .machine-view-bottom .cancle {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .antenna-box .machine-view-bottom .cancle .cancle-text {
+      margin-right: 5px;
+      margin-bottom: 3px;
+    }
+
+    .antenna-box .machine-view-bottom .cancle .cancle-img {
+      margin-right: 5px;
+      width: 12px;
+      height: 12px;
+      background: url(../../img/machine/return.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+    }
+
+    .response-beam-contain {
+      display: flex;
+      margin: 5px 10px;
+      align-items: center;
+      justify-content: center;
+      margin-left: 0;
+      border: 1px solid transparent;
+      cursor: default;
+      width: 144px;
+      margin: 0 auto;
+    }
+
+    .response-beam-contain.active {
+      border: 1px solid #ffd400;
+    }
+
+    .left-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/left-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #3741f0;
+      z-index: 10;
+      box-shadow: 0 0 2px #8189fe;
+    }
+
+    .right-btn {
+      width: 31px;
+      height: 27px;
+      background: url(../../img/machine/system/right-btn.png) 0 0 no-repeat;
+      background-size: 100% 100%;
+      cursor: pointer;
+      background-color: #3741f0;
+      z-index: 10;
+      box-shadow: 0 0 2px #8189fe;
+    }
+
+    .auto-btn {
+      background-color: #535fe5;
+      line-height: 27px;
+      text-align: center;
+      width: 80px;
+      height: 27px;
+    }
+
+    /* 天线设置 */
+    .antenna-main{
+      flex: auto;
+    }
+    .antenna-main .title{
+      text-align: center;
+      line-height: 30px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="antenna-box">
+    <div class="antenna-main">
+      <div class="title">请选择天线：</div>
+      <div class="response-beam-contain">
+        <div class="left-btn btn" id="turnLeft1"></div>
+        <div class="auto-btn" id="auto-btn">
+          内天线
+        </div>
+        <div class="right-btn btn" id="turnRight1"></div>
+      </div>
+    </div>
+    <div class="machine-view-bottom">
+      <div class="sure" id="sure">
+        <div class="sure-text">确定</div>
+        <div class="sure-img"></div>
+      </div>
+      <div class="cancle" id="return">
+        <div class="cancle-img"></div>
+        <div class="cancle-text">返回</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+  <script>
+    $(function () {
+      var obj = function (option) {
+        this.option = option || {};
+        this.currentIndex = 0;
+        this.init(); // 初始化
+      }
+
+      // 初始化
+      obj.prototype.init = function () {
+        this.allEvents(); // 各种点击事件
+      }
+
+      // 各种点击事件
+      obj.prototype.allEvents = function () {
+        this.clickReturn();       // 返回
+        this.clickSure();         // 确定
+        this.changeActive();      // 激活状态
+        this.clickBtn();          // 点击按钮
+      }
+
+      // 返回
+      obj.prototype.returnActive = function () {
+        window.parent.window.iframeObj.goBackBefore('天线设置');
+      }
+      obj.prototype.clickReturn = function () {
+        var _this = this;
+        $('#return').on('click', function () {
+          _this.returnActive();
+        });
+      }
+
+      // 确定
+      obj.prototype.sureActive = function () {
+        window.parent.window.iframeObj.goBackBefore('天线设置');
+      }
+      obj.prototype.clickSure = function () {
+        var _this = this;
+        $('#sure').on('click', function () {
+          _this.sureActive();
+        });
+      }
+
+      // 激活状态
+      obj.prototype.changeActive = function () {
+        $('.antenna-main').on('click', '.response-beam-contain', function () {
+          $('.response-beam-contain').removeClass('active');
+          $(this).addClass('active');
+        });
+      }
+
+      // 点击按钮
+      obj.prototype.clickBtn = function () {
+        var _this = this;
+        var antennaList = ['内天线', '外天线'];
+        $('.response-beam-contain').on('click', '.btn', function () {
+          if (_this.currentIndex == 0) {
+            _this.currentIndex =  antennaList.length-1;
+          } else if (_this.currentIndex == antennaList.length-1) {
+            _this.currentIndex = 0;
+          }
+          $('#auto-btn').text(antennaList[_this.currentIndex]);
+        });
+      }
+
+      // ----------------------------------------------------
+      window.antennaObj = new obj();
+    });
+  </script>
+</body>
+
+</html>

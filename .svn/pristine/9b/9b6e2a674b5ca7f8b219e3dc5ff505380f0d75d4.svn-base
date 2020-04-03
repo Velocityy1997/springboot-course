@@ -1,0 +1,38 @@
+{
+  "code": "200",
+  "msg": "msg",
+  "data": {
+    "data": [
+      {
+       "imgSrc": "./img/test/bdscj.png",
+       "imgActiveSrc": "./img/test/bdscj-active.png",
+       "text": "北斗手持机",
+       "isTest": "1"
+      },
+      {
+       "imgSrc": "./img/test/dtcz.png",
+       "imgActiveSrc": "./img/test/dtcz-active.png",
+       "text": "电台操作",
+       "isTest": "0"
+      },
+      {
+        "imgSrc": "./img/test/llzs.png",
+       "imgActiveSrc": "./img/test/llzs-active.png",
+       "text": "理论知识",
+       "isTest": "0"
+      },
+      {
+        "imgSrc": "./img/test/hppd.png",
+       "imgActiveSrc": "./img/test/hppd-active.png",
+       "text": "航片判读",
+       "isTest": "0"
+      },
+      {
+        "imgSrc": "./img/test/zzjs.png",
+       "imgActiveSrc": "./img/test/zzjs-active.png",
+       "text": "作战计算",
+       "isTest": "0"
+      }
+    ]
+  }
+}

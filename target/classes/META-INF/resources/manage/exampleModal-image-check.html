@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>识图用图考核</title>
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/normal.min.css">
+  <link rel="stylesheet" href="../css/dragger.css">
+  <link rel="stylesheet" href="../css/image.min.css">
+</head>
+<style>
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+
+  .content-image {
+    width: 75%;
+    height: 100%;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    z-index: 9999999999999999;
+  }
+
+  ._old path,
+  ._old text {
+    stroke: #666;
+  }
+
+  .machine-box .machine-body {
+    background-color: transparent;
+  }
+
+  /* 重写样式 */
+  .machine-body-left {
+    padding-bottom: 30px;
+  }
+
+  .my-answer {
+    padding-top: 30px;
+  }
+
+  .my-answer-img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .machine-box .machine-body .machine-body-right .item-btn-ul {
+    bottom: auto;
+    left: auto;
+    transform: auto;
+    transform: translateX(0);
+    margin-top: 50px;
+    position: relative;
+    margin-bottom: 0;
+  }
+
+  .machine-box .machine-body {
+    overflow: auto;
+  }
+</style>
+
+<body>
+  <div class="machine-box">
+    <div class="machine-body">
+      <ul class="leftNav" id="leftNav">
+        <li class="itemIcon bigIcon" id="bigIcon"></li>
+        <li class="itemIcon reduceIcon" id="reduceIcon"></li>
+        <li class="itemIcon ruleIcon" id="ruleIcon" x-target="ruleBox"></li>
+        <li class="itemIcon circle-ruleIcon" id="circleRuleIcon" x-target="circlrRuleBox"></li>
+        <li class="itemIcon short-ruler-icon" id="short-ruler-icon" x-target="shortRuler"></li>
+      </ul>
+      <div class="right-content">
+        <div class="content-image" id="contentImage">
+
+          <div class="compassBox">
+            <i class="compassLine"></i>
+          </div>
+          <!---------------- made by mc ---------------->
+          <div alt="" class="imgBox" id="imgBox"></div>
+          <div class="ruleBox sizemiddle" id="shortRuler">
+          </div>
+          <div class="ruleBox circleRule" id="circlrRuleBox">
+          </div>
+          <div class="ruleBox short-ruler" id="ruleBox"></div>
+        </div>
+        <div class="test-content" id="item-bank">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/lib/jquery-3.4.1.min.js"></script>
+  <script src="../js/lib/dragger.js"></script>
+  <script src="../js/lib/jquery.cookie.js"></script>
+  <script src="../js/lib/bootstrap.min.js"></script>
+  <script src="../js/exam/check-paper-image.js"></script>
+
+  <script>
+    $(function () {
+      var option = {};
+      window.imgObj = new machineObj(option);
+    });
+  </script>
+</body>
+
+</html>

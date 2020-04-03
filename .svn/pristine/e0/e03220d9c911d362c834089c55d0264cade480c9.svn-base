@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>通讯</title>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .messageIndex-box {
+            width: 193px;
+            height: 219px;
+            overflow: hidden;
+
+        }
+
+        .messageIndex-ul {
+            width: 100%;
+            height: calc(100% - 20px);
+            padding: 13px;
+            overflow: hidden;
+        }
+
+        .messageIndex-li {
+            width: 52px;
+            height: 52px;
+            border: 2px solid #83f2fb;
+            border-radius: 5px;
+            text-align: center;
+            color: #cfd1fe;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+        .messageIndex-li:hover,
+        .messageIndex-li.active {
+            border: 2px solid #ffbdff;
+        }
+
+        .messageIndex-img {
+            width: 31px;
+            height: 31px;
+            margin: 0 auto;
+        }
+
+        .messageIndex-li:nth-child(1) .messageIndex-img {
+            background: url(../../img/machine/message/new.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .messageIndex-li:nth-child(2) .messageIndex-img {
+            background: url(../../img/machine/message/getnews.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .messageIndex-li:nth-child(3) .messageIndex-img {
+            background: url(../../img/machine/message/outBox.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .messageIndex-li:nth-child(4) .messageIndex-img {
+            background: url(../../img/machine/message/messagePage.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .messageIndex-li:nth-child(5) .messageIndex-img {
+            background: url(../../img/machine/message/draft.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .messageIndex-li:nth-child(6) .messageIndex-img {
+            background: url(../../img/machine/message/delet.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .messageIndex-li:nth-child(7) .messageIndex-img {
+            background: url(../../img/machine/message/seach.png) no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .messageIndex-bottom {
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            height: 20px;
+        }
+
+        .cancle {
+            width: auto;
+            height: 100%;
+            float: right;
+            cursor: pointer;
+        }
+
+        .cancle .cancle-img {
+            width: 11px;
+            height: 11px;
+            background: url(../../img/machine/return.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+
+        .cancle .cancle-text {
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: s;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="messageIndex-box">
+        <ul class="messageIndex-ul" id="messageIndex-ul">
+            <li class="messageIndex-li" data-index="0">
+                <div class="messageIndex-img"></div>
+                <div class="messageIndex-text">新建电文</div>
+            </li>
+            <li class="messageIndex-li" data-index="1">
+                <div class="messageIndex-img"></div>
+                <div class="messageIndex-text">收件箱</div>
+            </li>
+            <li class="messageIndex-li" data-index="2">
+                <div class="messageIndex-img"></div>
+                <div class="messageIndex-text">发件箱</div>
+            </li>
+            <li class="messageIndex-li" data-index="3">
+                <div class="messageIndex-img"></div>
+                <div class="messageIndex-text">通讯录</div>
+            </li>
+            <li class="messageIndex-li" data-index="4">
+                <div class="messageIndex-img"></div>
+                <div class="messageIndex-text">草稿箱</div>
+            </li>
+            <li class="messageIndex-li" data-index="5">
+                <div class="messageIndex-img"></div>
+                <div class="messageIndex-text">垃圾箱</div>
+            </li>
+            <li class="messageIndex-li" data-index="6">
+                <div class="messageIndex-img"></div>
+                <div class="messageIndex-text">通讯查询</div>
+            </li>
+        </ul>
+        <div class="messageIndex-bottom">
+            <div class="cancle" id="return">
+                <div class="cancle-img"></div>
+                <div class="cancle-text">返回</div>
+            </div>
+        </div>
+    </div>
+    <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function () {
+            var obj = function (option) {
+                this.option = option || {};
+                this.init(); // 初始化
+            }
+
+            // 初始化
+            obj.prototype.init = function () {
+                this.currentIndex = Number(window.parent.window.iframeObj.messageIndex);
+                $('.messageIndex-li').eq(this.currentIndex).addClass('active');
+                this.allEvents(); // 各种点击事件
+            }
+
+            // 各种点击事件
+
+            obj.prototype.allEvents = function () {
+                this.clickReturn(); // 返回
+                // this.clickSure();         // 确定
+                this.nextIframe(); // 点击下个页面 
+            }
+
+            // 返回
+            obj.prototype.returnActive = function () {
+                window.parent.window.iframeObj.goBackBefore('系统设置');
+            }
+            obj.prototype.clickReturn = function () {
+                $('#return').on('click', function () {
+                    window.parent.window.iframeObj.goBackBefore('通讯');
+                });
+            }
+
+            // 确定
+            obj.prototype.sureActive = function () {
+                window.parent.window.iframeObj.changeIframe($('.messageIndex-li.active').children(
+                    '.messageIndex-text').text());
+            }
+            // obj.prototype.clickSure = function(){
+            //    this.sureActive();
+            // }
+
+            // 点击下个页面
+            obj.prototype.nextIframe = function () {
+                $('#messageIndex-ul').on('click', '.messageIndex-li', function () {
+                    var name = $(this).children('.messageIndex-text').text();
+                    window.parent.window.iframeObj.messageIndex = $(this).attr("data-index");
+                    window.parent.window.iframeObj.changeIframe(name);
+                });
+            }
+
+            // ---------------- made by mc --------------------
+            obj.prototype.upActive = function () {
+                let len = $('.messageIndex-li').length - 1;
+                if (this.currentIndex == 0) {
+                    this.currentIndex == 0
+                } else if (this.currentIndex == 1) {
+                    this.currentIndex == 1
+                } else if (this.currentIndex == 2) {
+                    this.currentIndex == 2
+                } else {
+                    this.currentIndex -= 3;
+                }
+                this.changeActive();
+            }
+            obj.prototype.leftActive = function () {
+                let len = $('.messageIndex-li').length - 1;
+                if (this.currentIndex == 0) {
+                    this.currentIndex == 0
+                } else {
+                    this.currentIndex -= 1;
+                }
+                this.changeActive();
+            }
+            obj.prototype.rightActive = function () {
+                let len = $('.messageIndex-li').length - 1;
+                if (this.currentIndex == len) {
+                    this.currentIndex == len
+                } else {
+                    this.currentIndex = Number(this.currentIndex) + 1;
+                }
+                this.changeActive();
+            }
+            obj.prototype.downActive = function () {
+                let len = $('.messageIndex-li').length - 1;
+                if (this.currentIndex == len) {
+                    this.currentIndex = len
+                } else if (this.currentIndex == len - 1) {
+                    this.currentIndex = len - 1
+                } else if (this.currentIndex == len - 2) {
+                    this.currentIndex = len - 2
+                } else {
+                    this.currentIndex = Number(this.currentIndex) + 3;
+                }
+                this.changeActive();
+            }
+
+            obj.prototype.changeActive = function () {
+                var currentIndex = this.currentIndex;
+                window.parent.window.iframeObj.messageIndex = currentIndex;
+                $('.messageIndex-li').eq(currentIndex).addClass('active').siblings('.messageIndex-li')
+                    .removeClass(
+                        'active');
+            }
+
+            window.messageIndexObj = new obj();
+        });
+    </script>
+</body>
+
+</html>

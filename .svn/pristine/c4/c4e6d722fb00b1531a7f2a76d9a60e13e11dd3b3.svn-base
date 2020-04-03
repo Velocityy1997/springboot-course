@@ -1,0 +1,152 @@
+package io.ken.springboot.course.dao;
+
+import io.ken.springboot.course.bean.User;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * ClassName: mapper user:hwy
+ * 
+ * @date 2019年11月14日
+ */
+@Mapper
+public interface UserMapper {
+//根据id查
+	@Select("SELECT * FROM user WHERE id = #{id}")
+	User queryById(@Param("id") String id);
+//根据名字查关联
+	@Select("SELECT * FROM user left join class_dic on user.class_id=class_dic.class_id WHERE user.name = #{name}")
+	User queryByName(@Param("name") String name);
+//根据证件查关联
+	@Select("SELECT name,class_name FROM user left join class_dic on user.class_id=class_dic.class_id WHERE user.id_number = #{idNumber}")
+	Map<String,String> queryByidNumber(@Param("idNumber") String idNumber);
+//全查
+	@Select("SELECT * FROM user")
+	List<User> queryAll();
+//查数量
+	@Select("SELECT count(*) FROM user where class_id != '' ")
+	int getUserCount();
+	
+	@Insert({
+			"INSERT INTO user(id,name,sex,id_number,type,password,class_id,level_id,photo) VALUES(#{id},#{name},#{sex},#{idNumber},"
+					+ "#{type},#{password},#{classId},#{levelId},#{photo})" })
+	int add(User user);
+
+	@Delete("DELETE FROM user WHERE name = #{name}")
+	int delByName(String name);
+
+	@Update("UPDATE user SET id = #{id},name = #{name},sex = #{sex},id_number =#{idNumber},birthday = #{birthday}, type = #{type},password = #{password},"
+			+ "class_id  = #{classId},level_id = #{levelId},tel = #{tel},photo = #{photo},hand_collect_list = #{handCollectList},fill_blank_collect_list = #{fillBlankCollectList},comm_collect_list = #{commCollectList}"
+			+ ",errhand_collect_list = #{errhandCollectList},errfill_blank_collect_list = #{errfillBlankCollectList},errcomm_collect_list = #{errcommCollectList}"
+			+ ",choose_blank_collect_list = #{chooseBlankCollectList},decide_blank_collect_list = #{decideBlankCollectList},errchoose_blank_collect_list = #{errchooseCollectList},"
+			+ "errdecide_blank_collect_list = #{errdecideBlankCollectList} WHERE id = #{id}")
+	int updateById(User user);
+
+	@Select("SELECT * FROM user WHERE id_number = #{id_number}")
+	User getUserInfo(@Param("id_number") String id_number);
+
+	@Select("SELECT type FROM user  WHERE id_number =#{id_number} ")
+	int getType(@Param("id_number") String id_number);
+
+	@Update("UPDATE user SET type=#{type} WHERE id_number = #{idNumber}")
+	int updateByType(User user);
+
+	//@Delete("delete from user WHERE id =#{id}")
+	@Delete("DELETE u,t,e ,l from user u  LEFT  JOIN training t ON u.id_number= t.id_number LEFT JOIN exam e ON u.id_number =e.id_number LEFT JOIN log l ON u.id_number = l.id_number  WHERE u.id = #{id}")
+	int delById(@Param("id")String id);
+
+	
+	@Select("<script>"  + "SELECT * from user  WHERE  1=1" +
+			"<if test = 'name  != null'> And name = #{name} </if>"
+			+"<if test = 'classId  != null'> And class_id = #{classId} </if>"
+			+ "<if test = 'levelId  != null'> And level_id = #{levelId} </if>"
+			+ "<if test = 'type  != null'> And type = #{type} </if>"
+			+ "</script>"
+			)
+	List<User> FindUser(@Param("name")String name, @Param("classId")String classId, @Param("levelId")String levelId, @Param("type")String type);
+	 
+
+	/*
+	 * @Delete("<script>" + "delete from user WHERE id in " +
+	 * "<foreach item='id' index='index' collection='list' open='(' separator=',' close=')'>"
+	 * + "#{id}" + "</foreach>" +"</script>" ) int
+	 * delById(@Param("list")List<String> list);
+	 */
+
+	
+	/*
+	 * public class Provider {
+	 * 
+	 * public String batchDelete(List<String> id){
+	 * 
+	 * StringBuilder sb = new StringBuilder();
+	 * sb.append("DELETE FROM user WHERE id IN ("); for(int i = 0; i < id.size();
+	 * i++) { sb.append("'").append(id.get(i)).append("'"); if( i< id.size() -1) {
+	 * sb.append(","); } } sb.append(")"); return sb.toString(); } }
+	 */
+	//统计各个班的人数
+	@Select("select count(*) count,u.class_id,c.class_name from user u,"
+			+ "class_dic c  where u.class_id=c.class_id GROUP BY u.class_id")
+	List<Map<String,String>> getUserGroupByClass();
+	
+	@Select("select count(*) from user u where class_id=#{classId} and sex=1")
+	int getUserByClassAndSex(@Param("classId")String classId);
+	
+	@Select("select count(*) from user u where class_id=#{classId}")
+	int getUserByClass(@Param("classId")String classId);
+
+	@Select("SELECT id_number  FROM  user  WHERE id_number = #{idNum}")
+	List<String> getByIdNum(@Param("idNum")String idNum);
+	
+	@Select("SELECT name from user  WHERE id_number =  #{idNum}")
+	String getNameByIdNum(@Param("idNum")String idNum);
+	
+	
+	/*@Update("UPDATE user SET tel = #{tel} ,photo = #{photo} WHERE id_number = #{idNumber}")
+	int updateByIdNum(String tel,String photo,String idNumber);*/
+
+	@Update("UPDATE user SET tel = #{tel}  WHERE id_number = #{idNumber}")
+	int updateTelphone(@Param("tel")String tel,@Param("idNumber")String idNumber);
+
+	@Update("UPDATE user SET photo = #{photo} WHERE id_number = #{idNumber}")
+	int updatePhoto(@Param("photo")String photo,@Param("idNumber")String idNumber);
+	
+	@Select("SELECT * from user WHERE id_number =#{idNumber}  AND  password =#{passWord} ")
+	List<User> findUserByIdNumAndPassword(@Param("idNumber")String idNumber, @Param("passWord")String passWord);
+	
+	
+	
+	@Select("SELECT * from user WHERE class_id = #{classId}")
+	List<User> queryList(@Param("classId")String classId);
+	
+	
+	@Update("UPDATE user SET password =#{passWord} WHERE id_number = #{idNumber}")
+	int resetPd(@Param("passWord")String passWord, @Param("idNumber")String idNumber);
+	
+	@Update("UPDATE user SET password =#{passWord} WHERE id_number = #{idNumber}")
+	int changePd(@Param("passWord")String passWord, @Param("idNumber")String idNumber);
+
+	@Insert("<script>" +
+			"insert into user" +
+			"(id,name,sex,id_number,birthday,type,password,class_id,level_id)" +
+			" values " +
+			"<foreach collection='list'  item='value'  separator=','>" +
+			"(#{value.id},#{value.name},#{value.sex},#{value.idNumber},#{value.birthday},#{value.type},#{value.password},#{value.classId},#{value.levelId})" +
+			"</foreach>" +
+			"</script>")
+    int addUserExcel(List<User> userList);
+}
+//("<script>" +
+//		" insert into choose_select_store " +
+//		"(id,question_name,question_code,result,select_a,subject,flag,type,grade,picture_path,level_id)" +
+//		" values" +
+//		" <foreach collection='list'  item='value'  separator=','>" +
+//		"(#{value.id},#{value.questionName},#{value.questionCode},#{value.result},#{value.selectA},#{value.subject},#{value.flag},#{value.type},#{value.grade},#{value.picturePath},#{value.levelId})" +
+//		"</foreach> " +
+//		"</script>")

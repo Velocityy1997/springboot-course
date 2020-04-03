@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>北斗手持机</title>
+  <link rel="stylesheet" href="./css/normal.min.css">
+  <link rel="stylesheet" href="./css/machine-index.min.css">
+</head>
+<body>
+    <div class="machine-index-container">
+        <div class="machine-view-head">
+            <div class="B1">B1</div>
+            <div class="B2">B2</div>
+            <div class="machine-time" id="machine-time"></div>
+            <div class="horn-box" id="horn-box"></div>
+            <div class="electric"></div>
+          </div>
+          <div class="machine-view-center">
+             <iframe src="./machine-control-list.html" data-beforeSrc = "" class="machine-view-iframe" frameborder="0" id="machine-view-iframe" data-name="导航"></iframe>
+            <!--<iframe src="./machine/nav/navManagement.html" data-beforeSrc = "" class="machine-view-iframe" frameborder="0" id="machine-view-iframe"></iframe>-->
+          
+          <!-- 屏幕校准 -->
+          <div class="screen-box" id="screen">
+            <div class="head">
+              <div class="screen-img"></div>
+              <div class="screen-text">系统提示</div>
+            </div>
+            <div class="screen-contain">确认要校准屏幕？</div>
+            <div class="screen-bottom">
+              <div class="sure" id="sure">
+                确认
+                <div class="sure-img"></div>
+              </div>
+              <div class="close" id="close">
+                <div class="close-img"></div>
+                返回
+              </div>
+            </div>
+          </div>
+          </div>
+    </div>
+    <script src="./js/lib/jquery-3.4.1.min.js"></script>
+    <script src="./js/machine-index.js"></script>
+    <script>
+      $(function(){
+        var option = {};
+        $.ajax({
+          type: "get",
+          url: "./js/json/iframeList.json",
+          dataType: "JSON",
+          async: false,
+          success:function(res){
+            option.iframeList = res.data.data;
+            window.iframeObj = new iframeControlObj(option);
+          },
+          error: function(err){
+            console.log('iframe列表数据返回错误', err);
+          }
+        });
+      });
+    </script>
+</body>
+</html>

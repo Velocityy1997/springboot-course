@@ -1,0 +1,512 @@
+package io.ken.springboot.course.service.implement;
+
+import io.ken.springboot.course.bean.ChooseSelectStore;
+import io.ken.springboot.course.bean.CommExamStore;
+import io.ken.springboot.course.bean.DecideStore;
+import io.ken.springboot.course.bean.Exam;
+import io.ken.springboot.course.bean.FillBlankExamStore;
+import io.ken.springboot.course.bean.HandExamStore;
+import io.ken.springboot.course.dao.ExamMapper;
+import io.ken.springboot.course.dao.exam.ExamInfoMapper;
+import io.ken.springboot.course.dao.exam.batch.ExamHadleMapper;
+import io.ken.springboot.course.model.NewExam;
+import io.ken.springboot.course.model.TreeClass;
+import io.ken.springboot.course.service.IExamService;
+import io.ken.springboot.course.tools.Result;
+import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 
+ * @author lq
+ *ExamServiceImpl.java
+ * 2019年11月20日
+ */
+@Service("/ExamService")
+public class ExamServiceImpl implements IExamService{
+
+	@Resource
+	private ExamMapper examMapper;
+
+	@Resource
+	private ExamInfoMapper examInfoMapper;
+
+
+	@Resource
+	private ExamHadleMapper examHadleMapper;
+
+	@Resource
+	private   ExamInfoServiceImpl examInfoServiceImpl;
+	//getRandomCode
+
+
+	@Override
+	public List<Exam> getMyExam(String id_number) {
+		// TODO Auto-generated method stub
+		List<Exam> examList = new ArrayList<Exam>();
+		examList = examMapper.getExam1(id_number);
+		
+		return examList;
+	}
+
+
+	//根据科目查询考试名称
+	@Override
+	public List<String> getExamNameBySubject(String subject) {
+		List<String> list = examMapper.queryExamNameBySubject(subject);
+		return list;
+	}
+
+	//根据名称查试卷
+	@Override
+	public List<Exam> getExamByName(String name) {
+
+		List<Exam> examList = new ArrayList<Exam>();
+		examList = examMapper.getExamByName(name);
+		
+		return examList;
+	}
+
+	//根据姓名&科目查询考试
+	@Override
+	public List<Exam> getExamByNameAndSub(String name, String subject) {
+		List<Exam> examList = new ArrayList<Exam>();
+		examList = examMapper.queryExamByNameSubject(name,subject);
+
+		return examList;
+	}
+
+	@Override
+	public List<Exam> getExamByNameYiKao(String name) {
+		// TODO Auto-generated method stub
+		List<Exam> examList = new ArrayList<Exam>();
+		examList = examMapper.getExamByNameYiKao(name);
+		
+		return examList;
+	}
+
+	@Override
+	public List<Exam> getFinishedExamByNameSub(String name, String subject) {
+
+		List<Exam> examList = new ArrayList<Exam>();
+		examList = examMapper.queryExamListByNameSubject(name,subject);
+		return examList;
+	}
+
+	//取出所有试卷的名称
+	@Override
+	public List<String> getExamName() {
+
+		List<String> nameList = examMapper.getExamName();
+		//List<String> nameList = examMapper.queryExamNameBySub();
+
+		return nameList;
+	}
+	//获取已经考过的考试数
+	@Override
+	public int getExamByStatus() {
+
+		int nameList = examMapper.getExamByStatus();
+		
+		return nameList;
+	}
+	
+	//获取所有的考试数
+	@Override
+	public int getExamNum() {
+		// TODO Auto-generated method stub
+		
+		int nameList = examMapper.getExamNum();
+		
+		return nameList;
+	}
+	
+	@Override
+	public Exam getModel(String examId) {
+		// TODO Auto-generated method stub
+		Exam exam = new Exam();
+		exam = examMapper.getModel(examId);
+		return exam;
+	}
+
+	@Override
+	public List<HandExamStore> getHandList(String subject,String level) {
+		// TODO Auto-generated method stub
+		List<HandExamStore> list = new ArrayList<HandExamStore>();
+		list = examMapper.getHandList(subject,level);
+		
+		return list;
+	}
+
+	@Override
+	public List<HandExamStore> getHandList1(String subject,int type,String level) {
+		// TODO Auto-generated method stub
+		List<HandExamStore> list = new ArrayList<HandExamStore>();
+		list = examMapper.getHandList1(subject,type, level);
+		
+		return list;
+	}
+	
+	@Override
+	public List<FillBlankExamStore> getFillList() {
+		// TODO Auto-generated method stub
+		List<FillBlankExamStore> list = new ArrayList<FillBlankExamStore>();
+		list = examMapper.getFillList();
+		
+		return list;
+	}
+
+	@Override
+	public List<CommExamStore> getComm(int type) {
+		// TODO Auto-generated method stub
+		
+		 List<CommExamStore>  list = new ArrayList<CommExamStore>();
+		 list = examMapper.getCommList();
+		return list;
+	}
+
+	@Override
+	public List<TreeClass> getTreeList(String level) {
+		// TODO Auto-generated method stub
+		List<TreeClass> treeList = new ArrayList<TreeClass>();
+		if(level == null) {
+			treeList = examMapper.getTreeList1( level);
+		}
+		else {
+			treeList = examMapper.getTreeList( level);
+		}
+		
+		return treeList;
+	}
+
+	@Override
+	public List<NewExam> getHF(String subject,String level) {
+		// TODO Auto-generated method stub
+		List<NewExam> list = new ArrayList<NewExam>();
+		list = examMapper.getHF(subject, level);
+		
+		return list;
+	}
+	
+	@Override
+	public List<NewExam> getFill(String subject,String level) {
+		// TODO Auto-generated method stub
+		List<NewExam> list = new ArrayList<NewExam>();
+		list = examMapper.getFill(subject, level);
+		
+		return list;
+	}
+	
+	
+	@Override
+	public List<NewExam> getHF1(String subject,int cate,String level) {
+		// TODO Auto-generated method stub
+		List<NewExam> list = new ArrayList<NewExam>();
+		list = examMapper.getHF1(subject,cate, level);
+		
+		return list;
+	}
+
+	@Override
+	public List<NewExam> getFill1(String subject,int cate) {
+		// TODO Auto-generated method stub
+		List<NewExam> list = new ArrayList<NewExam>();
+		list = examMapper.getFill1(subject,cate);
+		
+		return list;
+	}
+	
+	@Override
+	public List<ChooseSelectStore> getSelect(String subject,String level) {
+		// TODO Auto-generated method stub
+		List<ChooseSelectStore> list = new ArrayList<ChooseSelectStore>();
+		list = examMapper.getSelect(subject, level);
+		
+		return list;
+	}
+	
+	@Override
+	public List<ChooseSelectStore> getSelect1(String subject,int type,String level) {
+		// TODO Auto-generated method stub
+		List<ChooseSelectStore> list = new ArrayList<ChooseSelectStore>();
+		list = examMapper.getSelect1(subject, type, level);
+		
+		return list;
+	}
+	
+	@Override
+	public List<DecideStore> getDecide(String subject,String level) {
+		// TODO Auto-generated method stub
+		List<DecideStore> list = new ArrayList<DecideStore>();
+		list = examMapper.getDecide(subject, level);
+		
+		return list;
+	}
+	
+	@Override
+	public List<DecideStore> getDecide1(String subject,int type,String level) {
+		// TODO Auto-generated method stub
+		List<DecideStore> list = new ArrayList<DecideStore>();
+		list = examMapper.getDecide1(subject,type, level);
+		
+		return list;
+	}
+	
+	@Override
+	public String getCommResult(String questionCode) {
+		// TODO Auto-generated method stub
+		String result = examMapper.getReult(questionCode);
+		
+		return result;
+	}
+
+	@Override
+	public int addExam(Exam exam) {
+		// TODO Auto-generated method stub
+		return examMapper.add(exam) == 1 ? 0 : 1;//0为插入成功，1为插入失败
+	}
+
+
+			@Override
+			public int getStandard(int type) {
+				// TODO Auto-generated method stub
+				int nameList = examMapper.getStandard(type);
+				return nameList;
+			}
+
+			@Override
+			public int getNotStandard(int type) {
+				// TODO Auto-generated method stub
+				int nameList = examMapper.getNotStandard(type);
+				return nameList;
+			}
+	
+	//优
+		@Override
+		public int getExcellent() {
+			// TODO Auto-generated method stub
+			
+			int nameList = examMapper.getExcellent();
+			
+			return nameList;
+		}
+		//良
+		@Override
+		public int getGood() {
+			// TODO Auto-generated method stub
+			
+			int nameList = examMapper.getGood();
+			
+			return nameList;
+		}
+		//中
+		@Override
+		public int getMedium() {
+			// TODO Auto-generated method stub
+			
+			int nameList = examMapper.getMedium();
+			
+			return nameList;
+		}
+		//差
+		@Override
+		public int getSubalternation() {
+			// TODO Auto-generated method stub
+			
+			int nameList = examMapper.getSubalternation();
+			
+			return nameList;
+		}
+
+		
+		
+		@Override
+		public List<Exam> getExamList(String examId) {
+			// TODO Auto-generated method stub
+			List<Exam> list = new ArrayList<Exam>();
+			list = examMapper.getExamByExamId(examId);
+			return list;
+		}
+
+
+		@Override
+		public int delByName(String name) {
+            int nameList = examMapper.delByName(name);
+			
+			return nameList;
+		}
+
+	
+	
+		@Override
+		public int delUserByNames(List<String> names) {
+			// TODO Auto-generated method stub
+			int num  = 0;
+			for(int i =0; i < names.size(); i++) {
+				
+				String name = names.get(i);
+				 num = examMapper.delByName(name);
+				 if(num >0) { 
+					 continue;
+				 }else {
+					 return num;
+				}
+			}
+			return num;
+		}
+
+		
+		
+		//分数管理  cll
+		@Override
+		public List<Exam> getExamListByName(String examName) {
+			// TODO Auto-generated method stub
+			List<Exam> list = new ArrayList<Exam>();
+			list = examMapper.getExamListByName(examName);
+			return list;
+		}
+
+	//分数管理  gyd
+	@Override
+	public List<Exam> getExamListByNameSub(String examName,String subject) {
+		List<Exam> list = new ArrayList<Exam>();
+		list = examMapper.queryExamListByNameSubject(examName,subject);
+		return list;
+	}
+
+	@Override
+		public List<String> selectByfillCode(String fill_blank_exam_question) {
+			// TODO Auto-generated method stub
+			return examMapper.selectByfillCode(fill_blank_exam_question);
+		}
+		@Override
+		public List<String> selectByHandCode(String fill_blank_exam_question) {
+			// TODO Auto-generated method stub
+			return examMapper.selectByHandCode(fill_blank_exam_question);
+		}
+		@Override
+		public List<String> selectBycommCode(String fill_blank_exam_question) {
+			// TODO Auto-generated method stub
+			return examMapper.selectBycommCode(fill_blank_exam_question);
+		}
+		@Override
+		public List<String> selectBySelectCode(String fill_blank_exam_question) {
+			// TODO Auto-generated method stub
+			return examMapper.selectBySelectCode(fill_blank_exam_question);
+		}
+		@Override
+		public List<String> selectByDecideCode(String fill_blank_exam_question) {
+			// TODO Auto-generated method stub
+			return examMapper.selectByDecideCode(fill_blank_exam_question);
+		}
+
+
+
+	@Override
+		public int delByCodeHand(String question_code) {
+			// TODO Auto-generated method stub
+			return examMapper.delByCodeHand(question_code);
+		}
+		@Override
+		public int delByCodeComm(String question_code) {
+			// TODO Auto-generated method stub
+			return examMapper.delByCodeComm(question_code);
+		}
+		@Override
+		public int delByCodeFill(String question_code) {
+			// TODO Auto-generated method stub
+			return examMapper.delByCodeFill(question_code);
+		}
+		
+		@Override
+		public int delByCodeChoose(String question_code) {
+			// TODO Auto-generated method stub
+			return examMapper.delByCodeChoose(question_code);
+		}
+		
+		@Override
+		public int delByCodeDecide(String question_code) {
+			// TODO Auto-generated method stub
+			return examMapper.delByCodeDecide(question_code);
+		}
+		
+		@Override
+		public int updateModel(Exam exam) {
+			// TODO Auto-generated methupdateByUserod stub
+			
+			return examMapper.updateModel(exam) == 1 ? 0 : 1;//0为插入成功，1为插入失败;
+		}
+		
+
+
+		//查看考试名称重复
+		public  boolean checkExamName(String name) {
+
+			boolean tag = false;
+
+			List<String> list =  examMapper.checkName(name);
+
+			if (list != null) {
+				if (list.size() > 0) {
+					tag = true;
+				}
+			}
+
+
+			return  tag;
+		}
+
+	@Override
+	public int addExam(List<Exam> examList) {
+
+		return examMapper.addExam(examList);
+	}
+
+		/**
+		 * 批量更新考试
+		 * 入参：List<Exam> list
+		 * 回参：1：更新成功
+		 *       0：失败
+		 * by:gyd
+		 */
+		@Override
+		public int batchUpateExam(List<Exam> list) {
+
+			Result result = new Result();
+			String msg = "";
+
+			Long startTime = System.currentTimeMillis();
+			int tag = 0;
+
+			try {
+				//单个更新
+				/*for (Exam exam : list) {
+					tag = examHadleMapper.updateExam(exam);
+					if (tag == 0){
+						msg +="考生:"+exam.getIdNumber()+"交卷失败\n";
+					}
+				}*/
+
+				//批量更新
+				tag = examHadleMapper.batchUpdate(list);
+
+				Long endTime = System.currentTimeMillis();
+				System.out.println("************************************");
+				System.out.println("更新"+list.size()+"条考试题需要秒数："+(endTime-startTime)/1000+"S");
+
+
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+
+
+			return tag;
+		}
+
+	@Override
+	public List<Exam> getExams(String id_number, String subject) {
+		return examInfoMapper.selectAllExam(id_number,subject);
+	}
+}

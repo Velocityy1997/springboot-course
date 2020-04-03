@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="io.ken.springboot.course.dao.exam.batch.ExamHadleMapper" >
+  <resultMap id="BaseResultMap" type="io.ken.springboot.course.bean.Exam" >
+    <id column="exam_id" property="examId" jdbcType="VARCHAR" />
+    <result column="id_number" property="idNumber" jdbcType="VARCHAR" />
+    <result column="grade" property="grade" jdbcType="VARCHAR" />
+    <result column="hand_exam_question" property="handExamQuestion" jdbcType="VARCHAR" />
+    <result column="choose_exam_question" property="chooseExamQuestion" jdbcType="VARCHAR" />
+    <result column="fill_blank_exam_question" property="fillBlankExamQuestion" jdbcType="VARCHAR" />
+    <result column="decide_exam_question" property="decideExamQuestion" jdbcType="VARCHAR" />
+    <result column="comm_exam_question" property="commExamQuestion" jdbcType="VARCHAR" />
+    <result column="hand_exam_result" property="handExamResult" jdbcType="VARCHAR" />
+    <result column="choose_exam_result" property="chooseExamResult" jdbcType="VARCHAR" />
+    <result column="decide_exam_result" property="decideExamResult" jdbcType="VARCHAR" />
+    <result column="fill_blank_exam_result" property="fillBlankExamResult" jdbcType="VARCHAR" />
+    <result column="comm_exam_result" property="commExamResult" jdbcType="VARCHAR" />
+    <result column="hand_exam_answer" property="handExamAnswer" jdbcType="VARCHAR" />
+    <result column="fill_blank_exam_answer" property="fillBlankExamAnswer" jdbcType="VARCHAR" />
+    <result column="choose_exam_answer" property="chooseExamAnswer" jdbcType="VARCHAR" />
+    <result column="decide_exam_answer" property="decideExamAnswer" jdbcType="VARCHAR" />
+    <result column="comm_exam_answer" property="commExamAnswer" jdbcType="VARCHAR" />
+    <result column="exam_name" property="examName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="duration" property="duration" jdbcType="INTEGER" />
+    <result column="question_num" property="questionNum" jdbcType="INTEGER" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="exam_photo" property="examPhoto" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <!--批量更新-->
+    <update id="batchUpdate"   parameterType="java.util.List" >
+        <foreach collection="list" item="bean"   separator=";">
+            update exam
+            <set>
+                <if test="bean.grade !=null">
+                    grade =  #{ bean.grade,jdbcType= VARCHAR },
+                </if>
+                <if test="bean.endTime !=null">
+                    end_time =  #{ bean.endTime,jdbcType= TIMESTAMP },
+                </if>
+                <if test="bean.questionNum !=null">
+                    question_num =  #{ bean.questionNum,jdbcType= INTEGER },
+                </if>
+                <if test="bean.handExamAnswer !=null">
+                    hand_exam_answer =  #{ bean.handExamAnswer,jdbcType= VARCHAR },
+                </if>
+                <if test="bean.fillBlankExamAnswer !=null">
+                    fill_blank_exam_answer =  #{ bean.fillBlankExamAnswer,jdbcType= VARCHAR },
+                </if>
+                <if test="bean.commExamAnswer !=null">
+                    comm_exam_answer =  #{ bean.commExamAnswer,jdbcType= VARCHAR },
+                </if>
+                <if test="bean.chooseExamAnswer !=null">
+                    choose_exam_answer =  #{ bean.chooseExamAnswer,jdbcType= VARCHAR },
+                </if>
+                <if test="bean.decideExamAnswer !=null">
+                    decide_exam_answer =  #{ bean.decideExamAnswer,jdbcType= VARCHAR }
+                </if>
+            </set>
+            <where>
+                exam_id =  #{ bean.examId,jdbcType=VARCHAR}
+            </where>
+        </foreach>
+    </update>
+
+    <!--单个更新-->
+    <update id="updateExam"   parameterType="io.ken.springboot.course.bean.Exam" >
+            update exam
+            <set>
+                <if test="examObj.grade !=null">
+                    grade =  #{ examObj.grade,jdbcType= VARCHAR }
+                </if>
+
+                <if test="examObj.grade !=null">
+                    grade =  #{ examObj.grade,jdbcType= VARCHAR }
+                </if>
+
+                <if test="examObj.grade !=null">
+                    grade =  #{ examObj.grade,jdbcType= VARCHAR }
+                </if>
+
+                <if test="examObj.grade !=null">
+                    grade =  #{ examObj.grade,jdbcType= VARCHAR }
+                </if>
+
+                <if test="examObj.grade !=null">
+                    grade =  #{ examObj.grade,jdbcType= VARCHAR }
+                </if>
+
+                <if test="examObj.grade !=null">
+                    grade =  #{ examObj.grade,jdbcType= VARCHAR }
+                </if>
+            </set>
+            <where>
+                exam_id =  #{ examObj.examId,jdbcType=VARCHAR}
+            </where>
+    </update>
+
+
+
+    <insert id="batchInsert" parameterType="list">
+        insert into  exam (exam_id,exam_name,id_number,grade,hand_exam_answer,
+        fill_blank_exam_answer,choose_exam_answer,decide_exam_answer,
+        comm_exam_answer) values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.examId},#{item.examName},#{item.idNumber},
+            #{item.grade},#{item.handExamAnswer},
+            #{item.fillBlankExamAnswer},
+            #{item.chooseExamAnswer},
+            #{item.decideExamAnswer},
+            #{item.commExamAnswer})
+
+        </foreach>
+
+    </insert>
+ 
+  
+</mapper>

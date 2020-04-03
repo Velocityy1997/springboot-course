@@ -1,0 +1,51 @@
+{
+  "code": 500,
+  "data": {
+    "testData": [
+      {
+        "number": "1",
+        "table": "fill_blank_exam_store",
+        "type": "0",
+        "question_code": "001ad7",
+        "question_name": "选出舰载机",
+        "select": "",
+        "result": "F56100,8",
+        "img": null,
+        "id": null
+      },
+      {
+        "number": "2",
+        "table": "fill_blank_exam_store",
+        "type": "0",
+        "question_code": "52ffca",
+        "question_name": "测试机型",
+        "select": "",
+        "result": "H01100,H11,H20,H32019,0",
+        "img": null,
+        "id": null
+      },
+      {
+        "number": "3",
+        "table": "fill_blank_exam_store",
+        "type": "0",
+        "question_code": "4a3813",
+        "question_name": "电台没有百噪音",
+        "select": "",
+        "result": "F56100,4",
+        "img": null,
+        "id": null
+      },
+      {
+        "number": "4",
+        "table": "choose_select_store",
+        "type": "0",
+        "question_code": "141414",
+        "question_name": "全国卷--高考理综包含的科目@@@",
+        "result": "F56000,1",
+        "img": null,
+        "id": null
+      }
+    ],
+    "examId": "a50c3a9acc034049a4944378df015654"
+  }
+}

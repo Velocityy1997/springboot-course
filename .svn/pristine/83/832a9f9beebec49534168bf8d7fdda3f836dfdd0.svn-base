@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>边海防学院训练考核系统</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/login.min.css">
+    <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+    <link rel="bookmark" href="./img/favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+    <div class="bg">
+        <div class="logo"></div>
+        <div class="title-box">
+            <!-- <div class="title-deep">边海防学院</div> -->
+            <div class="title"></div>
+            <div class="number">v1.0</div>
+        </div>
+        <div class="ball ball1"></div>
+        <div class="ball ball2"></div>
+        <div class="ball ball3"></div>
+        <div class="ball ball4"></div>
+        <div class="ball ball5"></div>
+        <div class="ball ball6"></div>
+        <div class="login-box">
+            <div class="user-box">
+                <input type="text" placeholder="证件号" class="user-input input" id="user-input">
+                <div class="user-icon icon"></div>
+            </div>
+            <div class="password-box">
+                <input type="password" placeholder="密码" class="password-input input" id="password-input">
+                <div class="password-icon icon"></div>
+            </div>
+            <button type="button" class="btn" id="loginBtn" data-toggle="modal" data-target="">登录</button>
+            <div class="tips">
+                注：新用户的用户名及密码默认为7位军官证号，登录后请完善个人资料
+            </div>
+         </div>
+         <div class="bottom-text">©陆军边海防学院教务处研制</div>
+    </div>
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="tipMess">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="sure">确认</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="./js/lib/jquery-3.4.1.min.js"></script>
+    <script src="./js/lib/bootstrap.min.js"></script>
+    <script>
+        $("#loginBtn").on("click", function () {
+            login();
+        })
+        $(document).keydown(function (event) {
+            if (event.keyCode == 13) {
+                login();
+            }
+        })
+        function login() {
+            var user = $("#user-input").val();
+            var password = $("#password-input").val();
+            if (user == "" || password == "") {
+                alert("请输入证件号或密码");
+                return;
+            } else {
+                $.post("/springboot-course/user/login", { idNumber: user, passWord: password }, function (res) {
+                    if (res.code == 200) {
+                        userName = res.data.userName;
+                        adminType = res.data.type;
+                        if (res.data.newuser == 1) {
+                            $("#tipMess").text("请登录后立即完善个人信息");
+                            $("#exampleModal1").modal("show");
+                            $("#sure").on("click", function () {
+                                window.location.href = "./index.html";
+                            })
+                        }else{
+                            window.location.href = "./index.html";
+                        }
+
+                    } else {
+                        $("#tipMess").text(res.msg);
+                        $("#exampleModal1").modal("show");
+                    }
+                })
+            }
+        }
+        //输入框样式
+        $(".input").focus(function () {
+            if ($(this).attr("type") == "text") {
+                $(".password-icon").removeClass("active2");
+                $(".user-icon").addClass("active1");
+            }
+            else {
+                $(".password-icon").addClass("active2");
+                $(".user-icon").removeClass("active1");
+            }
+
+        })
+        $(".input").blur(function () {
+            $(".password-icon").removeClass("active2");
+            $(".user-icon").removeClass("active1");
+        })
+    </script>
+</body>
+
+</html>

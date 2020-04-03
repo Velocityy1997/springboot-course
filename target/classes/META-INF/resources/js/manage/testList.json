@@ -1,0 +1,53 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "eaxamId": 1,
+      "name": "张三",
+      "className": "19级1班",
+      "refrenceState": "已考试",
+      "score": "30",
+      "subject": "查看"
+    },
+    {
+      "eaxamId": 2,
+      "name": "李四",
+      "className": "19级1班",
+      "refrenceState": "已考",
+      "score": "30",
+      "subject": "查看"
+    },
+    {
+      "eaxamId": 3,
+      "name": "万物",
+      "className": "19级1班",
+      "refrenceState": "已考",
+      "score": "30",
+      "subject": "查看"
+    },
+    {
+      "eaxamId": 4,
+      "name": "孙刘",
+      "className": "19级1班",
+      "refrenceState": "已考",
+      "score": "30",
+      "subject": "查看"
+    },
+    {
+      "eaxamId": 5,
+      "name": "张三",
+      "className": "19级1班",
+      "refrenceState": "已考",
+      "score": "30",
+      "subject": "查看"
+    },
+    {
+      "eaxamId": 6,
+      "name": "张三",
+      "className": "19级1班",
+      "refrenceState": "已考",
+      "score": "30",
+      "subject": "查看"
+    }
+  ]
+}

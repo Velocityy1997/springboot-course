@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>用户管理</title>
+  <link rel="stylesheet" href="../css/normal.min.css">
+  <link rel="stylesheet" href="../layui/css/layui.css">
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/bootstrap-table.min.css">
+
+  <link rel="stylesheet" href="../css/user.min.css">
+</head>
+
+<body>
+  <div class="user-view-box">
+    <div class="user-head">
+      <ul class="user-head-ul layui-form">
+        <li class="user-head-li">
+          <label for="name" class="col-sm-3">姓名:</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-contain select layui-input" id="findName">
+          </div>
+        </li>
+        <li class="user-head-li">
+          <label for="findClass" class="col-sm-3">单位:</label>
+          <div class="col-sm-9">
+            <select name="" class="select form-contain" id="findClass">
+              <option value="">请选择</option>
+            </select>
+          </div>
+        </li>
+        <li class="user-head-li">
+          <label for="findGrade" class="col-sm-3">级别:</label>
+          <div class="col-sm-9">
+            <select name="" class="select form-contain" id="findGrade">
+              <option value="">请选择</option>
+            </select>
+          </div>
+        </li>
+        <li class="user-head-li">
+          <label for="name" class="col-sm-3">权限:</label>
+          <div class="col-sm-9">
+            <select name="" class="select form-contain" id="findQx">
+              <option value="">请选择</option>
+              <option value="1">学员</option>
+              <option value="0">管理员</option>
+            </select>
+          </div>
+        </li>
+        <li class="user-head-li">
+          <button class="search btn btn-info" id="find" type="submit" lay-submit="" lay-filter="demo3">查询</button>
+        </li>
+      </ul>
+    </div>
+    <div class="btns-box">
+      <div class="btn btn-info" id="excel-input">录入</div>
+      <div class="btn btn-success" data-toggle="modal" data-target="#exampleModal1" data-whatever="@mdo">添加</div>
+      <div class="btn btn-primary" data-toggle="modal" data-target="#exampleModal2" id="btn-edit">修改</div>
+      <div class="btn btn-danger" data-toggle="modal" data-target="" id="btn-del">删除</div>
+    </div>
+    <div class="user-body">
+      <table class="table table-hover" id="GridBox" data-unique-id="idx"></table>
+    </div>
+  </div>
+
+  <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel">添加数据</h4>
+        </div>
+        <div class="modal-body layui-form">
+          <form class="layui-form" action="" id="addRest">
+            <div class="layui-form-item">
+              <label class="layui-form-label">图像:</label>
+              <div class="layui-input-block">
+                <input type="file" name="title" lay-verify="file" id="pic" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label"><b class="must-fill">*</b>姓名:</label>
+              <div class="layui-input-block">
+                <input type="text" name="username" lay-verify="name" autocomplete="off" class="layui-input" id="name">
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label"><b class="must-fill">*</b>性别:</label>
+              <div class="layui-input-block">
+                <select class="select" id="sex" name="sexAdd" lay-verify="required">
+                  <option value="">请选择</option>
+                  <option value="1">男</option>
+                  <option value="0">女</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- <div class="layui-form-item">
+              <label class="layui-form-label"><b class="must-fill">*</b>出生年月:</label>
+              <div class="layui-input-block">
+                <input type='text' class="layui-input" id="birthday1" name="birthdayAdd" lay-verify="required" />
+              </div>
+            </div> -->
+
+            <div class="layui-form-item">
+              <label class="layui-form-label"><b class="must-fill">*</b>单位:</label>
+              <div class="layui-input-block">
+                <select class="select form-contain" id="class1" name="classAdd">
+                  <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label"><b class="must-fill">*</b>级别:</label>
+              <div class="layui-input-block">
+                <select name="levelAdd" class="select form-contain" id="level1" lay-verify="required">
+                  <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label"><b class="must-fill">*</b>证件号:</label>
+              <div class="layui-input-block">
+                <input type="text" class="layui-input" id="cardId" name="cardIdAdd" lay-verify="identity"
+                  autocomplete="off">
+              </div>
+            </div>
+
+            <!-- <div class="layui-form-item">
+              <label class="layui-form-label"><b class="must-fill">*</b>联系方式:</label>
+              <div class="layui-input-block">
+                <input type="text" class="layui-input" id="phone" name="tel" lay-verify="tel" autocomplete="off">
+              </div>
+            </div> -->
+
+            <div class="layui-form-item">
+              <label class="layui-form-label"><b class="must-fill">*</b>权限:</label>
+              <div class="layui-input-block">
+                <select name="qxAdd" id="qx" class="select form-contain" lay-verify="required">
+                  <option value="">请选择</option>
+                  <option value="1">学员</option>
+                  <option value="0">管理员</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="layui-form-item btns">
+              <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade modal2" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel">更改数据</h4>
+        </div>
+        <div class="modal-body">
+          <form class="layui-form" action="">
+            <div class="layui-form-item">
+              <label class="layui-form-label">图像:</label>
+              <div class="layui-input-block">
+                <input type="file" name="title" lay-verify="file" id="pic2" class="layui-input">
+              </div>
+            </div>
+            <div class="layui-form-item">
+              <label class="layui-form-label">姓名:</label>
+              <div class="layui-input-block">
+                <input type="text" name="username" lay-verify="name" autocomplete="off" class="layui-input" id="name2">
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">性别:</label>
+              <div class="layui-input-block">
+                <select class="select" id="sex2" name="sexAdd">
+                  <option value="">请选择</option>
+                  <option value="1">男</option>
+                  <option value="0">女</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- <div class="layui-form-item">
+              <label class="layui-form-label">出生年月:</label>
+              <div class="layui-input-block">
+                <input type='text' class="layui-input" id="birthday2" name="birthdayAdd" />
+              </div>
+            </div> -->
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">单位:</label>
+              <div class="layui-input-block">
+                <select class="select form-contain" id="class2" name="classAdd">
+                  <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">级别:</label>
+              <div class="layui-input-block">
+                <select name="levelAdd" class="select form-contain" id="level2">
+                  <option value="">请选择</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">证件号:</label>
+              <div class="layui-input-block">
+                <input type="text" class="layui-input" id="cardId2" name="cardIdAdd" lay-verify="required"
+                  autocomplete="off">
+              </div>
+            </div>
+
+            <!-- <div class="layui-form-item">
+              <label class="layui-form-label">联系方式:</label>
+              <div class="layui-input-block">
+                <input type="text" class="layui-input" id="phone2" name="tel" lay-verify="tel" autocomplete="off">
+              </div>
+            </div> -->
+
+            <div class="layui-form-item">
+              <label class="layui-form-label">权限:</label>
+              <div class="layui-input-block">
+                <select name="qxAdd" id="qx2" class="select form-contain">
+                  <option value="">请选择</option>
+                  <option value="1">学员</option>
+                  <option value="0">管理员</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="layui-form-item btns">
+              <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo2" id="edit">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="exampleModal3" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel">系统提示</h4>
+        </div>
+        <div class="modal-body" id="tipMes">
+          <!-- 确认删除？ -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="delete">确认</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="exampleModal4" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel">系统提示</h4>
+        </div>
+        <div class="modal-body" id="exampleModal4text">
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 删除成功 -->
+  <div class="modal fade" id="isDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="exampleModalLabel">系统提示</h4>
+        </div>
+        <div class="modal-body" id="isDeleteText">
+          <!-- 确认删除？ -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 确定重置密码 -->
+  <div class="modal fade" id="resetPwdSure" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">系统提示</h4>
+        </div>
+        <div class="modal-body">
+          确定重置密码？
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" id="resetTure">确认</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal fade" id="resetPwdSure2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">系统提示</h4>
+        </div>
+        <div class="modal-body" id="modal-body-reset">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/lib/jquery-3.4.1.min.js"></script>
+  <script src="../layui/layui.js"></script>
+  <script src="../js/lib/bootstrap.min.js"></script>
+  <script src="../js/lib/bootstrap-table.min.js"></script>
+  <script src="../js/lib/bootstrap-table-zh-CN.min.js"></script>
+
+  <script src="../js/user.js"></script>
+</body>
+
+</html>

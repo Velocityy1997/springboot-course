@@ -1,0 +1,268 @@
+{
+  "code": "200",
+  "msg": "msg",
+  "data": {
+    "data": [{
+        "id": "01",
+        "name": "导航",
+        "xId":"navigation",
+        "src": "./machine/navigation.html",
+        "beforeSrc": "./machine-control-list.html"
+      },
+      {
+        "id": "02",
+        "name": "定位",
+        "xId":"machine-location",
+        "src": "./machine/location/machine-location.html",
+        "beforeSrc": "./machine-control-list.html"
+      },
+      {
+        "id": "02-01",
+        "name": "RDSS定位",
+        "xId":"location-RDSS",
+        "src": "./machine/location/location-RDSS.html",
+        "beforeSrc": "./machine/location/machine-location.html"
+      },
+      {
+        "id": "02-01-01",
+        "name": "定位设置",
+        "xId":"location-settings",
+        "src": "./machine/location/location-settings.html",
+        "beforeSrc": "./machine/location/location-RDSS.html"
+      },
+      {
+        "id": "02-02",
+        "name": "RNSS定位",
+        "xId":"location-RNSS",
+        "src": "./machine/location/location-RNSS.html",
+        "beforeSrc": "./machine/location/machine-location.html"
+      },
+      {
+        "id": "02-02-01",
+        "name": "RDSS位置报告1",
+        "xId":"location-report1",
+        "src": "./machine/location/location-report1.html",
+        "beforeSrc": "./machine/location/location-RDSS.html"
+      },
+      {
+        "id": "02-02-02",
+        "name": "RDSS位置报告2",
+        "xId":"location-report2",
+        "src": "./machine/location/location-report2.html",
+        "beforeSrc": "./machine/location/location-RDSS.html"
+      },
+      {
+        "id": "02-02-03",
+        "name": "RNSS位置报告1",
+        "xId":"location-report3",
+        "src": "./machine/location/location-report3.html",
+        "beforeSrc": "./machine/location/location-RNSS.html"
+      },
+      {
+        "id": "02-02-04",
+        "name": "RNSS位置报告2",
+        "xId":"location-report4",
+        "src": "./machine/location/location-report4.html",
+        "beforeSrc": "./machine/location/location-RNSS.html"
+      },
+      {
+        "id": "02-02-05",
+        "name": "RNSS保存路标",
+        "xId":"save-road-signs2",
+        "src": "./machine/location/save-road-signs2.html",
+        "beforeSrc": "./machine/location/location-RNSS.html"
+      },
+      {
+        "id": "02-02-06",
+        "name": "RDSS保存路标",
+        "xId":"save-road-signs",
+        "src": "./machine/location/save-road-signs.html",
+        "beforeSrc": "./machine/location/location-RDSS.html"
+      },
+      {
+        "id": "03",
+        "name": "通讯",
+        "xId":"message-index",
+        "src": "./machine/message/message-index.html",
+        "beforeSrc": "./machine-control-list.html"
+      },
+      {
+        "id": "03-01",
+        "pid": "03",
+        "name": "新建电文",
+        "xId":"news",
+        "src": "./machine/message/news.html",
+        "beforeSrc": "./machine/message/message-index.html"
+      }, {
+        "id": "03-02",
+        "pid": "03",
+        "name": "收件箱",
+        "xId":"getBox",
+        "src": "./machine/message/getBox.html",
+        "beforeSrc": "./machine/message/message-index.html"
+      },{
+        "id": "03-03",
+        "pid": "03",
+        "name": "发件箱",
+        "xId":"outBox",
+        "src": "./machine/message/outBox.html",
+        "beforeSrc": "./machine/message/message-index.html"
+      }, {
+        "id": "03-04",
+        "pid": "03",
+        "name": "通讯录",
+        "xId":"messagePage",
+        "src": "./machine/message/messagePage.html",
+        "beforeSrc": "./machine/message/message-index.html"
+      },{
+        "id": "03-04",
+        "pid": "03",
+        "name": "通讯录",
+        "xId":"messagePage",
+        "src": "./machine/message/messagePage.html",
+        "beforeSrc": "./machine/message/message-index.html"
+      },{
+        "id": "03-05",
+        "pid": "03",
+        "name": "草稿箱",
+        "xId":"draft",
+        "src": "./machine/message/draft.html",
+        "beforeSrc": "./machine/message/message-index.html"
+      },
+      {
+        "id": "03-05-01",
+        "pid": "03-05",
+        "name": "编辑页",
+        "xId":"draft",
+        "src": "./machine/message/editPage.html",
+        "beforeSrc": "./machine/message/draft.html"
+      }
+      ,{
+        "id": "03-06",
+        "pid": "03",
+        "name": "垃圾箱",
+        "xId":"delet",
+        "src": "./machine/message/delet.html",
+        "beforeSrc": "./machine/message/message-index.html"
+      },{
+        "id": "03-07",
+        "pid": "03",
+        "name": "通讯查询",
+        "xId":"search",
+        "src": "./machine/message/search.html",
+        "beforeSrc": "./machine/message/message-index.html"
+      },
+      {
+        "id": "04",
+        "name": "系统",
+        "xId":"system-index",
+        "src": "./machine/system/system-index.html",
+        "beforeSrc": "./machine-control-list.html"
+      },
+      {
+        "id": "04-01",
+        "name": "系统查看",
+        "xId":"system-watch",
+        "src": "./machine/system/system-watch.html",
+        "beforeSrc": "./machine/system/system-index.html"
+      },
+      {
+        "id": "04-01-01",
+        "name": "本机信息",
+        "xId":"this-machine",
+        "src": "./machine/system/this-machine.html",
+        "beforeSrc": "./machine/system/system-watch.html"
+      },
+      {
+        "id": "04-01-02",
+        "name": "波束状态",
+        "xId":"beam-state",
+        "src": "./machine/system/beam-state.html",
+        "beforeSrc": "./machine/system/system-watch.html"
+      },
+      {
+        "id": "04-01-03",
+        "name": "BD2状态",
+        "xId":"BD2-state",
+        "src": "./machine/system/BD2-state.html",
+        "beforeSrc": "./machine/system/system-watch.html"
+      },
+      {
+        "id": "04-01-04",
+        "name": "电源管理",
+        "xId":"power-management",
+        "src": "./machine/system/power-management.html",
+        "beforeSrc": "./machine/system/system-watch.html"
+      },
+      {
+        "id": "04-01-05",
+        "name": "时间管理",
+        "xId":"time-management",
+        "src": "./machine/system/time-management.html",
+        "beforeSrc": "./machine/system/system-watch.html"
+      },
+      {
+        "id": "04-02",
+        "name": "系统设置",
+        "xId":"system-settings",
+        "src": "./machine/system/system-settings.html",
+        "beforeSrc": "./machine/system/system-index.html"
+      },
+      {
+        "id": "04-02-01",
+        "name": "显示设置",
+        "xId":"display-settings",
+        "src": "./machine/system/display-settings.html",
+        "beforeSrc": "./machine/system/system-settings.html"
+      },
+      {
+        "id": "04-02-02",
+        "name": "声音设置",
+        "xId":"voice-settings",
+        "src": "./machine/system/voice-settings.html",
+        "beforeSrc": "./machine/system/system-settings.html"
+      },
+      {
+        "id": "04-02-03",
+        "name": "天线设置",
+        "xId":"antenna-settings",
+        "src": "./machine/system/antenna-settings.html",
+        "beforeSrc": "./machine/system/system-settings.html"
+      },
+      {
+        "id": "04-02-04",
+        "name": "串口设置",
+        "xId":"port2",
+        "src": "./machine/system/port2.html",
+        "beforeSrc": "./machine/system/system-settings.html"
+      },
+      {
+        "id": "04-02-05",
+        "name": "串口设置主页面",
+        "xId":"port-main",
+        "src": "./machine/system/port-main.html",
+        "beforeSrc": "./machine/system/system-settings.html"
+      },
+      {
+        "id": "04-04",
+        "name": "导航模式选择",
+        "xId":"nav-mode-select",
+        "src": "./machine/system/nav-mode-select.html",
+        "beforeSrc": "./machine/system/system-index.html"
+      },
+      {
+        "id": "05",
+        "name": "工具",
+        "xId":"tool",
+        "src": "./machine/tool.html",
+        "beforeSrc": "./machine-control-list.html"
+      }, {
+        "id": "06",
+        "name": "时间",
+        "xId":"time",
+        "src": "./machine/time.html",
+        "beforeSrc": "./machine-control-list.html"
+      }
+    ]
+  }
+}

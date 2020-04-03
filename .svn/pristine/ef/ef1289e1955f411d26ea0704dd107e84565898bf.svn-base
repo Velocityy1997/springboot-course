@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/bootstrap-table.min.css">
+    
+    <style>
+        .main {
+            position: absolute;
+            top: 0;
+            padding: 30px;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+        .table {
+            width: 100%;
+            height: 100%;
+        }
+
+        .thead-light {
+            background-image: linear-gradient(to bottom, #f8f8f8 0, #ececec 100%);
+        }
+
+        .layui-tree-icon {
+            height: 14px;
+            line-height: 10px;
+            width: 14px;
+        }
+
+        .layui-tree-line .layui-tree-entry:hover .layui-tree-txt {
+            color: #448656;
+            text-decoration: none;
+            transition: .3s;
+        }
+
+        /* 树 */
+        .layui-tree-icon {
+            height: 14px;
+            line-height: 10px;
+            width: 14px;
+        }
+
+        .layui-tree-line .layui-tree-entry:hover .layui-tree-txt {
+            color: #448656;
+            text-decoration: none;
+            transition: .3s;
+        }
+        /* .setQx .modal-header{
+            border-bottom: none;
+        } */
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <table class="table table-hover" id="GridBox">
+        </table>
+        <div class="modal fade" id="exampleModal1" tabindex="-1" style="z-index: 0;" role="dialog"
+            aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document" style="z-index: 9999;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">添加学员</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="tree" class="demo-tree"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="add" data-toggle="modal"
+                            data-target="#exampleModal2">提交</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="close">关闭</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 设置权限成功 -->
+        <div class="modal fade setQx" id="exampleModal2" tabindex="-1" style="z-index: 0;" role="dialog"
+            aria-labelledby="exampleModalLabel">
+            <div class="modal-dialog" role="document" style="z-index: 9999;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">系统提示</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div id="setSuccess">请选择学员</div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="../js/lib/jquery-1.10.2.min.js"></script>
+<script src="../js/lib/bootstrap.min.js"></script>
+<script src="../js/lib/bootstrap-table.min.js"></script>
+<script src="../js/lib/bootstrap-table-zh-CN.min.js"></script>
+<script src="../layui/layui.js"></script>
+<script>
+    $(function () {
+
+        layui.use(['tree', 'util'], function () {
+
+
+            class obj {
+                constructor(tree, layer, util) {
+                    this.init(); // 初始化
+                    this.objTree = '';
+                    this.tree = tree;
+                    this.layer = layer;
+                    this.util = util;
+                    this.powerName = '';
+                }
+
+                init() {
+                    this.tableInit(); // 表格初始化
+                    this.clickDistribution(); // 点击分配
+                    this.clickSure(); // 点击提交
+                }
+
+                // 表格初始化
+                tableInit() {
+                    let _this = this;
+                    $('#GridBox').bootstrapTable('destroy');
+                    $('#GridBox').bootstrapTable({
+                        method: 'get',
+                        contentType: "application/x-www-form-urlencoded", //必须要有！！！！
+                        url: "../js/manage/power.json", //要请求数据的文件路径
+                        theadClasses: "thead-light", //这里设置表头样式
+                        // toolbar: '#toolbar',//指定工具栏
+                        striped: true, //是否显示行间隔色
+                        dataField: "res",
+                        pageNumber: 1, //初始化加载第一页，默认第一页
+                        pagination: true, //是否分页
+                        sidePagination: 'client', //指定服务器端分页
+                        pageSize: 8, //单页记录数
+                        pageList: [5, 8, 10], //分页步进值
+                        // showRefresh:false,//刷新按钮
+                        // showColumns:false,
+                        clickToSelect: false, //是否启用点击选中行
+                        // toolbarAlign:'right',//工具栏对齐方式
+                        // buttonsAlign:'right',//按钮对齐方式
+                        columns: [{
+                                title: '权限',
+                                width: 200,
+                                field: 'power',
+                                align: 'center'
+                            },
+                            {
+                                title: '权限分配',
+                                align: "center",
+                                field: 'distribution',
+                                width: 200,
+                                align: 'center',
+                                formatter: _this.AddFunctionAlty
+                            }
+                        ],
+                        locale: 'zh-CN', //中文支持,
+                        responseHandler: function (res) {
+                            //在ajax获取到数据，渲染表格之前，修改数据源
+                            return res.rows;
+                        }
+                    })
+                }
+
+                // 
+                AddFunctionAlty(value, row, index) {
+                    return '<button type="button" class="btn btn-primary delBtn" data-toggle="modal" data-target="#exampleModal1">分配</button>'
+                }
+
+                // 点击分配
+                clickDistribution() {
+                    let _this = this;
+                    $('#GridBox').on('click-cell.bs.table', (field, value, row, $element) => {
+                        if (value == 'distribution') {
+                            _this.createTree($element.power);
+                        }
+                    });
+                }
+
+                // 创建树
+                createTree(powerName) {
+
+                    let _this = this;
+                    _this.powerName = powerName;
+                    new Promise((resolve, reject) => {
+                        $.ajax({
+                            cache: true,
+                            dataType: "json",
+                            type: "POST",
+                            url: "/springboot-course/newexam/getclassandstu", //获取json数据  
+                            success: function (data) {
+                                resolve(data);
+                            },
+                            error: function (err) {
+                                reject(err);
+                            }
+                        });
+                    }).then(res => {
+
+                        //手风琴模式
+                        _this.tree.render({
+                            elem: '#tree',
+                            data: res,
+                            showCheckbox: true,
+                            accordion: true,
+                            id: 'tree',
+                            onlyIconControl: false,
+                            skin: 'shihuang'
+                        });
+
+
+
+                    }).catch(err => {
+                        console.log(err);
+                    });
+                }
+
+                // 点击提交
+                clickSure() {
+                    let _this = this;
+                    $('#add').off('click').on('click', function () {
+                        var childNodes = _this.tree.getChecked('tree');
+                        var people = "";
+                        for (var i = 0; i < childNodes.length; i++) {
+                            if (childNodes[i].children) {
+                                for (var j = 0; j < childNodes[i].children
+                                    .length; j++) {
+                                    if (childNodes[i].children[j].type == 2) {
+                                        if (people != "") {
+                                            people += ",";
+                                        }
+                                        people += childNodes[i].children[j].id;
+                                    }
+                                }
+
+                            } else {
+                                if (childNodes[i].type == 2) {
+                                    if (people != "") {
+                                        people += ",";
+                                    }
+                                    people += childNodes[i].id;
+                                }
+                            }
+
+                        }
+
+                        new Promise((resolve, reject) => {
+                            $.ajax({
+                                type: "post",
+                                url: "/springboot-course/user/privilege",
+                                dataType: "JSON",
+                                data: "idNumber=" + people +
+                                    "&powerName=" +
+                                    _this.powerName,
+                                success: function (res) {
+                                    if (res.code == 200) {
+                                        resolve(res);
+                                    }
+                                },
+                                error: function (err) {
+                                    reject(err);
+                                }
+                            });
+                        }).then(res => {
+                            $('#setSuccess').text(res.msg);
+                        }).then(err => {
+                            $('#setSuccess').text(res.msg);
+                        })
+                    });
+                }
+            }
+
+            // ------------------------------------
+            let tree = layui.tree,
+                layer = layui.layer,
+                util = layui.util;
+
+
+            var newObj = new obj(tree, layer, util);
+            window.updata = function () {
+                newObj.tableInit();
+            }
+        });
+    })
+</script>
+
+</html>

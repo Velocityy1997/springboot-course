@@ -1,0 +1,262 @@
+package io.ken.springboot.course.dao;
+
+import io.ken.springboot.course.bean.ChooseSelectStore;
+import io.ken.springboot.course.bean.CommExamStore;
+import io.ken.springboot.course.bean.DecideStore;
+import io.ken.springboot.course.bean.Exam;
+import io.ken.springboot.course.bean.FillBlankExamStore;
+import io.ken.springboot.course.bean.HandExamStore;
+import io.ken.springboot.course.model.NewExam;
+import io.ken.springboot.course.model.TreeClass;
+import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import java.util.List;
+
+/**
+ * 
+ * @author lq
+ *ExamMapper.java
+ * 2019年11月20日
+ */
+
+@Mapper
+public interface ExamMapper {
+//根据证件号查
+	@Select("SELECT * FROM exam WHERE id_number =#{id_number}")
+	List<Exam> getExam(@Param("id_number")String id_number);
+
+	@Select("SELECT exam_name FROM exam WHERE exam_name =#{examName}")
+	List<String> checkName(@Param("examName") String examName);
+	
+	@Select("SELECT * FROM exam WHERE id_number =#{id_number} and status=1 order by end_time desc")
+	List<Exam> getExam1(@Param("id_number")String id_number);
+	
+	//根据名字查
+	@Select("SELECT * FROM exam WHERE exam_name =#{name} order by grade desc")
+	List<Exam> getExamByName(@Param("name")String name);
+
+	//根据名字+科目查询  gyd
+	@Select("SELECT * FROM exam WHERE exam_name =#{name} and type = #{subject}  order by grade desc")
+	List<Exam> queryExamByNameSubject(@Param("name")String name,@Param("subject")String subject);
+	
+	@Select("SELECT * FROM exam WHERE exam_name =#{name} and status=1")
+	List<Exam> getExamByNameYiKao(@Param("name")String name);
+
+	@Select("SELECT * FROM exam WHERE exam_name =#{name} and status=1 and type = #{subject} ")
+	List<Exam> queryFinishedExamByNameSub(@Param("name")String name,@Param("subject")String subject);
+
+
+//根据id查
+	@Select("SELECT * FROM exam WHERE exam_id =#{exam_id}")
+	Exam getModel(@Param("exam_id")String exam_id);
+	
+	@Select("SELECT * FROM hand_exam_store WHERE subject =#{subject} and level_id like CONCAT('%',#{level},'%')")
+	List<HandExamStore> getHandList(@Param("subject")String subject,@Param("level")String level);
+	
+	@Select("SELECT * FROM hand_exam_store WHERE subject =#{subject} and type=#{type} and level_id like CONCAT('%',#{level},'%')")
+	List<HandExamStore> getHandList1(@Param("subject")String subject,@Param("type")int type,@Param("level")String level);
+
+	@Select("SELECT * FROM fill_blank_exam_store")
+	List<FillBlankExamStore> getFillList();
+
+	@Select("SELECT * FROM choose_select_store WHERE subject =#{subject} and level_id like CONCAT('%',#{level},'%')")
+	List<ChooseSelectStore> getSelect(@Param("subject")String subject,@Param("level")String level);
+	
+	@Select("SELECT * FROM choose_select_store WHERE subject =#{subject} and type=#{type} and level_id like CONCAT('%',#{level},'%')")
+	List<ChooseSelectStore> getSelect1(@Param("subject")String subject,@Param("type")int type,@Param("level")String level);
+	
+	@Select("SELECT * FROM decide_store WHERE subject =#{subject} and level_id like CONCAT('%',#{level},'%')")
+	List<DecideStore> getDecide(@Param("subject")String subject,@Param("level")String level);
+	
+	@Select("SELECT * FROM decide_store WHERE subject =#{subject} and type=#{type} and level_id like CONCAT('%',#{level},'%')")
+	List<DecideStore> getDecide1(@Param("subject")String subject,@Param("type")int type,@Param("level")String level);
+	
+	
+	/**
+	 * tyep =4 type= 5 4.普通通信，5.密码通信）
+	 * @return
+	 */
+	@Select("SELECT * from comm_exam_store WHERE (type = '4' OR type ='5')")
+	List<CommExamStore> getCommList();
+
+	
+	@Select("SELECT u.name , u.id_number ,u.class_id,c.class_name "
+			+ "FROM user u,class_dic c WHERE u.class_id = c.class_id and u.level_id = #{level}")
+	List<TreeClass> getTreeList(String level);
+
+	@Select("SELECT u.name , u.id_number ,u.class_id,c.class_name "
+			+ "FROM user u,class_dic c WHERE u.class_id = c.class_id ")
+	List<TreeClass> getTreeList1(String level);
+	
+	@Select("SELECT id,question_name,question_code,type,grade ,pass_table_id,picture_path,'comm' AS typeQ FROM comm_exam_store where level_id like CONCAT('%',#{level},'%')  UNION ALL "
+			+ "SELECT id,question_name,question_code,type,grade ,pass_table_id,picture_path,'fill' AS typeQ FROM  fill_blank_exam_store where subject =#{subject} and level_id like CONCAT('%',#{level},'%')")
+	List<NewExam> getHF(@Param("subject")String subject,@Param("level")String level);
+	
+	@Select("SELECT id,question_name,question_code,type,grade ,pass_table_id,picture_path,'fill' AS typeQ FROM  fill_blank_exam_store where subject =#{subject} and level_id like CONCAT('%',#{level},'%')")
+	List<NewExam> getFill(@Param("subject")String subject,@Param("level")String level);
+	
+	@Select("SELECT id,question_name,question_code,type,grade ,pass_table_id,picture_path,'comm' AS typeQ FROM comm_exam_store where type=#{type} and level_id like CONCAT('%',#{level},'%') UNION ALL "
+			+ "SELECT id,question_name,question_code,type,grade ,pass_table_id,picture_path,'fill' AS typeQ FROM  fill_blank_exam_store "
+			+ "where subject =#{subject} and type=#{type} and level_id like CONCAT('%',#{level},'%')")
+	List<NewExam> getHF1(@Param("subject")String subject,@Param("type")int type,@Param("level")String level);
+
+	@Select("SELECT id,question_name,question_code,type,grade ,pass_table_id,'fill' AS typeQ FROM  fill_blank_exam_store "
+			+ "where subject =#{subject} and type=#{type}")
+	List<NewExam> getFill1(@Param("subject")String subject,@Param("type")int type);
+
+	
+	
+	@Select("SELECT result FROM comm_exam_store WHERE question_code = #{questionCode}")
+	String getReult(@Param("questionCode")String questionCode);
+
+	
+	@Insert({"INSERT INTO exam  (exam_id ,exam_name,id_number,type,status,grade,duration,total_grade,start_time,hand_exam_question,"
+			+ "fill_blank_exam_question,fill_blank_exam_result,comm_exam_question,comm_exam_result,question_num,"
+			+ "choose_exam_question,choose_exam_result,choose_exam_answer,decide_exam_question,decide_exam_result,decide_exam_answer)"
+			+ "VALUES (#{examId}, #{examName},#{idNumber},#{type},#{status},#{grade},#{duration},#{totalGrade},#{startTime},#{handExamQuestion},#{fillBlankExamQuestion},"
+			+ "#{fillBlankExamResult},#{commExamQuestion},#{commExamResult},#{questionNum},"
+			+ "#{chooseExamQuestion},#{chooseExamResult},#{chooseExamAnswer},#{decideExamQuestion},#{decideExamResult},#{decideExamAnswer})"})
+	int add(Exam exam);
+
+	//查试卷的所有名称  cll
+	@Select("select exam_name from exam   GROUP BY exam_name")
+	List<String> getExamName();
+
+	//查试卷的所有名称  gyd
+	@Select("select exam_name from exam where type = #{subject}   GROUP BY exam_name")
+	List<String> queryExamNameBySub(@Param("subject")String subject);
+
+	//查试卷的所有名称 gyd
+	@Select("select exam_name from exam  WHERE type = #{subject}  GROUP BY exam_name")
+	List<String> queryExamNameBySubject(@Param("subject")String subject);
+
+
+//已考的次数
+	@Select("select count(*) from exam where status = 1")
+	int getExamByStatus();
+	
+//所有考试数	
+	@Select("select count(*) from exam")
+	int getExamNum();
+	//合格
+	@Select("select count(*) from exam where grade >=total_grade* 0.6 and status = 1 and type=#{type}")
+
+	int getStandard(@Param("type") int type);
+
+	//不合格
+	@Select("select count(*) from exam where grade < total_grade* 0.6 and status = 1 and type=#{type}")
+	int getNotStandard(@Param("type") int type);
+//优	
+	@Select("select count(*) from exam where grade >=85 && status = 1")
+	int getExcellent();
+//良	
+	@Select("select count(*) from exam where grade >=75 && grade <85 && status = 1")
+	int getGood();
+//中	
+	@Select("select count(*) from exam where grade >=60 && grade <75 && status = 1")
+	int getMedium();
+//差	
+	@Select("select count(*) from exam where grade < 60 && status = 1")
+	int getSubalternation();
+
+	@Select("SELECT * FROM exam WHERE exam_id = #{examId}")
+	List<Exam> getExamByExamId(@Param("examId")String examId);
+
+	@Delete("delete from exam WHERE exam_name =#{name}")
+	int delByName(@Param("name")String name);
+	
+	
+	@Select("SELECT * FROM exam WHERE exam_name =#{examName}")
+	List<Exam> getExamListByName(@Param("examName")String examName);
+
+	//查分
+	@Select("SELECT * FROM exam WHERE exam_name =#{examName}  and type = #{subject}")
+	List<Exam> queryExamListByNameSubject(@Param("examName")String examName,@Param("subject")String subject);
+
+	
+	//检查考试里面有没有这个填空题
+	@Select("select exam_id from exam where fill_blank_exam_question like  CONCAT('%',#{fill_blank_exam_question},'%')")
+	List<String>  selectByfillCode(@Param("fill_blank_exam_question")String fill_blank_exam_question);
+	
+	//检查考试里面有没有这个操作题
+	@Select("select exam_id from exam where hand_exam_question like  CONCAT('%',#{hand_exam_question},'%')")
+	List<String> selectByHandCode(@Param("hand_exam_question")String hand_exam_question);
+	
+	//检查考试里面有没有这个通信题
+	@Select("select exam_id from exam where comm_exam_question like  CONCAT('%',#{comm_exam_question},'%')")
+	List<String>  selectBycommCode(@Param("comm_exam_question")String comm_exam_question);
+	
+	@Select("select exam_id from exam where choose_exam_question like  CONCAT('%',#{comm_exam_question},'%')")
+	List<String>  selectBySelectCode(@Param("comm_exam_question")String comm_exam_question);
+	
+	@Select("select exam_id from exam where decide_exam_question like  CONCAT('%',#{comm_exam_question},'%')")
+	List<String>  selectByDecideCode(@Param("comm_exam_question")String comm_exam_question);
+			
+	@Delete("DELETE FROM hand_exam_store WHERE question_code = #{question_code}")
+	int delByCodeHand(@Param("question_code")String question_code);
+	
+	@Delete("DELETE FROM comm_exam_store WHERE question_code = #{question_code}")
+	int delByCodeComm(@Param("question_code")String question_code);
+	
+	@Delete("DELETE FROM fill_blank_exam_store WHERE question_code = #{question_code}")
+	int delByCodeFill(@Param("question_code")String question_code);
+	
+	@Delete("DELETE FROM choose_select_store WHERE question_code = #{question_code}")
+	int delByCodeChoose(@Param("question_code")String question_code);
+	
+	@Delete("DELETE FROM decide_store WHERE question_code = #{question_code}")
+	int delByCodeDecide(@Param("question_code")String question_code);
+	
+	@Delete("DELETE FROM exam WHERE id_number = #{id}")
+	int delById(@Param("id") String id);
+	
+	
+	/*@Update("UPDATE exam SET  grade = #{exam.grade}, end_time = #{exam.endTime} WHERE exam_id = #{examId}")
+	int updateModel(@Param("exam")Exam exam);*/
+
+	@Update("UPDATE exam SET  grade = #{grade}, end_time = #{endTime} , " +
+			"question_num =#{questionNum},hand_exam_answer = #{handExamAnswer}," +
+			"fill_blank_exam_answer= #{fillBlankExamAnswer},comm_exam_answer=#{commExamAnswer}," +
+			"choose_exam_answer =#{chooseExamAnswer} ,decide_exam_answer=#{decideExamAnswer}" +
+			"WHERE exam_id = #{examId} ")
+	int updateModel(Exam exam);
+
+    //获取交卷情况的倒叙
+	//SELECT * FROM `exam` WHERE exam_name = '测试卷08' AND `status` = '1' ORDER BY end_time DESC
+
+	
+    //批量插入list集合的数据
+	@Insert("<script>" +
+			"insert into exam (exam_id ,exam_name,id_number,type,status,grade,duration,total_grade,start_time,hand_exam_question," + 
+			"fill_blank_exam_question,fill_blank_exam_result,comm_exam_question,comm_exam_result,question_num," + 
+			"choose_exam_question,choose_exam_result,choose_exam_answer,decide_exam_question,decide_exam_result,decide_exam_answer)" +
+			"values" + 
+			"<foreach collection='list' item='item' index='index' separator=','>" + 
+			"(#{item.examId},#{item.idNumber},#{item.grade},#{item.totalGrade},#{item.handExamQuestion},#{item.chooseExamQuestion},"
+			+ "#{item.fillBlankExamQuestion},#{item.decideExamQuestion},#{item.commExamQuestion},#{item.handExamResult},#{item.chooseExamResult}," 
+			+ "#{item.decideExamResult},#{item.fillBlankExamResult},#{item.commExamResult},#{item.handExamAnswer},#{item.fillBlankExamAnswer},"
+			+ "#{item.chooseExamAnswer},#{item.decideExamAnswer},#{item.commExamAnswer},#{item.examName},#{item.type}," 
+			+ "#{item.status},#{item.duration},#{item.questionNum},#{item.startTime},#{item.endTime},#{item.examPhoto})" +
+			"</foreach>" + 
+			"</script>")
+	
+	@Update("<script>" +
+			"update exam (exam_id ,exam_name,id_number,type,status,grade,duration,total_grade,start_time,hand_exam_question," + 
+			"fill_blank_exam_question,fill_blank_exam_result,comm_exam_question,comm_exam_result,question_num," + 
+			"choose_exam_question,choose_exam_result,choose_exam_answer,decide_exam_question,decide_exam_result,decide_exam_answer)" +
+			"values" + 
+			"<foreach collection='list' item='item' index='index' separator=','>" + 
+			"(#{item.examId},#{item.idNumber},#{item.grade},#{item.totalGrade},#{item.handExamQuestion},#{item.chooseExamQuestion},"
+			+ "#{item.fillBlankExamQuestion},#{item.decideExamQuestion},#{item.commExamQuestion},#{item.handExamResult},#{item.chooseExamResult}," 
+			+ "#{item.decideExamResult},#{item.fillBlankExamResult},#{item.commExamResult},#{item.handExamAnswer},#{item.fillBlankExamAnswer},"
+			+ "#{item.chooseExamAnswer},#{item.decideExamAnswer},#{item.commExamAnswer},#{item.examName},#{item.type}," 
+			+ "#{item.status},#{item.duration},#{item.questionNum},#{item.startTime},#{item.endTime},#{item.examPhoto})" +
+			"</foreach>" + 
+			"</script>")
+	int insertList(Exam exam);
+
+}

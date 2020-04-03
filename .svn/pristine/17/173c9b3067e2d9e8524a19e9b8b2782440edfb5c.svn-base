@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+        .main{
+            width: 193px;
+            height: 219px;
+            overflow: hidden;
+            position: relative; 
+            color: #fff; 
+            
+        }
+        .tittle{
+            width:100%;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            font-size: 18px;  
+        }
+        .totle-box{
+            width: 100%;
+            height: 20px;
+            padding: 0 30px;
+            font-size: 16px;
+            line-height: 20px;
+            text-align: right;
+        }
+        .listBox{
+            width: 85%;
+            height: 60%;
+            margin: 0 auto;
+            overflow-y: auto;
+            border: 1px solid #fff;
+            background: #515DE8;
+        }
+        .listBox li{
+            width: 100%;
+            height: 20px;
+            line-height: 20px;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+            font-size: 16px;
+            background: #515DE8;
+            border-bottom: 1px solid #7F8DEC;
+            padding: 0 5px;
+            cursor: pointer;
+        }
+        .listBox .active{
+            background-image: linear-gradient(to bottom,#0016bf,#939de0);
+        }
+        .mainBottom{
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            height: 20px;
+            padding: 0 5px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .mainReturn{
+            width:auto;
+            height: 100%;
+            float:right;
+            cursor: pointer;
+        }
+        .mainReturn .mainReturn-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/return.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .mainReturn .mainReturn-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+        .mainSure{
+            width:auto;
+            height: 100%;
+            float:left;
+            cursor: pointer;
+        }
+        .mainSure .mainSure-img{
+            width: 15px;
+            height: 15px;
+            background: url(../../img/machine/sure.png) no-repeat;
+            background-size: 100% 100%;
+            display: inline-block;
+        }
+        .mainSure .mainSure-text{
+            font-size: 16px;
+            color: #fff;
+            display: inline-block;
+            line-height: 20px;
+            cursor: pointer;
+        }
+        .content{
+            width: 193px;
+            height: 219px;
+            overflow: hidden;
+            position: relative; 
+            color: #fff;  
+            display: none;
+        }
+        .topBox{
+            width: 100%;
+            height: 50px;
+            padding: 0 5px;
+        }
+        .topBox span{
+            line-height: 50px;
+            font-size: 16px;           
+        }
+        .topBox .peopleId{
+            float: left;
+        }
+        .topBox .time{
+            float: right;
+        }
+        .textarea{
+            width: 100%;
+            height: 120px;
+            border: 1px solid #fff;
+            background: #89A7F5;
+            box-shadow: inset 0px 15px 1px -15px #000, inset 17px 17px 1px -16px #000;
+            padding: 3px;
+            resize: none;
+        }
+        .content .nav-img{
+            background: url(../../img/machine/message/navIcon.png) no-repeat;
+            background-size: 100% 100%;
+        }
+        .nav-list {
+            width: 80px;
+            height: 100px;
+            position: absolute;
+            bottom: 20px;
+            left: 0;
+            text-align: center;
+            display: none;
+        }
+
+        .nav-list li {
+            width: 100%;
+            height: 25px;
+            color: #fff;
+            line-height: 25px;
+            background: #1B31BA;
+            border: 1px solid #25308F;
+            box-shadow: inset 0px 12px 10px -15px #fff;
+            letter-spacing: 14px;
+            padding-left: 11px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .nav-list li:hover {
+            background-image: linear-gradient(to bottom, #C3D642, #C04825);
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="tittle">发件箱</div>
+        <div class="totle-box">
+            短信总数：<span id="totleNumber"></span>
+        </div>
+        <ul class="listBox" id="listBox">
+            <!-- <li class="active">455-混合</li>
+            <li>455-混合</li> -->
+        </ul>
+        <div class="mainBottom" >
+            <div class="mainSure" id="mainSure">
+                <div class="mainSure-text">确定</div>
+                <div class="mainSure-img"></div>
+            </div>
+            <div class="mainReturn" id="mainReturn">
+                <div class="mainReturn-img"></div>
+                <div class="mainReturn-text">返回</div>
+            </div>
+        </div>
+    </div>
+    <div class="content">
+        <div class="topBox">
+            <span class="peopleId" id="peopleId"></span>
+            <span class="time" id="time"></span>
+            
+        </div>
+        <textarea name="" id="news" cols="30" rows="10" class="textarea"></textarea>
+        <div class="mainBottom" >
+            <div class="mainSure" id="contentNav">
+                <div class="mainSure-text">菜单</div>
+                <div class="mainSure-img nav-img"></div>
+            </div>
+            <div class="mainReturn" id="contentReturn">
+                <div class="mainReturn-img"></div>
+                <div class="mainReturn-text">返回</div>
+            </div>
+        </div>
+        <ul class="nav-list" id="navList">
+            <li class="send" id="send">重发</li>
+            <li class="insert" id="insert">转发</li>
+            <li class="save" id="save">删除</li>
+            <li class="nav-return" id="navReate">返回</li>
+        </ul>
+    </div>
+    <script src="../../js/lib/jquery-3.4.1.min.js"></script>
+    <script>
+        $(function(){
+             //返回按钮
+        var obj = function(option){
+            this.option = option || {};
+            this.init();      // 初始化
+            }
+
+        // 初始化
+        obj.prototype.init = function(){
+            this.allEvents(); // 各种点击事件
+            this.getNew();//发件箱消息列表
+            this.clickLi();
+            this.contentShow();
+        }
+
+        // 各种点击事件
+        obj.prototype.allEvents = function(){
+            this.clickReturn();       // 返回
+        }
+
+        // 返回
+        obj.prototype.clickReturn = function(){
+            $('#mainReturn').on('click', function(){
+                window.parent.window.iframeObj.goBackBefore('通讯录');
+            });
+        }
+        //发件箱消息列表
+        obj.prototype.getNew=function(){
+            var data= window.parent.window.iframeObj.newsArr;
+            $.each(data,function(index,item){
+                if(index==0){
+                    $('<li class="listLi active" x-id="'+item.id+'" x-content="'+item.content+'">'+item.id+'-'+item.type+'</li>').appendTo("#listBox");
+                }else{
+                    $('<li class="listLi" x-id="'+item.id+'" x-content="'+item.content+'">'+item.id+'-'+item.type+'</li>').appendTo("#listBox");
+                }         
+            })
+            $("#totleNumber").text(data.length);
+        }
+        //信息详情
+        obj.prototype.clickLi=function(){
+            $("#listBox").on("click",".listLi",function(){
+                $(this).addClass("active").siblings().removeClass("active");
+                $("#peopleId").text($(this).attr("x-id"));
+                // $("#time").text($(this).attr("x-time"));
+                $("#news").text($(this).attr("x-content"));
+                $(".main").hide();
+                $(".content").show();
+            })
+            $("#mainSure").on("click",function(){
+                $("#peopleId").text($("#listBox .active").attr("x-id"));
+                // $("#time").text($("#listBox .active").attr("x-time"));
+                $("#news").text($("#listBox .active").attr("x-content"));
+                $(".main").hide();
+                $(".content").show();
+            })
+        }
+        //详情页面返回按钮及菜单按钮
+        obj.prototype.contentShow=function(){
+            $("#contentReturn").on("click",function(){
+                $(".content").hide();
+                $(".main").show();
+            })
+            $("#contentNav").on("click",function(){
+                $("#navList").show();
+            })
+            $("#navList").on("click","li",function(){
+                $("#navList").hide();
+            })
+        }
+        new obj();
+
+        })
+    </script>
+</body>
+</html>

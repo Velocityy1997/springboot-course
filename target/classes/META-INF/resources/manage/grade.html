@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>分数管理</title>
+  <link rel="stylesheet" href="../css/normal.min.css">
+  <link rel="stylesheet" href="../css/bootstrap.min.css">
+  <link rel="stylesheet" href="../css/bootstrap-table.min.css">
+  <link rel="stylesheet" href="../css/grade.min.css">
+</head>
+
+<body>
+  <div class="view-box">
+    <div class="view-head">
+      <div class="test-box">
+        <label for="name" class="col-sm-3">考试科目</label>
+        <div class="col-sm-9" id="selectBoxSubject">
+          <select name="" class="select form-control" id="examSelectSubject">
+            <option value="1">北斗手持机</option>
+            <option value="2">电台操作</option>
+            <option value="3">理论知识</option>
+            <option value="4">航片判读</option>
+            <option value="5">作战计算</option>
+            <option value="6">识图用图</option>
+          </select>
+        </div>
+      </div>
+      <div class="test-box">
+        <label for="name" class="col-sm-3">试卷名称</label>
+        <div class="col-sm-9" id="selectBox">
+          <select name="" class="select form-control" id="examSelectList">
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="view-test" id="view-test">
+      <ul class="view-test-ul" id="view-test-ul">
+      </ul>
+    </div>
+    <div class="view-body">
+      <table id="GridBox" class="layui-hide"></table>
+    </div>
+  </div>
+
+  <script src="../js/lib/jquery-3.4.1.min.js"></script>
+  <script src="../js/lib/bootstrap.min.js"></script>
+  <script src="../js/lib/bootstrap-table.min.js"></script>
+  <script src="../js/lib/bootstrap-table-zh-CN.min.js"></script>
+  <script src="../js/exam/grade.js"></script>
+</body>
+
+</html>

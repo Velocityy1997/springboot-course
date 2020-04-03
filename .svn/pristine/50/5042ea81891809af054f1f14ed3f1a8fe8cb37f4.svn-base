@@ -1,0 +1,58 @@
+{
+  "code": "200",
+  "msg": "msg",
+  "data": {
+    "data": [
+      {
+        "text": "存储容量",
+        "value": "229.06M/14.66G",
+        "id":"ccrl"
+      },
+      {
+        "text": "IC状态",
+        "value": "正常",
+        "id":"ICzt"
+      },
+      {
+        "text": "IC有效期",
+        "value": "2020年1月4日",
+        "id":"ICyxq"
+      },
+      {
+        "text": "PRM状态",
+        "value": "正常",
+        "id":"PRMzt"
+      },
+      {
+        "text": "PRM有效期",
+        "value": "点击查看PRM有效期",
+        "id":"PRMyxq"
+      },
+      {
+        "text": "本机地址",
+        "value": "116714",
+        "id":"bjid"
+      },
+      {
+        "text": "序列号",
+        "value": "2230677",
+        "id":"xlh"
+      },
+      {
+        "text": "保密标志",
+        "value": "保密用户",
+        "id":"bmbz"
+      },
+      {
+        "text": "服务频度",
+        "value": "60",
+        "id":"fwpd"
+      },
+      {
+        "text": "通信等级",
+        "value": "1",
+        "id":"txdj"
+      }
+    ]
+  }
+}

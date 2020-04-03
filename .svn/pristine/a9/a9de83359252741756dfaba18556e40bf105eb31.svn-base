@@ -1,0 +1,75 @@
+package io.ken.springboot.course.model.exam.newExam;
+
+/**
+ * @author ZhaoWenHao
+ * @create 2020-03-11 16:21
+ * 接收自动创建试卷参数
+ **/
+public class CreatNewExam {
+    private String subject;
+    private String level;
+    private Integer radio;
+    private Integer checkbox;
+    private Integer pack;
+    private Integer judge;
+    private String flag;
+    private String idNumber;
+    private String duration;
+    private String startTime;
+
+    public String getFlag() {
+        return flag;
+    }
+
+    public void setFlag(String flag) {
+        this.flag = flag;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public Integer getRadio() {
+        return radio;
+    }
+
+    public void setRadio(Integer radio) {
+        this.radio = radio;
+    }
+
+    public Integer getCheckbox() {
+        return checkbox;
+    }
+
+    public void setCheckbox(Integer checkbox) {
+        this.checkbox = checkbox;
+    }
+
+    public Integer getPack() {
+        return pack;
+    }
+
+    public void setPack(Integer pack) {
+        this.pack = pack;
+    }
+
+    public Integer getJudge() {
+        return judge;
+    }
+
+    public void setJudge(Integer judge) {
+        this.judge = judge;
+    }
+}

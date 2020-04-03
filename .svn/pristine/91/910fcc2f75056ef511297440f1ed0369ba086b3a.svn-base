@@ -1,0 +1,31 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "id": 1,
+      "userImg": "../img/logo.png",
+      "name": "张文静",
+      "sex": "男",
+      "age": 12,
+      "class": "二班",
+      "grade": "一年级",
+      "cardId": "XXXXXXXXXXXXXXXXXXXX",
+      "information": "13222222222",
+      "jurisdiction": "学员",
+      "password": "123456"
+    },
+    {
+      "id": 1,
+      "userImg": "../img/logo.png",
+      "name": "张文静",
+      "sex": "男",
+      "age": 12,
+      "class": "二班",
+      "grade": "一年级",
+      "cardId": "XXXXXXXXXXXXXXXXXXXX",
+      "information": "13222222222",
+      "jurisdiction": "学员",
+      "password": "123456"
+    }
+  ]
+}

@@ -1,0 +1,216 @@
+$(function () {
+    //使用严格模式
+    // "use strict";
+
+    var url = '';
+    var columns1 = [
+        {
+            title: '时间',
+            field: 'time',
+            // visible:false
+        },
+        {
+            title: '科目',
+            field: 'type',
+            // sortable:true
+        },
+        {
+            title: '试卷名称',
+            field: 'object',
+            // sortable:true
+        },
+        {
+            title: '成绩',
+            field: 'grade',
+            // sortable:true
+        },
+        {
+            title: '评定',
+            field: 'judge',
+        },
+        {
+            title: '操作',
+            field: 'operation'
+        }
+    ];
+    var columns2 = [
+        {
+            title: '时间',
+            field: 'time'
+        },
+        {
+            title: '科目',
+            field: 'object'
+        },
+        {
+            title: '答题数',
+            field: 'number'
+        }
+    ];
+    var columns3 = [
+        {
+            title: '序号',
+            field: 'id',
+            visible: false
+        },
+        {
+            title: '题目',
+            field: 'object'
+        },
+        {
+            title: '操作',
+            field: 'operation'
+        }
+    ];
+    // 收藏夹
+    var columns4 = [
+        {
+            title: '序号',
+            field: 'id',
+            visible: false
+        },
+        {
+            title: '题目',
+            field: 'object'
+        },
+        {
+            title: '操作',
+            field: 'operation'
+        },
+        {
+            title: '删除',
+            field: 'del',
+            formatter: function (value, field, index) {
+                return `<button class="btn btn-primary">删除</button>`
+            }
+        }
+    ];
+
+    window.params = window.parent.window.setOption.option.idNumber;
+
+    window.tableFirst = function () {
+        tableInit('/springboot-course/exam/getmyexam?id_number=' + window.params, columns1);
+    }
+
+    //生成用户数据
+    function tableInit(url, columns) {
+        $('#testGridBox').bootstrapTable('destroy');
+        $('#testGridBox').bootstrapTable({
+            method: 'post',
+            contentType: "application/x-www-form-urlencoded",//必须要有！！！！
+            url: url,//要请求数据的文件路径
+            theadClasses: "thead-light",//这里设置表头样式
+            // height:tableHeight(),//高度调整
+            // toolbar: '#toolbar',//指定工具栏
+            striped: true, //是否显示行间隔色
+            dataField: "res",//bootstrap table 可以前端分页也可以后端分页，这里
+            //我们使用的是后端分页，后端分页时需返回含有total：总记录数,这个键值好像是固定的 
+            //rows： 记录集合 键值可以修改 dataField 自己定义成自己想要的就好
+            pageNumber: 1, //初始化加载第一页，默认第一页
+            pagination: true,//是否分页
+            //  queryParamsType:'limit',//查询参数组织方式
+            //  queryParams:queryParams,//请求服务器时所传的参数
+            sidePagination: 'client',//指定服务器端分页
+            pageSize: 5,//单页记录数
+            pageList: [5, 10, 20, 30],//分页步进值
+            // showRefresh:false,//刷新按钮
+            // showColumns:false,
+            // clickToSelect: false,//是否启用点击选中行
+            // toolbarAlign:'right',//工具栏对齐方式
+            // buttonsAlign:'right',//按钮对齐方式
+            columns: columns,
+            locale: 'zh-CN',//中文支持,
+            responseHandler: function (res) {
+                //在ajax获取到数据，渲染表格之前，修改数据源
+               return res.rows;
+            },
+            onLoadSuccess: function (data) {
+                $('#testGridBox').find('td').each(function () {
+                    if ($(this).text() == '不合格') {
+                        $(this).attr('style', 'color: #f959a3');
+                    } else if ($(this).text() == '查看试卷') {
+                        $(this).attr('style', 'color: #5492ff;cursor:pointer;');
+                        $(this).addClass('needWatchExam');
+                    } 
+                    // else if ($(this).text() == 1) {
+                    //     $(this).text('北斗手持机');
+                    // } else if ($(this).text() == 2) {
+                    //     $(this).text('电台操作');
+                    // } else if ($(this).text() == 3) {
+                    //     $(this).text('理论知识');
+                    // } else if ($(this).text() == 4) {
+                    //     $(this).text('航片判读');
+                    // } else if ($(this).text() == 5) {
+                    //     $(this).text('作战计划');
+                    // } else if ($(this).text() == 6) {
+                    //     $(this).text('识图用图');
+                    // }
+                });
+            }
+        })
+    }
+
+    //选中效果
+    function navSelected(that) {
+        $(that).addClass('active').siblings('.left-nav-li').removeClass('active');
+    }
+    $("#mineTest").on("click", function () {
+        var that = this;
+        url = '/springboot-course/exam/getmyexam?id_number=' + params;
+        navSelected(that);
+        tableInit(url, columns1);
+    })
+    $("#mineTran").on("click", function () {
+        var that = this;
+        url = '/springboot-course/train/getTrain?id_number=' + params;
+        navSelected(that);
+        tableInit(url, columns2);
+    })
+    $("#wrong").on("click", function () {
+        var that = this;
+        url = '/springboot-course/train/getError?id_number' + params;
+        navSelected(that);
+        tableInit(url, columns3);
+    })
+    $("#collect").on("click", function () {
+        var that = this;
+        falseCollect(that);
+    })
+
+    //------------------ made by mc ------------------------
+    window.falseCollect = function (that) {
+        navSelected(that);
+        url = '/springboot-course/collect/getques?id_number=' + params;
+        tableInit(url, columns4);
+    }
+
+    // 查看试卷
+    $('#testGridBox').on('click-cell.bs.table', function (field, value, row, $element) {
+        let type = $element.type;
+        if (row == '查看试卷' && $('.left-nav-li.active').hasClass('mine-test')) {
+            window.top.window.setPapers($element.examId, 3);
+        } else if (row == '查看试卷' && $('.left-nav-li.active').hasClass('collect')) {
+            window.top.window.setCollect($element.examId, $element.table_name, type);
+        } else if (row == '查看试卷' && $('.left-nav-li.active').hasClass('wrong')) {
+            window.top.window.setWrong($element.examId, $element.table_name, type);
+        }
+    });
+
+    // 点击删除
+    $('#testGridBox').on('click-cell.bs.table', function (field, value, row, $element) {
+        if (value == 'del') {
+            new Promise((resolve, reject) => {
+                $.post('/springboot-course/collect/deletecollect', {
+                    questionCode: $element.id,
+                    table: $element.table_name
+                }, function (res) {
+                    resolve(res);
+                })
+            }).then(res => {
+                $('#isDeleteText').text(res.msg);
+                $('#isDelete').modal();
+                $('#testGridBox').bootstrapTable('refresh');
+            });
+        }
+    });
+})

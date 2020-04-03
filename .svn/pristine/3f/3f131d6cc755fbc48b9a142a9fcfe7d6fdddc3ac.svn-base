@@ -1,0 +1,447 @@
+* {
+  box-sizing: border-box;
+}
+
+.machine-box {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.machine-box .machine-head {
+  flex: 0 0 70px;
+  display: flex;
+  font-size: 18px;
+  background-color: #fff;
+  color: #6f737a;
+}
+
+.machine-box .machine-head .return-box {
+  flex: 1.5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.machine-box .machine-head .return-box .return-img {
+  width: 38px;
+  height: 39px;
+  background: url(../img/test/return.png) 0 0 no-repeat;
+  background-size: 100% 100%;
+  margin-left: 20px;
+}
+
+.machine-box .machine-head .return-box .return-text {
+  color: #6f737a;
+  margin-left: 14px;
+}
+
+.machine-box .machine-head .is-now-test {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: linear-gradient(to right, #046b3a, #b6e2ae);
+}
+
+.machine-box .machine-head .is-now-test .test-img {
+  width: 36px;
+  height: 41px;
+  background: url(../img/test/nowTest.png) 0 0 no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-head .is-now-test .test-text {
+  color: #fff;
+  letter-spacing: 1px;
+  font-weight: 300;
+  margin-left: 20px;
+}
+
+.machine-box .machine-head .test-time {
+  flex: 4;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.machine-box .machine-head .test-time .remain-time-text {
+  padding-left: 15px;
+}
+
+.machine-box .machine-head .test-time .time {
+  padding-left: 10px;
+}
+
+.machine-box .machine-head .test-time .remain-time {
+  color: #f959a3;
+}
+
+.machine-box .machine-head .hand {
+  flex: 2;
+  text-align: center;
+  line-height: 70px;
+  color: #fff;
+  letter-spacing: 2px;
+  background-color: #827de6;
+  cursor: pointer;
+  font-family: "SimHei";
+  font-size: 23px;
+}
+
+.machine-box .machine-head .hand .collectIcon {
+  vertical-align: top;
+  margin-top: 22px;
+  margin-right: 10px;
+  font-size: 27px;
+}
+
+.machine-box .machine-head .collectButton {
+  display: none;
+}
+
+.machine-box .machine-body {
+  flex: auto;
+  margin-top: 5px;
+  background-color: #fff;
+  display: flex;
+}
+
+.machine-box .machine-body .leftNav {
+  width: 60px;
+  height: 100%;
+  border: 1px solid #eee;
+}
+
+.machine-box .machine-body .leftNav li {
+  width: 100%;
+  height: 60px;
+  background: url(../img/image/big.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
+
+.machine-box .machine-body .leftNav .bigIcon.active {
+  background: url(../img/image/big-active.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+.machine-box .machine-body .leftNav .reduceIcon {
+  background: url(../img/image/reduce.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+.machine-box .machine-body .leftNav .reduceIcon.active {
+  background: url(../img/image/reduce-icon-active.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+.machine-box .machine-body .leftNav .ruleIcon {
+  background: url(../img/image/rule-icon.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+.machine-box .machine-body .leftNav .ruleIcon.active {
+  background: url(../img/image/rule-icon-active.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+.machine-box .machine-body .leftNav .circle-ruleIcon {
+  background: url(../img/image/circleRule-icon.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+.machine-box .machine-body .leftNav .circle-ruleIcon.active {
+  background: url(../img/image/circleRule-icon-active.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+.machine-box .machine-body .leftNav .short-ruler-icon {
+  background: url(../img/image/short-ruler-icon.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+.machine-box .machine-body .leftNav .short-ruler-icon.active {
+  background: url(../img/image/short-ruler-icon-active.png) no-repeat;
+  background-size: 30px 30px;
+  background-position: center center;
+}
+
+.machine-box .machine-body .right-content {
+  width: calc(100% - 60px);
+  height: 100%;
+  font-size: 0;
+  position: relative;
+}
+
+.machine-box .machine-body .right-content .content-image {
+  width: 75%;
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+  position: relative;
+  z-index: 999;
+}
+
+.machine-box .machine-body .right-content .content-image ._svg {
+  display: none;
+}
+
+.machine-box .machine-body .right-content .content-image .compassBox {
+  width: 200px;
+  height: 200px;
+  background: url(../img/image/compass.png) no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.machine-box .machine-body .right-content .content-image .compassBox .compassLine {
+  width: 200px;
+  height: 200px;
+  background: url(../img/image/compassLine.png) no-repeat;
+  background-size: 100% 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 999;
+}
+
+.machine-box .machine-body .right-content .content-image .imgBox {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1965px;
+  height: 1587px;
+}
+
+.machine-box .machine-body .right-content .content-image .ruleBox {
+  width: 2323px;
+  height: 1076px;
+  position: absolute;
+  display: none;
+  transform: scale(0.4);
+  transform-origin: left top;
+  z-index: 9999;
+  background: url(../img/image/middle-ruler.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-body .right-content .content-image .ruleBox .roteIcon {
+  display: inline-block;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 260px;
+  right: 30px;
+  cursor: pointer;
+}
+
+.machine-box .machine-body .right-content .content-image .ruleBox .moveIcon {
+  display: inline-block;
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  top: 200px;
+  right: 30px;
+  cursor: pointer;
+  color: #f959a3;
+}
+
+.machine-box .machine-body .right-content .content-image .ruleBox #circleRuleRote {
+  top: 260px;
+  right: 100px;
+}
+
+.machine-box .machine-body .right-content .content-image .ruleBox #circleRuleMove {
+  top: 210px;
+  right: 100px;
+}
+
+.machine-box .machine-body .right-content .content-image .circleRule {
+  width: 653px;
+  height: 324px;
+  transform: scale(1);
+  transform-origin: bottom center;
+  background: url(../img/image/middle-pro-ruler.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-body .right-content .content-image .short-ruler {
+  width: 763px;
+  height: 357px;
+  transform: scale(0.4);
+  background: url(../img/image/middle-short-ruler.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-body .right-content .content-image.size-big .imgBox {
+  width: 2621.2px;
+  height: 2116.8px;
+}
+
+.machine-box .machine-body .right-content .content-image.size-big .ruleBox {
+  width: 3097px;
+  height: 1434px;
+  background: url(../img/image/middle-ruler.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-body .right-content .content-image.size-big .short-ruler {
+  width: 1017px;
+  height: 476px;
+  background: url(../img/image/big-short-ruler.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-body .right-content .content-image.size-big .circleRule {
+  width: 870px;
+  height: 432px;
+  background: url(../img/image/big-pro-ruler.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-body .right-content .content-image.size-small .imgBox {
+  width: 1310.6px;
+  height: 1058.4;
+}
+
+.machine-box .machine-body .right-content .content-image.size-small .ruleBox {
+  width: 1550px;
+  height: 718px;
+  background: url(../img/image/small-ruler.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-body .right-content .content-image.size-small .short-ruler {
+  width: 509px;
+  height: 238px;
+  background: url(../img/image/small-short-ruler.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-body .right-content .content-image.size-small .circleRule {
+  width: 435px;
+  height: 217px;
+  background: url(../img/image/small-pro-ruler.png) no-repeat;
+  background-size: 100% 100%;
+}
+
+.machine-box .machine-body .right-content .test-content {
+  width: 25%;
+  height: 100%;
+  border-left: 1px solid #eee;
+  display: inline-block;
+  vertical-align: top;
+  overflow-y: auto;
+  position: absolute;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul {
+  width: 100%;
+  height: auto;
+  padding: 0 20px 20px 20px;
+  font-size: 18px;
+  color: #6f737a;
+  letter-spacing: 2px;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item {
+  line-height: 30px;
+  margin-top: 30px;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item .answer-line {
+  border: none;
+  border-bottom: 1px solid #93969b;
+  outline: 0;
+  text-align: center;
+  line-height: 22px;
+  font-size: 16px;
+  color: #6f737a;
+  width: auto;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item .img-box {
+  width: 241px;
+  height: 86px;
+  margin: 0 auto;
+  margin-top: 20px;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item .img-box .img {
+  width: 100%;
+  height: 100%;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item .select-box {
+  width: 100%;
+  height: auto;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item .select-box .selectLi {
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item .select-box .selectLi label {
+  font-weight: normal;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item .select-box .selectLi label .selectRadio {
+  margin-right: 10px;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item .answerIcon {
+  width: 30px;
+  height: 20px;
+  font-size: 20px;
+  cursor: pointer;
+  color: #f959a3;
+  display: block;
+  margin: 10px 0 0 0;
+}
+
+.machine-box .machine-body .right-content .test-content .questions-ul .questions-item .answerBox {
+  width: 100%;
+  line-height: 30px;
+  color: #f959a3;
+  display: none;
+}
+
+._old path,
+._old text {
+  stroke: white;
+}
+
+.modal-dialog {
+  width: 500px;
+  z-index: 9999;
+}
+
+.stu-grad-show {
+  color: #f959a3;
+  line-height: 40px;
+  font-size: 16px;
+}
+
+.moreSelect {
+  -webkit-appearance: radio;
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>手持机考核</title>
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/normal.min.css">
+    <link rel="stylesheet" href="./css/machine.min.css">
+</head>
+
+<body>
+    <div class="machine-box">
+        <div class="machine-head">
+            <div class="return-box" id="returnBox">
+                <div class="return-img"></div>
+                <div class="return-text">返回</div>
+            </div>
+            <div class="is-now-test">
+                <div class="test-img"></div>
+                <div class="test-text"><span id="handText">考核</span>-北斗手持机</div>
+            </div>
+            <div class="test-time">
+                <div class="timed-box" id="timedBox">
+                    已考时间：<span class="time" id="timed"></span>
+                    <lable class="remain-time-text">剩余时间：</lable><span class="time remain-time" id="remain-time"></span>
+                </div>
+            </div>
+            <div class="hand" data-toggle="modal" data-target="#isHand" id="handBtn">交卷</div>
+            <div class="hand collectButton" id="collectButton" data-toggle="modal" data-target=""><i class="collectIcon glyphicon glyphicon-star"></i>收藏</div>
+        </div>
+        <div class="machine-body">
+            <div class="machine-body-left">
+                <!-- 北斗手持机 -->
+                <div class="machine-main">
+                    <!-- 北斗手持机视口 -->
+                    <div class="machine-view">
+                        <div class="machine-view-body">
+                            <iframe src="./machine-index.html" class="machine-view-iframe" frameborder="0" id="machineIndex"></iframe>
+                        </div>
+                        <div class="cover" id="cover"></div>
+                    </div>
+
+                    <!-- 北斗手持机按键 -->
+                    <div class="machine-btn-box" id="machine-btn-box">
+                        <div class="machine-btn-head">
+                            <div class="machine-btn F1-btn"></div>
+                            <div class="machine-btn F2-btn"></div>
+                            <div class="machine-btn nav-btn"></div>
+                            <div class="machine-btn open-btn"></div>
+                            <div class="machine-btn up-btn"></div>
+                            <div class="machine-btn left-btn"></div>
+                            <div class="machine-btn right-btn"></div>
+                            <div class="machine-btn bottom-btn"></div>
+                            <div class="machine-btn sure-btn"></div>
+                        </div>
+                        <div class="machine-btn-body">
+                            <div class="machine-btn num1-btn num" data-num="1"></div>
+                            <div class="machine-btn num2-btn num" data-num="2"></div>
+                            <div class="machine-btn num3-btn num" data-num="3"></div>
+                            <div class="machine-btn num4-btn num" data-num="4"></div>
+                            <div class="machine-btn num5-btn num" data-num="5"></div>
+                            <div class="machine-btn num6-btn num" data-num="6"></div>
+                            <div class="machine-btn num7-btn num" data-num="7"></div>
+                            <div class="machine-btn num8-btn num" data-num="8"></div>
+                            <div class="machine-btn num9-btn num" data-num="9"></div>
+                            <div class="machine-btn lock-btn"></div>
+                            <div class="machine-btn num0-btn num" data-num="0"></div>
+                            <div class="machine-btn change-btn"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="machine-body-right">
+                <!-- 考题区域 -->
+                <div class="item-bank" id="item-bank">
+
+                </div>
+                <div class="answer-bank" id="answerBank">
+
+                </div>
+                <ul class="item-btn-ul" id="item-btn-ul">
+                    <li class="item-btn active" id="reform">重做此题</li>
+                    <li class="item-btn active answer" id="answer">查看答案</li>
+                    <li class="item-btn" data-toggle="modal" data-target="" id="preQuestion">上一题</li>
+                    <li class="item-btn" data-toggle="modal" data-target="" id="nextQuestion">下一题</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- 首题和末题收藏提示 -->
+    <div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="tipMess">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="collectButtonSure">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- 确认交卷 -->
+    <div class="modal fade" id="isHand" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body">
+                    确认交卷？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="hand" data-toggle="modal" data-target="#handSuccess">确认</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancelhand">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 交卷成功 -->
+    <div class="modal fade" id="handSuccess" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+              aria-hidden="true" id="closeBtn">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="handSuccessText">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="handSure">确认</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="handcancle">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/lib/jquery-3.4.1.min.js"></script>
+    <script src="./js/lib/jquery.cookie.js"></script>
+    <script src="./js/lib/bootstrap.min.js"></script>
+    <script src="./js/machine.js"></script>
+
+    <script>
+        $('#cancelhand').on('click', function() {
+            $('#isHand').modal('hide');
+        })
+        $(function() {
+            var option = {
+                muteAnswer: "false",
+                soundAnswer: "false",
+                noElevationAnswer: "false",
+                highLightAnswer: "false",
+                alwaysAnswer: "false"
+            };
+            window.newObj = new machineObj(option);
+        });
+    </script>
+</body>
+
+</html>

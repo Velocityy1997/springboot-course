@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/normal.min.css">
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/main.min.css">
+</head>
+
+<body>
+    <div class="main-container">
+        <div class="slider-box" id="slider-box"></div>
+        <div class="infomation-box" id="infomation-box">
+            <img class="admin-img" src="" id="admin-img" />
+            <ul class="admin-ul">
+            </ul>
+        </div>
+        <div class="body active hand" data-handAfter="handAfter">
+            <ul class="tab-control" id="tab-control">
+                <li class="tab-item active hand" id="tab-item1" x-src="./train.html">
+                    <div class="tab-item-img"></div>
+                    <div class="tab-item-text">训练</div>
+                </li>
+                <li class="tab-item hand" id="tab-item2" x-src="./test.html">
+                    <div class="is-test" id="test"></div>
+                    <div class="tab-item-img"></div>
+                    <div class="tab-item-text">考核</div>
+                </li>
+                <li class="tab-item hand" id="tab-item3" data-handAfter="handAfter" x-src="./mine.html">
+                    <div class="tab-item-img"></div>
+                    <div class="tab-item-text">我的考核</div>
+                </li>
+
+            </ul>
+            <div class="body-contain" id="body-contain">
+                <iframe src="./train.html" frameborder="0" class="body-iframe active hand" target="tab-item1"></iframe>
+                <iframe src="./test.html" frameborder="0" class="body-iframe hand" target="tab-item2" id="iframeTest"></iframe>
+                <iframe src="./mine.html" frameborder="0" class="body-iframe hand" target="tab-item3" data-handAfter="handAfter" id="mainIframe"></iframe>
+            </div>
+        </div>
+        <div class="body hand" id="body-hand">
+            <iframe src="./machine.html" frameborder="0" class="machine-iframe active" target="tab-item3" id="textIframe"></iframe>
+            <iframe src="./radio.html" class="machine-iframe" frameborder="0" id="radioIframe"></iframe>
+            <iframe src="./knowledge.html" class="machine-iframe" frameborder="0" id="knowIframe"></iframe>
+            <iframe src="./interpretation.html" class="machine-iframe" frameborder="0" id="interpretationIframe"></iframe>
+            <iframe src="./count.html" class="machine-iframe" frameborder="0" id="countIframe"></iframe>
+            <iframe src="./image.html" class="machine-iframe" frameborder="0" id="imageIframe"></iframe>
+        </div>
+
+        <!-- 考试题为空的模态框 -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document" style="z-index: 9999;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">系统提示</h4>
+                    </div>
+                    <div class="modal-body">
+                        <span id='myModalText'></span>
+                        <span id="time" style="color:red; padding-left: 10px;"></span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" id="button-Confirm" data-dismiss="modal">确认</button>
+                        <button type="button" class="btn btn-primary" id="button-Cancel" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 考试前选择身份模态框 -->
+        <div class="modal fade" id="rankModal" tabindex="-1" role="dialog" aria-labelledby="rankModalLabel">
+            <div class="modal-dialog" role="document" style="z-index: 9999;">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size: 21px;">&times;</button>
+                        <h4 class="modal-title">系统提示</h4>
+                    </div>
+                    <div class="modal-body" id="rankModal1">
+                        <span>请选择你的身份：</span>
+                        <select id="checkRank" name="checkRank" style="width: 220px;height: 30px;">
+						    <option value="1">院校领导</option>
+						    <option value="2">学员大队领导</option>
+						    <option value="3">分队军官</option>
+						    <option value="4">参谋军官</option>
+						    <option value="5">教员</option>
+						    <option value="6">教学管理保障人员</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="delete">确认</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal" id="cancal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="./js/lib/jquery-3.4.1.min.js"></script>
+<script src="./js/lib/bootstrap.min.js"></script>
+<script src="./js/main.js"></script>
+<script>
+    $(function() {
+        var option = {};
+        $.ajax({
+            type: "get",
+            url: 'user/getuserbyname',
+            async: false,
+            dataType: "JSON",
+            success: function(res) {
+
+                option.adminData = res.data;
+                window.setOption = new obj(option);
+                // layer.close(loading);
+            },
+            error: function(err) {
+                console.log('数据返回错误', err);
+            }
+        });
+    });
+</script>
+
+</html>

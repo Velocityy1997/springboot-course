@@ -1,0 +1,67 @@
+{
+    "data":[{
+        "text":"数据分析",
+        "id":"sjfx",
+        "ico": "fa fa-bar-chart-o",
+        "url":"./manage/data.html"
+    },{
+        "text":"系统管理",
+        "id":"xtgl",
+        "ico": "fa fa-th-large"
+    },{
+        "text":"权限管理",
+        "id":"xtgl-qx",
+        "pid":"xtgl",
+        "url":"./manage/power.html"
+    },{
+        "text":"班级管理",
+        "id":"xtgl-bj",
+        "pid":"xtgl",
+        "url":"./manage/class.html"
+    },{
+        "text":"用户管理",
+        "id":"xtgl-yh",
+        "pid":"xtgl",
+        "url":"./manage/user.html"
+    },{
+        "text":"登录日志",
+        "id":"xtgl-rz",
+        "pid":"xtgl",
+        "url":"./manage/Journal.html"
+    },{
+        "text":"资源管理",
+        "id":"zygl",
+        "ico": "fa fa-database"
+    },{
+        "text":"试题库",
+        "id":"zygl-st",
+        "pid":"zygl",
+        "url":"./manage/questionBank.html"
+    },{
+        "text":"类别管理",
+        "id":"zygl-lbgl",
+        "pid":"zygl",
+        "url":"./manage/category.html"
+    },{
+        "text":"考试管理",
+        "id":"ksgl",
+        "ico": "fa fa-list-alt"
+    },{
+        "text":"试卷管理",
+        "id":"ksgl-sj",
+        "pid":"ksgl",
+        "url":"./manage/testPaper.html"
+    },{
+        "text":"分数管理",
+        "id":"ksgl-fs",
+        "pid":"ksgl",
+        "url":"./manage/grade.html"
+    },
+    {
+        "text":"考试监控",
+        "id":"ckzt",
+        "ico": "fa fa-table",
+        "url":"./manage/rank.html"
+    }
+]
+}

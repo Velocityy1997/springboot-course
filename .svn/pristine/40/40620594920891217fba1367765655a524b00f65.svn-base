@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>训练</title>
+  <link rel="stylesheet" href="./css/normal.min.css">
+  <link rel="stylesheet" href="./layui/css/layui.css">
+  <link rel="stylesheet" href="./css/train.min.css">
+</head>
+
+<body>
+  <div class="train-contain">
+    <ul class="train-ul" id="train-ul">
+      <li class="train-li" data-id="1" id="北斗手持机">
+        <div class="train-img" style="background: url(./img/test/bdscj.png) 0 0 no-repeat; background-size: 100% 100%;"
+          data-imgactive="./img/test/bdscj-active.png" data-img="./img/test/bdscj.png"></div>
+        <div class="train-text">北斗手持机</div>
+      </li>
+      <li class="train-li" data-id="2" id="电台操作">
+        <div class="train-img" style="background: url(./img/test/dtcz.png) 0 0 no-repeat; background-size: 100% 100%;"
+          data-imgactive="./img/test/dtcz-active.png" data-img="./img/test/dtcz.png"></div>
+        <div class="train-text">电台操作</div>
+      </li>
+      <li class="train-li" data-id="3" id="理论知识">
+        <div class="train-img" style="background: url(./img/test/llzs.png) 0 0 no-repeat; background-size: 100% 100%;"
+          data-imgactive="./img/test/llzs-active.png" data-img="./img/test/llzs.png"></div>
+        <div class="train-text">理论知识</div>
+      </li>
+      <li class="train-li" data-id="4" id="航片判读">
+        <div class="train-img" style="background: url(./img/test/hppd.png) 0 0 no-repeat; background-size: 100% 100%;"
+          data-imgactive="./img/test/hppd-active.png" data-img="./img/test/hppd.png"></div>
+        <div class="train-text">航片判读</div>
+      </li>
+      <li class="train-li" data-id="5" id="作战计算">
+        <div class="train-img" style="background: url(./img/test/zzjs.png) 0 0 no-repeat; background-size: 100% 100%;"
+          data-imgactive="./img/test/zzjs-active.png" data-img="./img/test/zzjs.png"></div>
+        <div class="train-text">作战计算</div>
+      </li>
+      <li class="train-li" data-id="6" id="识图用图">
+        <div class="train-img" style="background: url(./img/test/styt.png) 0 0 no-repeat; background-size: 100% 100%;"
+          data-imgactive="./img/test/styt-active.png" data-img="./img/test/styt.png"></div>
+        <div class="train-text">识图用图</div>
+      </li>
+    </ul>
+  </div>
+
+  <script src="./js/lib/jquery-3.4.1.min.js"></script>
+  <script src="./layui/layui.js"></script>
+  <script src="./js/train.js"></script>
+  <script>
+    $(function () {
+      new trainObj();
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+package io.ken.springboot.course.service.implement;
+
+import io.ken.springboot.course.bean.HandExamStore;
+import io.ken.springboot.course.dao.HandExamMapper;
+import io.ken.springboot.course.service.IHandExamService;
+import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+
+@Service("HandExamService")
+public class HandExamServiceImpl  implements IHandExamService{
+
+	
+	@Resource
+	private HandExamMapper  handExamMapper;
+	@Override
+	public HandExamStore getNameByCode(String handQCode) {
+		// TODO Auto-generated method stub
+		HandExamStore model = new HandExamStore();
+		 model = handExamMapper.getNameByCode(handQCode);
+		return model;
+	}
+	@Override
+	public List<Map<String,String>> getQuestionRandom(String subject) {
+		// TODO Auto-generated method stub
+		List<Map<String,String>> list = handExamMapper.getQuestionRandom(subject);
+		return list;
+	}
+
+	@Override
+	public int addModel(HandExamStore handExamStore) {
+		return handExamMapper.insertModel(handExamStore);
+	}
+}

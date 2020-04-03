@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/normal.min.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../fonts/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../fonts/iconfont/iconfont.css">
+    <link rel="stylesheet" href="../css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../css/journal.min.css">
+</head>
+<body>
+    <div class="main">
+        <div class="user-view-box">
+            <div class="user-head">
+              <ul class="user-head-ul">
+                <li class="user-head-li">
+                  <label for="name" class="col-sm-3">姓名:</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control select" id="findName">
+                  </div>
+                </li>
+                <!-- <li class="user-head-li">
+                  <label for="name" class="col-sm-3">班级:</label>
+                  <div class="col-sm-9">
+                    <select name="" id="" class="select form-control" id="findClass">
+                      <option value="">一班</option>
+                      <option value="">二班</option>
+                      <option value="">三班</option>
+                    </select>
+                  </div>
+                </li>
+                <li class="user-head-li">
+                  <label for="name" class="col-sm-3">权限:</label>
+                  <div class="col-sm-9">
+                    <select name="" id="" class="select form-control" id="findQx">
+                      <option value="1">普通用户</option>
+                      <option value="0">管理员</option>
+                    </select>
+                  </div>
+                </li> -->
+                <li class="user-head-li">
+                  <button class="search btn btn-info" id="find">查询</button>
+                </li>
+              </ul>
+            </div>
+            <div class="user-body">
+              <table class="table table-hover" id="GridBox" data-unique-id="idx"></table>
+            </div>
+        </div>
+    </div>
+    <script src="../js/lib/jquery-3.4.1.min.js"></script>
+    <script src="../js/lib/bootstrap.min.js"></script>
+    <script src="../js/lib/bootstrap-table.min.js"></script>
+    <script src="../js/lib/bootstrap-table-zh-CN.min.js"></script>
+
+    <script>
+        $(function(){
+          window.updata=function(){
+              tableInit();
+          }
+            tableInit();
+            function tableInit() {
+                //先销毁表格
+                $('#GridBox').bootstrapTable('destroy');
+                //加载表格
+                $('#GridBox').bootstrapTable({
+                showHeader: true, //是否显示列头
+                theadClasses: "thead-light",//这里设置表头样式
+                undefinedText: '',
+                toolbar: '#toolbar',
+                toolbarAlign: 'left',
+                paginationHAlign: 'right',
+                silent: true,
+                url: "/springboot-course/log/list",
+                contentType: "application/x-www-form-urlencoded",
+                dataType: "json",
+                striped: true, //是否显示行间隔色
+                cache: false, //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+                pagination: true, //是否显示分页（*）
+                sortable: false, //是否启用排序
+                sortOrder: "asc", //排序方式
+                queryParams: function (params) { //上传服务器的参数
+                    var temp = { //如果是在服务器端实现分页，limit、offset这两个参数是必须的
+                    limit: params.limit, // 每页显示数量
+                    offset: params.pageNumber, // SQL语句起始索引
+                    name:$('#findName').val()
+                    };
+
+                    return temp;
+                },
+                paginationPreText: '上一页',
+                paginationNextText: '下一页',
+                sidePagination: "server", //服务端处理分页
+                // sidePagination: "client", //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1, //初始化加载第一页，默认第一页
+                pageSize: 12, //每页的记录行数（*）
+                pageList: [8,12,15], //可供选择的每页的行数（*）
+                search: false, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                clickToSelect: true,
+                uniqueId: "id", //每一行的唯一标识，一般为主键列
+                columns: [
+                    {
+                    field: 'name',
+                    title: '姓名',
+                    align: 'center'
+                    },
+                    {
+                    field: 'className',
+                    title: '单位',
+                    align: 'center'
+                    },
+                    {
+                    field: 'jurisdiction',
+                    title: '权限',
+                    align: 'center'
+                    },
+                    {
+                    field: 'loginTime',
+                    title: '登录时间',
+                    align: 'center'
+                    }
+                ]
+                });
+            }
+            //查询
+            // $('#find').on('click', function () {
+            //     var findName = $('#findName').val();
+            //     var findClass = $('#findClass').val();
+            //     var findGrade = $('#findGrade').val();
+            //     var findQx = $('#findQx').val();
+
+            //     $.ajax({
+            //     url: '/springboot-course/log/list?name=' + findName,
+            //     dataType: 'json',
+            //     success: function (res) {
+            //         $("#GridBox").bootstrapTable('load', res.data);
+            //     }
+            //     })
+            // })
+            $("#find").bind("click", tableInit);
+        })
+    </script>
+</body>
+</html>

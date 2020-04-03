@@ -1,0 +1,91 @@
+package io.ken.springboot.course.service.implement;
+
+import io.ken.springboot.course.bean.FillBlankExamStore;
+import io.ken.springboot.course.dao.FillExamMapper;
+import io.ken.springboot.course.model.ExcelModel;
+import io.ken.springboot.course.model.exam.newExam.CreatNewExam;
+import io.ken.springboot.course.service.IFillExamService;
+import org.springframework.stereotype.Service;
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author lq
+ * FillExamServiceImpl.java
+ * 2019年11月28日
+ */
+@Service("FillExamService")
+public class FillExamServiceImpl implements IFillExamService {
+
+    @Resource
+    private FillExamMapper fillExamMapper;
+
+    @Override
+    public FillBlankExamStore getNameByCode(String fillQCode) {
+        // TODO Auto-generated method stub
+        FillBlankExamStore fill = fillExamMapper.getNameByCode(fillQCode);
+        return fill;
+    }
+
+    @Override
+    public List<FillBlankExamStore> getAll() {
+        return fillExamMapper.queryAll();
+    }
+
+    @Override
+    public List<FillBlankExamStore> getByName(String name) {
+        // TODO Auto-generated method stub
+
+        List<FillBlankExamStore> comm = fillExamMapper.getByName(name);
+        return comm;
+    }
+
+    @Override
+    public int addExcel(List<ExcelModel> excelModel) {
+        return fillExamMapper.addExcel(excelModel);
+    }
+
+    @Override
+    public ExcelModel queryName(String name, String result) {
+        ExcelModel excelModel = fillExamMapper.queryName(name, result);
+        if (excelModel == null) {
+            return null;
+        }
+        return excelModel;
+    }
+
+    @Override
+    public int updateQuestions(ExcelModel excelModel) {
+        return fillExamMapper.updateQuestions(excelModel);
+    }
+
+    @Override
+    public int add(FillBlankExamStore exam) {
+        // TODO Auto-generated method stub
+        return fillExamMapper.add(exam);
+    }
+
+    @Override
+    public List<Map<String, String>> getFillQuestionRandom(String subject, int limitm) {
+        List<Map<String, String>> list = fillExamMapper.getFillQuestionRandom(subject, limitm);
+        return list;
+    }
+
+    @Override
+    public int addModel(FillBlankExamStore exam) {
+        // TODO Auto-generated method stub
+        return fillExamMapper.add(exam);
+    }
+
+    @Override
+    public int getCount(String subject, String level) {
+        return fillExamMapper.getCount(subject, level);
+    }
+
+    @Override
+    public List<FillBlankExamStore> getQuestion(CreatNewExam creatNewExam) {
+        List<FillBlankExamStore> fillBlankExamStoreList = fillExamMapper.getQUestion(creatNewExam);
+        return fillBlankExamStoreList;
+    }
+}

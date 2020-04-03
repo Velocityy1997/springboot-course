@@ -1,0 +1,267 @@
+.navServeBox {
+    position: absolute;
+    bottom: 0px;
+    left: 5px;
+    z-index: 9999
+}
+
+.navServeBox .nav-item {
+    width: 27px;
+    height: 27px;
+    margin-bottom: 5px;
+    cursor: pointer
+}
+
+.navServeBox .nav-item1 {
+    position: absolute;
+    bottom: 12px;
+    background: url(../img/navigation/left1.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.navServeBox .nav-serve-ul {
+    position: absolute;
+    bottom: 44px;
+    display: none
+}
+
+.navServeBox .nav-serve-ul .nav-item:first-child {
+    background: url(../img/navigation/left2.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.navServeBox .nav-serve-ul .nav-item:nth-child(2) {
+    background: url(../img/navigation/left3.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.navServeBox .nav-serve-ul .nav-item:nth-child(3) {
+    background: url(../img/navigation/left4.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.navServeBox .nav-serve-ul .nav-item:nth-child(4) {
+    background: url(../img/navigation/left5.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.navServeBox .nav-serve-ul .nav-item:nth-child(5) {
+    background: url(../img/navigation/left6.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.navServeBox .nav-set-after {
+    display: none;
+    background: url(../img/navigation/left7.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    bottom: 32px
+}
+
+.nav-set-right {
+    left: auto;
+    right: 0;
+    display: none
+}
+
+.nav-set-right .nav-serve-ul {
+    display: block;
+    bottom: 0;
+    right: 5px
+}
+
+.nav-set-right .nav-serve-ul .nav-item:first-child {
+    background: url(../img/navigation/right6.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.nav-set-right .nav-serve-ul .nav-item:nth-child(2) {
+    background: url(../img/navigation/right7.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.right-tool {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    z-index: 9999
+}
+
+.right-tool .tool-item {
+    width: 26px;
+    cursor: pointer;
+    height: 26px;
+    margin-top: 5px
+}
+
+.right-tool .tool-item:first-child {
+    background: url(../img/navigation/right1.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.right-tool .tool-item:nth-child(2) {
+    background: url(../img/navigation/right2.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.right-tool .tool-item:nth-child(3) {
+    background: url(../img/navigation/right3.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.right-tool .tool-item:nth-child(4) {
+    background: url(../img/navigation/right4.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.img,
+.svgcontainer {
+    /* width: 1000px;
+    height: 800px; */
+    position: absolute;
+    left: 0;
+    top: 0
+}
+
+.svgcontainer.active {
+    z-index: 999
+}
+
+.img.big,
+.svgcontainer.big {
+    transform: scale(1.5);
+    transform-origin: left top
+}
+
+.img.small,
+.svgcontainer.small {
+    transform: scale(0.5);
+    transform-origin: left top
+}
+
+.img {
+    background: url(../img/timg.jpg) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.coordinate {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 40px;
+    height: 40px;
+    margin-left: -20px;
+    margin-top: -20px;
+    background: url(../img/cor.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+    z-index: 999
+}
+
+.screen-box {
+    z-index: 99999;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 150px;
+    height: 130px;
+    margin-left: -75px;
+    margin-top: -70px;
+    background-color: #555cff;
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    box-shadow: 0 0 3px #333;
+    display: none
+}
+
+.screen-box .head {
+    flex: 0 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-image: linear-gradient(to bottom, #7375a5, #e9f1fc);
+    padding: 0 5px
+}
+
+.screen-box .head .screen-img {
+    background: url(../img/machine/system-img.png) 0 0 no-repeat;
+    background-size: 100% 100%;
+    width: 18px;
+    height: 20px
+}
+
+.screen-box .screen-contain {
+    flex: auto;
+    display: flex;
+    justify-content: center;
+    line-height: 25px;
+    color: #f1ff89;
+    font-size: 13px;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    text-align: center
+}
+
+.screen-box .roadNameContain {
+    padding: 10px 10px;
+    flex-direction: column;
+    text-align: left
+}
+
+.screen-box .roadNameContain .radName-input {
+    margin-top: 5px
+}
+
+.screen-box .roadNameContain .roadName-label {
+    color: #ffeb8f
+}
+
+.screen-box .screen-bottom {
+    flex: 0 0 20px;
+    display: flex;
+    justify-content: space-between
+}
+
+.screen-box .screen-bottom .sure,
+.screen-box .screen-bottom .close {
+    width: 50px;
+    height: 20px;
+    background-image: linear-gradient(to bottom, #1d2347, #c8cbfe);
+    cursor: pointer
+}
+
+.screen-box .screen-bottom .sure {
+    margin-left: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.screen-box .screen-bottom .sure .sure-img {
+    margin-left: 5px;
+    width: 12px;
+    height: 12px;
+    background: url(../img/machine/sure.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.screen-box .screen-bottom .close {
+    margin-right: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center
+}
+
+.screen-box .screen-bottom .close .close-img {
+    margin-right: 5px;
+    width: 12px;
+    height: 12px;
+    background: url(../img/machine/return.png) 0 0 no-repeat;
+    background-size: 100% 100%
+}
+
+.screen-box.active {
+    display: flex
+}

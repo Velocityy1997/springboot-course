@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../fonts/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../fonts/iconfont/iconfont.css">
+    <link rel="stylesheet" href="../css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../css/ace.min.css">
+
+    <link rel="stylesheet" href="../css/jquery-ui-1.10.3.full.min.css" />
+    <link rel="stylesheet" href="../css/metro.css" />
+    <link rel="stylesheet" href="../css/datepicker.css" />
+    <link rel="stylesheet" href="../css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../layui/css/layui.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="../css/newPaper.css">
+
+    <!-- 重写引得插件样式 -->
+    <style type="text/css">
+        .ui-widget-overlay {
+            background: rgba(0, 0, 0, .5);
+        }
+        
+        .ui-dialog {
+            background-color: #fff;
+            -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+            border: 1px solid #999;
+            border: 1px solid rgba(0, 0, 0, .2);
+            border-radius: 6px;
+            outline: 0;
+            -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+            box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+            top: 30px !important;
+            width: 650px !important;
+        }
+        /* 头部 */
+        
+        .ui-dialog .ui-dialog-titlebar {
+            min-height: 16.43px;
+            padding: 15px;
+            border-bottom: 1px solid #e5e5e5;
+            background-color: #fff;
+            font: 14px Helvetica Neue, Helvetica, PingFang SC, Tahoma, Arial, sans-serif;
+            color: #333;
+        }
+        
+        .ui-dialog .ui-dialog-title {
+            margin: 0;
+            line-height: 1.42857143;
+            font-size: 18px;
+        }
+        
+        .ui-dialog .ui-dialog-titlebar-close {
+            font-size: 21px;
+            line-height: 1;
+            color: #000;
+            text-shadow: 0 1px 0 #fff;
+            margin-top: -16px;
+            filter: alpha(opacity=20);
+            opacity: .2;
+            font-weight: 100;
+        }
+        /* 底部 */
+        
+        .footer {
+            padding: 15px;
+            text-align: right;
+            border-top: 1px solid #e5e5e5;
+        }
+        
+        .ui-dialog .ui-dialog-content {
+            padding: 0;
+        }
+        
+        .dz-message {
+            padding: 10px 5px;
+        }
+        
+        .table td {
+            border: none !important;
+        }
+        
+        .modal-dialog {
+            z-index: 9999;
+        }
+        
+        #peopleNames {
+            font-size: 16px;
+        }
+        
+        .must-fill {
+            width: 20%;
+            margin-left: 5px;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 5px;
+            color: #ff0000;
+            margin-top: 3px;
+            font-size: 18px;
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 5px 10px;
+        }
+        
+        .dropdown-item:hover,
+        .dropdown-item:active {
+            background-color: #428bca;
+            color: #fff;
+        }
+        /* made by mc */
+        
+        select.form-control {
+            width: 345px;
+        }
+        
+        .auto {
+            display: none;
+        }
+        
+        .autoTestBox {
+            display: none;
+        }
+        
+        .autoTestBox .topTitle {
+            font-size: 18px;
+            line-height: 50px;
+            padding-left: 28px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .autoTestBox .testUl {
+            width: 700px;
+            height: auto;
+            padding: 30px 30px 0 30px;
+            margin: 0 auto;
+            color: #333;
+        }
+        
+        .autoTestBox .testUl li {
+            width: 100%;
+            height: 60px;
+            line-height: 60px;
+            font-size: 16px;
+        }
+        
+        .autoTestBox .testUl li input {
+            width: 100px;
+            height: 35px;
+            margin-left: 20px;
+            margin-right: 10px;
+        }
+        
+        .autoTestBox .testUl li input:nth-child(2) {
+            margin-left: 50px;
+        }
+        
+        .autoTestBox .testUl li span {
+            font-size: 15px;
+            color: #666;
+            margin-left: 30px;
+        }
+        
+        .autoTestBox .testUl li span i {
+            font-style: normal;
+        }
+        
+        .autoTestBox .totleBox {
+            width: 100%;
+            font-size: 18px;
+            line-height: 50px;
+            padding-left: 30px;
+        }
+        
+        .autoTestBox .bottonBox {
+            width: 135px;
+            margin: 0 auto;
+        }
+        
+        .autoTestBox .bottonBox button:nth-child(1) {
+            margin-right: 20px;
+        }
+    </style>
+</head>
+
+<body onload="loadtime()">
+    <div class="metinfotop">
+        新建试卷
+    </div>
+    <table cellpadding="2" cellspacing="1" class="table">
+        <tbody>
+            <tr>
+                <td class="text"><b class="must-fill">*</b>试卷名称：</td>
+                <td class="input"><input name="met_webname" id="testName" type="text" class="text" style="width:345px;">
+                </td>
+            </tr>
+            <tr>
+                <td class="text"><b class="must-fill">*</b>考试人员：</td>
+                <td style="width: 345px;">
+                    <select class="form-control" id="rank">
+						<option value="0">全部</option>
+						<option value="1">院校领导</option>
+						<option value="2">学员大队领导</option>
+						<option value="3">分队军官</option>
+						<option value="4">参谋军官</option>
+						<option value="5">教员</option>
+						<option value="6">教学管理保障人员</option>
+					</select>
+                </td>
+                <td class="input upload">
+                    <span id="peopleNames"></span>
+                    <span href='#' style='color: #f00;font-size: 16px;cursor: pointer;' onclick='addPeoples();' data-toggle="modal" data-target="#needTestPerson">添加考试人员</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="text"><b class="must-fill">*</b>考试时间：</td>
+                <td class="input">
+                    <input class='form_datetime' type='text' id='startTime' placeholder='请选择时间' autocomplete="off" data-date-format='yyyy-mm-dd hh:mm:ss' style='width:172px; line-height: 21px;' />
+                </td>
+            </tr>
+
+            <tr>
+                <td class="text"><b class="must-fill">*</b>考试时长：</td>
+                <td class="input">
+                    <input name="met_keywords" type="text" id="duration" class="text gen" style="width:69px;">
+                    <span style="color: #666;font-size: 16px">分钟</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="text"><b class="must-fill">*</b>考试科目：</td>
+                <td style="padding:10px;" class="input-icon input-icon-right">
+                    <select id="sendSubject" name="sendSubject" style="width:345px;" onchange="getParams(1)" class="form-control">
+						<option value="1">北斗手持机</option>
+						<option value="2">电台操作</option>
+						<option value="3">理论知识</option>
+						<option value="4">航片判读</option>
+						<option value="5">作战计算</option>
+						<option value="6">识图用图</option>
+					</select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="addPeople" title="添加学员" style="display:none;">
+        <ul id="addPeopleTree" class="ztree" style="width:760px; overflow:auto;"></ul>
+    </div>
+    <div id="toolbar" class="btn-group" style="float: right;margin-right: 10px;margin-bottom: 20px;">
+        <button id="automaticTest" type="button" class="btn btn-success auto">自动出题</button>
+        <button id="btn_add" type="button" class="btn btn-success" onclick="addQuestions()">新增</button>
+
+        <button id="btn_delete" type="button" class="btn btn-danger" onclick="delQuestions();">删除</button>
+    </div>
+    <div class="parTable" id="parTable">
+        <div style="margin: 18px 20px 0 20px;">
+            <table class="table table-hover" id="GridBox" data-unique-id="idx">
+            </table>
+        </div>
+        <div style="margin-top: 16px;margin-left: 60px;color: #666;font-size: 18px;">
+            <span>总分</span>
+            <span id="score"></span>
+        </div>
+        <div id="toolbar" class="btn-group" style="left: 50%;margin-left: -55px;margin-bottom:20px">
+            <button id="btn_add2" type="button" class="btn btn-primary" onclick="addExams()">确定</button>
+            <button id="btn_delete2" type="button" class="btn btn-default" onclick="cacelExams();">取消</button>
+        </div>
+    </div>
+    <div class="autoTestBox" id="autoTestBox">
+        <div class="topTitle">自动生成试卷</div>
+        <ul class="testUl" id="testUl">
+            <li class="radioLi">
+                <span id="radioLi">单选</span>
+                <input type="text" class="radioNumber" id="radioNumber" autocomplete="off">题
+                <input type="text" class="radioGrade" id="radioGrade" autocomplete="off">分/题
+                <span class="numberTip">试题库可选试题<i class="radioBank" id="radioBank"></i>道</span>
+            </li>
+            <li class="checkBoxLi">
+                <span id="checkBoxLi">多选</span>
+                <input type="text" class="checkBoxNumber" id="checkBoxNumber" autocomplete="off">题
+                <input type="text" class="checkBoxGrade" id="checkBoxGrade" autocomplete="off">分/题
+                <span class="numberTip">试题库可选试题<i class="checkBoxBank" id="checkBoxBank"></i>道</span>
+            </li>
+            <li class="blankLi">
+                <span id="blankLi">填空题</span>
+                <input type="text" class="blankNumber" id="blankNumber" autocomplete="off">题
+                <input type="text" class="blankGrade" id="blankGrade" autocomplete="off">分/题
+                <span class="numberTip">试题库可选试题<i class="blankBank" id="blankBank"></i>道</span>
+            </li>
+            <li class="judgeLi">
+                <span id="judgeLi">判断题</span>
+                <input type="text" class="judgeNumber" id="judgeNumber" autocomplete="off">题
+                <input type="text" class="judgeGrade" id="judgeGrade" autocomplete="off">分/题
+                <span class="numberTip">试题库可选试题<i class="judgeBank" id="judgeBank"></i>道</span>
+            </li>
+        </ul>
+        <div class="totleBox">
+            合计 <span class="testNum" id="testNum"></span>题， 共
+            <span class="gradeTotle" id="gradeTotle"></span>分
+        </div>
+        <div class="bottonBox">
+            <button id="autoSure" type="button" class="btn btn-primary">确定</button>
+            <button id="autoCancle" type="button" class="btn btn-default">取消</button>
+        </div>
+    </div>
+    <div id="addQuestionDialog" title="增加试题" style="display:none;">
+        <!-- <h5>增加试题</h5> -->
+        <div class="dz-default dz-message">
+            <table class="exhibit_table" style="font-size:13px; text-align:left;">
+                <tr>
+                    <td style="width:100px;" align="right">试题类型
+                        <font color="red">*</font>
+                    </td>
+                    <td style="padding:10px;" class="input-icon input-icon-right">
+                        <select id="sendType" name="sendType" style="width:230px;" onchange="getParams(0)">
+							<option value="全部">全部</option>
+							<option value="1">操作题</option>
+							<option value="2">填空题</option>
+							<option value="3">选择题</option>
+							<option value="4">判断题</option>
+						</select>
+                    </td>
+                    <td style="width:100px;" align="right">类别
+                        <font color="red">*</font>
+                    </td>
+                    <td style="padding:10px;" class="input-icon input-icon-right">
+                        <select id="sendCategory" name="sendCategory" style="width:230px;" onchange="getParams(0)">
+
+						</select>
+                    </td>
+                </tr>
+            </table>
+            <table class="table table-hover" style="margin-top: 46px;font-size: 15px;" id="GridBoxQuestion" data-unique-id="idx">
+            </table>
+        </div>
+        <div class="footer">
+            <div>
+                <button class="btn btn-primary" onclick="addQuestionByType()" style=' margin-right:10px;'>
+					确定
+				</button>
+                <button class="btn btn-default" onclick="$('#addQuestionDialog').dialog('close')">
+					取消
+				</button>
+            </div>
+        </div>
+    </div>
+    <!-- 提示模态框 -->
+    <div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size: 21px;"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">系统提示</h4>
+                </div>
+                <div class="modal-body" id="tipMess">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="delete">确认</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="cancal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 考试人员 -->
+    <div class="modal fade" id="needTestPerson" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+							aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">添加学员</h4>
+                </div>
+                <div class="modal-body">
+                    <div id="tree"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="addPersonCommit">提交</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/lib/jquery-1.10.2.min.js"></script>
+    <script src="../js/lib//jquery-ui-1.10.3.custom.min.js"></script>
+    <script src="../js/lib/bootstrap-table.min.js"></script>
+    <script src="../js/lib/bootstrap-table-zh-CN.min.js"></script>
+    <script src="../js/bootstrap-datetimepicker.js"></script>
+    <script src="../js/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script src="../layui/layui.js"></script>
+    <script src="../js/jquery.ztree.all-3.5.min.js"></script>
+    <script src="../js/lib/bootstrap.min.js"></script>
+    <script src="../js/exam/newPaper.js"></script>
+
+</body>
+
+</html>

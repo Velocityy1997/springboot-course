@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>手持机考核</title>
+  <link rel="stylesheet" href="../css/normal.min.css">
+  <link rel="stylesheet" href="../css/machine.min.css">
+  <style>
+    /* 重写样式 */
+    .machine-body-left {
+      padding-bottom: 30px;
+    }
+
+    .my-answer {
+      padding-top: 30px;
+    }
+
+    .my-answer-img {
+      width: 20px;
+      height: 20px;
+    }
+
+    .machine-box .machine-body .machine-body-right .item-btn-ul {
+      bottom: 25px;
+      margin-bottom: 0;
+    }
+    .machine-box .machine-body{
+      overflow: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="machine-box"style="overflow: hidden;">
+    <div class="machine-body">
+      <div class="machine-body-left">
+        <!-- 北斗手持机 -->
+        <div class="machine-main">
+          <!-- 北斗手持机视口 -->
+          <div class="machine-view">
+            <div class="machine-view-body">
+              <iframe src="../machine-index.html" class="machine-view-iframe" frameborder="0"
+                id="machineIndex"></iframe>
+            </div>
+            <div class="cover" id="cover"></div>
+          </div>
+
+          <!-- 北斗手持机按键 -->
+          <div class="machine-btn-box" id="machine-btn-box">
+            <div class="machine-btn-head">
+              <div class="machine-btn F1-btn"></div>
+              <div class="machine-btn F2-btn"></div>
+              <div class="machine-btn nav-btn"></div>
+              <div class="machine-btn open-btn"></div>
+              <div class="machine-btn up-btn"></div>
+              <div class="machine-btn left-btn"></div>
+              <div class="machine-btn right-btn"></div>
+              <div class="machine-btn bottom-btn"></div>
+              <div class="machine-btn sure-btn"></div>
+            </div>
+            <div class="machine-btn-body">
+              <div class="machine-btn num1-btn"></div>
+              <div class="machine-btn num2-btn"></div>
+              <div class="machine-btn num3-btn"></div>
+              <div class="machine-btn num4-btn"></div>
+              <div class="machine-btn num5-btn"></div>
+              <div class="machine-btn num6-btn"></div>
+              <div class="machine-btn num7-btn"></div>
+              <div class="machine-btn num8-btn"></div>
+              <div class="machine-btn num9-btn"></div>
+              <div class="machine-btn lock-btn"></div>
+              <div class="machine-btn num0-btn"></div>
+              <div class="machine-btn change-btn"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="machine-body-right">
+        <!-- 考题区域 -->
+        <div class="item-bank" id="item-bank">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/lib/jquery-3.4.1.min.js"></script>
+  <script src="../js/lib/jquery.cookie.js"></script>
+  <script src="../js/exam/check-paper-wrong.js"></script>
+
+  <script>
+    $(function () {
+      var option = {
+        muteAnswer: "false",
+        soundAnswer: "false",
+        noElevationAnswer: "false",
+        highLightAnswer: "false",
+        alwaysAnswer: "false"
+      };
+
+      window.newObj = new machineObj(option);
+    });
+  </script>
+</body>
+
+</html>

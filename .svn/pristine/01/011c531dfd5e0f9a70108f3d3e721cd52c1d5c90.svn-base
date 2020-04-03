@@ -1,0 +1,25 @@
+package io.ken.springboot.course.service;
+
+import io.ken.springboot.course.bean.HandExamStore;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 
+ * @author lq
+ *IHandExamService.java
+ * 2019年11月28日
+ */
+public interface IHandExamService {
+
+	HandExamStore getNameByCode(String handQCode);
+	
+	List<Map<String,String>> getQuestionRandom(String subject);
+	
+	List<HandExamStore> getQuestionRandom1(String subject);
+
+	int addModel(HandExamStore handExamStore);
+
+
+
+}

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>查看试卷</title>
+  <link rel="stylesheet" href="../css/normal.min.css">
+  <link rel="stylesheet" href="../css/check-paper.min.css">
+</head>
+
+<body>
+  <div class="view-box">
+    <div class="view-head">
+      <div class="exam-head">
+        <div class="exam-name" id="examName"></div>
+        <div class="exam-time" id="examTime"></div>
+      </div>
+      <ul class="exam-list">
+        <li class="exam-li">
+          考生: <span class="exam-span" id="studentName"></span>
+        </li>
+        <li class="exam-li">
+          完成时间: <span class="exam-span" id="completeTime"></span>
+        </li>
+        <li class="exam-li">
+          总题目: <span class="exam-span" id="totalTimuNum"></span>
+        </li>
+        <li class="exam-li">
+          正确: <span class="exam-span" id="corretNum"></span>
+        </li>
+        <li class="exam-li">
+          错误: <span class="exam-span" id="errorNum"></span>
+        </li>
+        <li class="exam-li">
+          得分: <span class="exam-span exam-score" id="score"></span>
+        </li>
+        <li class="exam-li">
+          <span class="exam-span" id="grade"></span>
+        </li>
+      </ul>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="close"><span
+        aria-hidden="true">&times;</span></button>
+    </div>
+    <div class="view-body" id="view-body">
+    </div>
+    <div class="view-footer">
+      <ul class="banner-items" id="banner-items">
+      </ul>
+    </div>
+  </div>
+
+  <script src="../js/lib/jquery-1.10.2.min.js"></script>
+  <script src="../js/exam/check-paper.js"></script>
+</body>
+
+</html>
